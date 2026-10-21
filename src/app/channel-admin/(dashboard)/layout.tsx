@@ -25,12 +25,21 @@ export default async function ChannelAdminDashboardLayout({
   const session = await requireAdminSession();
 
   // Query live counts for badges
-  const [dealsReviewCount, leadsPendingCount] = await Promise.all([
+  const [dealsReviewCount, conflictsCount, leadsPendingCount, requestsPendingCount, jbpPendingCount] = await Promise.all([
     prisma.dealRegistration.count({
       where: { status: DealStatus.awaiting_approval },
     }),
+    prisma.dealRegistration.count({
+      where: { conflict_detected: true, status: DealStatus.awaiting_approval },
+    }),
     prisma.leadAssignment.count({
       where: { partner_acceptance_status: LeadAcceptanceStatus.pending },
+    }),
+    prisma.commercialRequest.count({
+      where: { status: 'submitted' },
+    }),
+    prisma.jointBusinessPlan.count({
+      where: { status: 'submitted' },
     }),
   ]);
 
@@ -38,19 +47,42 @@ export default async function ChannelAdminDashboardLayout({
     { label: 'Overview', href: '/channel-admin', icon: LayoutDashboard },
     { label: 'Partners', href: '/channel-admin/partners', icon: Building2 },
     {
-      label: 'Deals Review',
+      label: 'Deals',
       href: '/channel-admin/deals',
       icon: FileCheck2,
       badge: dealsReviewCount > 0 ? dealsReviewCount : undefined,
     },
     {
-      label: 'Leads Routing',
+      label: 'Conflicts',
+      href: '/channel-admin/deal-conflicts',
+      icon: ShieldAlert,
+      badge: conflictsCount > 0 ? conflictsCount : undefined,
+    },
+    {
+      label: 'Leads',
       href: '/channel-admin/leads',
       icon: Inbox,
       badge: leadsPendingCount > 0 ? leadsPendingCount : undefined,
     },
-    { label: 'Commercial Renewals', href: '/channel-admin/renewals', icon: RefreshCw },
-    { label: 'Audit Trail', href: '/channel-admin/audit', icon: ScrollText },
+    {
+      label: 'Requests',
+      href: '/channel-admin/commercial-requests',
+      icon: ScrollText,
+      badge: requestsPendingCount > 0 ? requestsPendingCount : undefined,
+    },
+    { label: 'Renewals', href: '/channel-admin/renewals', icon: RefreshCw },
+    { label: 'Programs', href: '/channel-admin/programs', icon: Building2 },
+    { label: 'Resources', href: '/channel-admin/resources', icon: ScrollText },
+    { label: 'Learning', href: '/channel-admin/learning', icon: ScrollText },
+    { label: 'Campaigns', href: '/channel-admin/campaigns', icon: ScrollText },
+    { label: 'Events', href: '/channel-admin/events', icon: ScrollText },
+    {
+      label: 'JBP',
+      href: '/channel-admin/jbp',
+      icon: ScrollText,
+      badge: jbpPendingCount > 0 ? jbpPendingCount : undefined,
+    },
+    { label: 'Audit Log', href: '/channel-admin/audit-log', icon: ScrollText },
   ];
 
   return (

@@ -42,6 +42,8 @@ export default async function PartnerDashboardPage() {
       display_name: true,
       tier: true,
       partner_type: true,
+      partner_manager_name: true,
+      partner_manager_email: true,
     },
   });
 
@@ -52,9 +54,11 @@ export default async function PartnerDashboardPage() {
     protectedDealsCount,
     assignedLeadsActionCount,
     upcomingRenewalsCount,
+    openCommercialRequestsCount,
     recentDeals,
     recentLeads,
     recentRenewals,
+    announcements,
   ] = await Promise.all([
     // Open Deal Registrations (active pipeline)
     prisma.dealRegistration.count({
@@ -98,6 +102,13 @@ export default async function PartnerDashboardPage() {
         renewal_date: { gte: now },
       },
     }),
+    // Open Commercial Requests
+    prisma.commercialRequest.count({
+      where: {
+        partner_organization_id: orgId,
+        status: { in: ['submitted', 'in_review'] },
+      },
+    }),
     // Recent Deals
     prisma.dealRegistration.findMany({
       where: { partner_organization_id: orgId },
@@ -116,6 +127,12 @@ export default async function PartnerDashboardPage() {
       where: { partner_organization_id: orgId },
       orderBy: { renewal_date: 'asc' },
       take: 4,
+    }),
+    // Announcements
+    prisma.announcement.findMany({
+      where: { is_published: true },
+      orderBy: { published_at: 'desc' },
+      take: 2,
     }),
   ]);
 
@@ -195,21 +212,53 @@ export default async function PartnerDashboardPage() {
           <p className="text-sm text-slate-400">
             {companyName} &bull; Channel Sales & Deal Protection Workspace
           </p>
+          {org?.partner_manager_name && (
+            <div className="pt-1 text-xs text-slate-400">
+              Assigned Partner Manager: <strong className="text-slate-200">{org.partner_manager_name}</strong>{' '}
+              ({org.partner_manager_email})
+            </div>
+          )}
         </div>
 
-        <div className="relative z-10 flex items-center gap-3">
+        <div className="relative z-10 flex flex-wrap items-center gap-2.5">
           <Link href="/partner-portal/deals/new">
             <Button
               variant="primary"
-              size="lg"
-              className="gap-2 text-sm font-semibold px-6 shadow-md shadow-cyan-950"
+              size="sm"
+              className="gap-1.5 text-xs font-semibold shadow-sm shadow-cyan-950"
             >
-              <FilePlus2 className="h-4 w-4" />
+              <FilePlus2 className="h-3.5 w-3.5" />
               <span>Register a Deal</span>
+            </Button>
+          </Link>
+          <Link href="/partner-portal/leads">
+            <Button variant="outline" size="sm" className="text-xs">
+              <span>View Leads</span>
+            </Button>
+          </Link>
+          <Link href="/partner-portal/commercial-requests/new">
+            <Button variant="outline" size="sm" className="text-xs">
+              <span>Request Trial / POC</span>
+            </Button>
+          </Link>
+          <Link href="/partner-portal/team">
+            <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-white">
+              <span>Invite Team</span>
             </Button>
           </Link>
         </div>
       </div>
+
+      {/* Announcements Notice */}
+      {announcements.length > 0 && (
+        <div className="p-4 rounded-xl bg-cyan-950/30 border border-cyan-800/40 text-xs text-slate-300 flex items-start gap-3">
+          <span className="h-2 w-2 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
+          <div className="space-y-0.5">
+            <strong className="text-cyan-300 font-semibold">{announcements[0].title}</strong>
+            <p className="text-slate-400">{announcements[0].content}</p>
+          </div>
+        </div>
+      )}
 
       {/* 2. REAL LIVE METRIC CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">

@@ -103,6 +103,178 @@ async function main() {
     }
   }
 
+  // 3. Seed Courses
+  const standardCourses = [
+    {
+      title: 'OmniPriv PAM Fundamentals & Value Selling',
+      description: 'Master enterprise privileged access management value drivers, buyer personas, and competitive objection handling.',
+      track: 'Sales',
+      level: 'Fundamental',
+      duration_minutes: 45,
+      modules_count: 4,
+    },
+    {
+      title: 'Technical Architecture & Credential Vaulting',
+      description: 'Learn how OmniPriv orchestrates zero-standing privileges, ephemeral secrets, and multi-cloud infrastructure credentials.',
+      track: 'Presales',
+      level: 'Intermediate',
+      duration_minutes: 90,
+      modules_count: 6,
+    },
+    {
+      title: 'Zero-Trust Session Recording & Micro-segmentation',
+      description: 'Advanced configuration of SSH/RDP session interception, AI behavioral threat detection, and forensic playback.',
+      track: 'Technical',
+      level: 'Advanced',
+      duration_minutes: 120,
+      modules_count: 8,
+    },
+    {
+      title: 'Multi-Tenant PAM for MSPs & Managed Services',
+      description: 'Operational guidelines for deploying and managing multi-tenant customer vaults, monthly licensing, and compliance reporting.',
+      track: 'Technical',
+      level: 'Intermediate',
+      duration_minutes: 60,
+      modules_count: 5,
+    },
+  ];
+
+  for (const course of standardCourses) {
+    const existing = await prisma.course.findFirst({ where: { title: course.title } });
+    if (!existing) {
+      await prisma.course.create({ data: course });
+      console.log(`[SEED] Created course: "${course.title}"`);
+    }
+  }
+
+  // 4. Seed Certifications
+  const standardCertifications = [
+    {
+      code: 'OCSP',
+      name: 'OmniPriv Certified Sales Professional',
+      description: 'Validates commercial expertise in qualifying PAM requirements, ROI articulation, and competitive sales execution.',
+      track: 'Sell',
+      level: 'Fundamental',
+      validity_months: 24,
+    },
+    {
+      code: 'OCIE',
+      name: 'OmniPriv Certified Implementation Engineer',
+      description: 'Validates hands-on deployment competence for enterprise zero-trust privileged architecture and policy enforcement.',
+      track: 'Deploy',
+      level: 'Advanced',
+      validity_months: 24,
+    },
+    {
+      code: 'OCSE',
+      name: 'OmniPriv Certified Security Expert',
+      description: 'Demonstrates deep mastery of session monitoring, PAM automation APIs, and high-availability multi-region cluster management.',
+      track: 'Manage',
+      level: 'Expert',
+      validity_months: 24,
+    },
+  ];
+
+  for (const cert of standardCertifications) {
+    const existing = await prisma.certification.findUnique({ where: { code: cert.code } });
+    if (!existing) {
+      await prisma.certification.create({ data: cert });
+      console.log(`[SEED] Created certification: ${cert.code}`);
+    }
+  }
+
+  // 5. Seed Campaigns
+  const standardCampaigns = [
+    {
+      title: 'Replace Legacy Vaults Q1 2026 Campaign',
+      summary: 'Turnkey demand-gen package targeting CISOs running antiquated, costly legacy on-premise vault architectures.',
+      related_product: 'OmniPriv Enterprise PAM',
+      target_audience: 'CISOs, VPs of Infrastructure, Security Operations Directors',
+      start_date: new Date('2026-01-01'),
+      end_date: new Date('2026-06-30'),
+      status: 'active',
+      assets_url: 'https://assets.omnipriv.com/campaigns/legacy-vault-replacement.zip',
+      email_copy: 'Subject: Eliminating PAM complexity and 6-figure maintenance renewals in 2026',
+      social_copy: 'Is your legacy credential vault slowing down your cloud migration? Discover how OmniPriv delivers zero-standing privileges in weeks.',
+    },
+    {
+      title: 'Zero-Trust Compliance & Audit Acceleration',
+      summary: 'Target organizations preparing for SOC2, ISO27001, PCI-DSS 4.0, or NIS2 compliance requirements.',
+      related_product: 'OmniPriv Compliance Suite',
+      target_audience: 'Compliance Officers, IT Auditors, GRC Teams',
+      start_date: new Date('2026-02-01'),
+      end_date: new Date('2026-08-31'),
+      status: 'active',
+      assets_url: 'https://assets.omnipriv.com/campaigns/compliance-accelerator.zip',
+      email_copy: 'Subject: Achieving automated privileged session compliance in 30 days',
+      social_copy: 'Auditors asking for proof of privileged access controls? OmniPriv provides immutable session playback and instant compliance logs.',
+    },
+  ];
+
+  for (const camp of standardCampaigns) {
+    const existing = await prisma.campaign.findFirst({ where: { title: camp.title } });
+    if (!existing) {
+      await prisma.campaign.create({ data: camp });
+      console.log(`[SEED] Created campaign: "${camp.title}"`);
+    }
+  }
+
+  // 6. Seed Events & Webinars
+  const standardEvents = [
+    {
+      title: 'Quarterly Global Partner Briefing: Product Roadmap & Incentives',
+      event_type: 'partner_briefing',
+      description: 'Exclusive executive briefing with OmniPriv Product Leadership and Channel Strategy team.',
+      starts_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // In 7 days
+      duration_minutes: 60,
+      timezone: 'UTC',
+      product_area: 'Enterprise PAM & AI Copilot',
+      meeting_link: 'https://webinar.omnipriv.com/briefing-q1-2026',
+    },
+    {
+      title: 'Hands-on Technical Lab: Ephemeral Broker Deployment',
+      event_type: 'technical_workshop',
+      description: 'Live interactive technical deep dive for Solutions Architects and Implementation Engineers.',
+      starts_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // In 14 days
+      duration_minutes: 90,
+      timezone: 'UTC',
+      product_area: 'Ephemeral Credential Broker',
+      meeting_link: 'https://webinar.omnipriv.com/lab-ephemeral-broker',
+    },
+  ];
+
+  for (const ev of standardEvents) {
+    const existing = await prisma.event.findFirst({ where: { title: ev.title } });
+    if (!existing) {
+      await prisma.event.create({ data: ev });
+      console.log(`[SEED] Created event: "${ev.title}"`);
+    }
+  }
+
+  // 7. Seed Announcements
+  const standardAnnouncements = [
+    {
+      title: 'OmniPriv 2026 Partner Deal Protection Rules Updated',
+      content: 'All verified deal registrations now receive a guaranteed 90-day price lock and exclusive margin reservation upon Channel Admin review.',
+      priority: 'important',
+      published_at: new Date(),
+    },
+    {
+      title: 'New Zero-Trust Cloud Workload Integrations Released',
+      content: 'OmniPriv has introduced native integrations for AWS IAM Identity Center and Azure Entra Privileged Identity Management.',
+      priority: 'normal',
+      published_at: new Date(),
+    },
+  ];
+
+  for (const ann of standardAnnouncements) {
+    const existing = await prisma.announcement.findFirst({ where: { title: ann.title } });
+    if (!existing) {
+      await prisma.announcement.create({ data: ann });
+      console.log(`[SEED] Created announcement: "${ann.title}"`);
+    }
+  }
+
   console.log('--- OmniPriv Seed Routine Complete ---');
 }
 
