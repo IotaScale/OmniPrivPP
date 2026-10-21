@@ -150,14 +150,15 @@ export default async function PartnerDealsListPage({
               <table className="w-full text-left text-xs text-slate-300">
                 <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider text-[11px] border-y border-slate-800">
                   <tr>
-                    <th className="py-3 px-6 font-semibold">Reference</th>
-                    <th className="py-3 px-6 font-semibold">Customer / Domain</th>
-                    <th className="py-3 px-6 font-semibold">Product Interest</th>
-                    <th className="py-3 px-6 font-semibold">Estimated Value</th>
-                    <th className="py-3 px-6 font-semibold">Status</th>
-                    <th className="py-3 px-6 font-semibold">Protection Expiry</th>
-                    <th className="py-3 px-6 font-semibold">Submitted</th>
-                    <th className="py-3 px-6 font-semibold text-right">Action</th>
+                    <th className="py-3 px-5 font-semibold">Deal Reference</th>
+                    <th className="py-3 px-5 font-semibold">Customer / Opportunity</th>
+                    <th className="py-3 px-5 font-semibold">Product Interest</th>
+                    <th className="py-3 px-5 font-semibold">Status</th>
+                    <th className="py-3 px-5 font-semibold">Estimated Value</th>
+                    <th className="py-3 px-5 font-semibold">Expected Close Date</th>
+                    <th className="py-3 px-5 font-semibold">Protection Expiry</th>
+                    <th className="py-3 px-5 font-semibold">Last Updated</th>
+                    <th className="py-3 px-5 font-semibold text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800">
@@ -166,10 +167,10 @@ export default async function PartnerDealsListPage({
                       key={deal.id}
                       className="hover:bg-slate-800/30 transition-colors group"
                     >
-                      <td className="py-3.5 px-6 font-mono font-medium text-slate-200">
+                      <td className="py-3.5 px-5 font-mono font-medium text-cyan-400">
                         {deal.public_reference}
                       </td>
-                      <td className="py-3.5 px-6">
+                      <td className="py-3.5 px-5">
                         <div className="font-semibold text-slate-200 group-hover:text-cyan-400 transition-colors">
                           {deal.customer_legal_name}
                         </div>
@@ -177,21 +178,26 @@ export default async function PartnerDealsListPage({
                           {deal.customer_domain}
                         </div>
                       </td>
-                      <td className="py-3.5 px-6 max-w-xs truncate text-slate-300">
+                      <td className="py-3.5 px-5 max-w-xs truncate text-slate-300">
                         {deal.product_interest}
                       </td>
-                      <td className="py-3.5 px-6 font-mono text-slate-200">
-                        {deal.estimated_deal_value
-                          ? `${deal.currency} ${deal.estimated_deal_value.toLocaleString()}`
-                          : '—'}
-                      </td>
-                      <td className="py-3.5 px-6">
+                      <td className="py-3.5 px-5">
                         <StatusBadge status={deal.status} />
                       </td>
-                      <td className="py-3.5 px-6">
+                      <td className="py-3.5 px-5 font-mono text-slate-200">
+                        {deal.estimated_deal_value
+                          ? `${deal.currency} ${Number(deal.estimated_deal_value).toLocaleString()}`
+                          : '—'}
+                      </td>
+                      <td className="py-3.5 px-5 text-slate-300 font-mono text-xs">
+                        {deal.expected_close_date
+                          ? new Date(deal.expected_close_date).toLocaleDateString()
+                          : '—'}
+                      </td>
+                      <td className="py-3.5 px-5">
                         {deal.protection_expires_at ? (
-                          <div className="flex items-center gap-1.5 text-emerald-400 font-medium font-mono">
-                            <ShieldCheck className="h-3.5 w-3.5" />
+                          <div className="flex items-center gap-1.5 text-emerald-400 font-medium font-mono text-xs">
+                            <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
                             <span>
                               {new Date(deal.protection_expires_at).toLocaleDateString()}
                             </span>
@@ -200,12 +206,12 @@ export default async function PartnerDealsListPage({
                           <span className="text-slate-500">—</span>
                         )}
                       </td>
-                      <td className="py-3.5 px-6 text-slate-400">
-                        {new Date(deal.created_at).toLocaleDateString()}
+                      <td className="py-3.5 px-5 text-slate-400 text-xs">
+                        {new Date(deal.updated_at).toLocaleDateString()}
                       </td>
-                      <td className="py-3.5 px-6 text-right">
+                      <td className="py-3.5 px-5 text-right">
                         <Link href={`/partner-portal/deals/${deal.id}`}>
-                          <Button variant="ghost" size="sm" className="h-7 px-2">
+                          <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">
                             <span>Details</span>
                             <ArrowRight className="h-3 w-3 ml-1" />
                           </Button>

@@ -58,14 +58,16 @@ export default async function PartnerLeadsPage() {
               <table className="w-full text-left text-xs text-slate-300">
                 <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider text-[11px] border-y border-slate-800">
                   <tr>
-                    <th className="py-3 px-6 font-semibold">Reference</th>
-                    <th className="py-3 px-6 font-semibold">Company / Location</th>
-                    <th className="py-3 px-6 font-semibold">Contact Person</th>
-                    <th className="py-3 px-6 font-semibold">Product Interest</th>
-                    <th className="py-3 px-6 font-semibold">Acceptance Status</th>
-                    <th className="py-3 px-6 font-semibold">SLA Deadline</th>
-                    <th className="py-3 px-6 font-semibold">Work Status</th>
-                    <th className="py-3 px-6 font-semibold text-right">Action</th>
+                    <th className="py-3 px-4 font-semibold">Lead Reference</th>
+                    <th className="py-3 px-4 font-semibold">Customer / Company</th>
+                    <th className="py-3 px-4 font-semibold">Contact</th>
+                    <th className="py-3 px-4 font-semibold">Product Interest</th>
+                    <th className="py-3 px-4 font-semibold">Lead Source</th>
+                    <th className="py-3 px-4 font-semibold">Assigned Date</th>
+                    <th className="py-3 px-4 font-semibold">Acceptance Deadline</th>
+                    <th className="py-3 px-4 font-semibold">Partner Acceptance</th>
+                    <th className="py-3 px-4 font-semibold">Status</th>
+                    <th className="py-3 px-4 font-semibold text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800">
@@ -75,15 +77,23 @@ export default async function PartnerLeadsPage() {
                       assignment.accepted_at || assignment.declined_at
                     );
 
+                    // SLA Visual Urgency label
+                    let urgencyBadge = { label: 'Normal', color: 'text-slate-300 bg-slate-900 border-slate-800' };
+                    if (sla.isBreached) {
+                      urgencyBadge = { label: 'Overdue', color: 'text-rose-400 bg-rose-500/10 border-rose-500/30' };
+                    } else if (sla.isUrgent) {
+                      urgencyBadge = { label: 'Action needed soon', color: 'text-amber-400 bg-amber-500/10 border-amber-500/30' };
+                    }
+
                     return (
                       <tr
                         key={assignment.id}
                         className="hover:bg-slate-800/30 transition-colors group"
                       >
-                        <td className="py-3.5 px-6 font-mono font-medium text-slate-200">
+                        <td className="py-3.5 px-4 font-mono font-medium text-cyan-400">
                           {assignment.lead.public_reference}
                         </td>
-                        <td className="py-3.5 px-6">
+                        <td className="py-3.5 px-4">
                           <div className="font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">
                             {assignment.lead.company}
                           </div>
@@ -91,7 +101,7 @@ export default async function PartnerLeadsPage() {
                             {assignment.lead.country} {assignment.lead.region ? `• ${assignment.lead.region}` : ''}
                           </span>
                         </td>
-                        <td className="py-3.5 px-6">
+                        <td className="py-3.5 px-4">
                           <div className="font-medium text-slate-200">
                             {assignment.lead.contact_first_name} {assignment.lead.contact_last_name}
                           </div>
@@ -99,29 +109,25 @@ export default async function PartnerLeadsPage() {
                             {assignment.lead.contact_email}
                           </span>
                         </td>
-                        <td className="py-3.5 px-6 text-slate-300 max-w-xs truncate">
+                        <td className="py-3.5 px-4 text-slate-300 max-w-xs truncate">
                           {assignment.lead.product_interest || 'OmniPriv PAM'}
                         </td>
-                        <td className="py-3.5 px-6">
-                          <StatusBadge status={assignment.partner_acceptance_status} />
+                        <td className="py-3.5 px-4 text-slate-400 text-xs">
+                          {assignment.lead.lead_source || 'OmniPriv Web Inbound'}
                         </td>
-                        <td className="py-3.5 px-6">
+                        <td className="py-3.5 px-4 text-slate-400 text-xs font-mono">
+                          {new Date(assignment.assigned_at).toLocaleDateString()}
+                        </td>
+                        <td className="py-3.5 px-4">
                           {assignment.partner_acceptance_status === 'pending' ? (
-                            <div
-                              className={`flex items-center gap-1.5 font-medium ${
-                                sla.isBreached
-                                  ? 'text-rose-400'
-                                  : sla.isUrgent
-                                  ? 'text-amber-400 font-semibold'
-                                  : 'text-slate-300'
-                              }`}
-                            >
-                              {sla.isBreached ? (
-                                <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                              ) : (
-                                <Clock className="h-3.5 w-3.5 shrink-0" />
-                              )}
-                              <span>{sla.formattedRemaining}</span>
+                            <div className="flex flex-col gap-1">
+                              <span className="font-mono text-xs text-slate-200">
+                                {new Date(assignment.acceptance_deadline_at).toLocaleDateString()}
+                              </span>
+                              <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded border w-fit ${urgencyBadge.color}`}>
+                                {sla.isBreached && <AlertTriangle className="h-3 w-3 shrink-0" />}
+                                <span>{urgencyBadge.label}</span>
+                              </span>
                             </div>
                           ) : (
                             <span className="text-slate-500 font-mono text-[11px]">
@@ -129,23 +135,16 @@ export default async function PartnerLeadsPage() {
                             </span>
                           )}
                         </td>
-                        <td className="py-3.5 px-6">
-                          {assignment.converted_deal ? (
-                            <Link
-                              href={`/partner-portal/deals/${assignment.converted_deal.id}`}
-                              className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 font-medium"
-                            >
-                              <CheckCircle2 className="h-3.5 w-3.5" />
-                              <span>{assignment.converted_deal.public_reference}</span>
-                            </Link>
-                          ) : (
-                            <StatusBadge status={assignment.current_status} />
-                          )}
+                        <td className="py-3.5 px-4">
+                          <StatusBadge status={assignment.partner_acceptance_status} />
                         </td>
-                        <td className="py-3.5 px-6 text-right">
+                        <td className="py-3.5 px-4">
+                          <StatusBadge status={assignment.current_status} />
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
                           <Link href={`/partner-portal/leads/${assignment.id}`}>
-                            <Button variant="ghost" size="sm" className="h-7 px-2">
-                              <span>Details</span>
+                            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">
+                              <span>Work Lead</span>
                               <ArrowRight className="h-3 w-3 ml-1" />
                             </Button>
                           </Link>

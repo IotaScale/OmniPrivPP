@@ -36,6 +36,7 @@ This document tracks all completed phases, schema migrations, route implementati
 | **Phase 12** | Audit log (`/channel-admin/audit`) & in-app notifications system | Completed | Multi-parameter filtering on immutable audit events |
 | **Phase 13** | UI/UX refinement, enterprise dark/light contrast, mobile responsiveness & keyboard accessibility | Completed | High density, professional PAM enterprise aesthetic |
 | **Phase 14** | Unit tests (Vitest), end-to-end flows, production build validation & documentation | Completed | 23/23 tests pass, Next.js build clean with 0 errors |
+| **Phase 15** | Kaspersky-Model Partner Program (`/become-a-partner`), 2-step registration wizard (`/sign-up`), Left-nav Sales Workspace shell (`/partner-portal`), Live KPI cards, empty states, and partner tools | Completed | Polished B2B workspace layout, strict multi-tenant isolation, 0 mock data |
 
 ---
 

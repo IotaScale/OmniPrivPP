@@ -10,14 +10,21 @@ import { redirect } from 'next/navigation';
 
 const SignUpSchema = z.object({
   companyLegalName: z.string().min(2, 'Company legal name is required'),
-  companyDisplayName: z.string().min(2, 'Display name is required'),
+  companyDisplayName: z.string().optional(),
   website: z.string().min(3, 'Valid company website domain is required'),
-  country: z.string().min(2, 'Country is required'),
-  region: z.string().min(2, 'Region is required'),
+  country: z.string().min(2, 'Country / region is required'),
+  region: z.string().optional(),
   partnerType: z.string().min(2, 'Partner type is required'),
+  primaryFocus: z.string().optional(),
+  companyDescription: z.string().optional(),
   fullName: z.string().min(2, 'Contact full name is required'),
-  email: z.string().email('Valid business email is required'),
+  email: z.string().email('Valid work email is required'),
+  jobTitle: z.string().optional(),
+  phone: z.string().optional(),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
+  termsAccepted: z.union([z.boolean(), z.string()]).refine(val => val === true || val === 'on' || val === 'true', {
+    message: 'You must accept the OmniPriv Partner Agreement to continue',
+  }),
 });
 
 export type ActionState = {
@@ -39,7 +46,7 @@ export async function signUpPartnerAction(
 
   if (!validated.success) {
     return {
-      error: 'Please fix the errors below.',
+      error: 'Please review and complete all required registration fields.',
       fieldErrors: validated.error.flatten().fieldErrors,
     };
   }
@@ -51,8 +58,12 @@ export async function signUpPartnerAction(
     country,
     region,
     partnerType,
+    primaryFocus,
+    companyDescription,
     fullName,
     email,
+    jobTitle,
+    phone,
     password,
   } = validated.data;
 
@@ -77,11 +88,13 @@ export async function signUpPartnerAction(
       const org = await tx.partnerOrganization.create({
         data: {
           legal_name: companyLegalName.trim(),
-          display_name: companyDisplayName.trim(),
+          display_name: (companyDisplayName || companyLegalName).trim(),
           website: website.trim().toLowerCase(),
           country: country.trim(),
-          region: region.trim(),
+          region: (region || country).trim(),
           partner_type: partnerType.trim(),
+          primary_focus: primaryFocus?.trim() || null,
+          company_summary: companyDescription?.trim() || null,
           tier: PartnerTier.Registered,
           status: OrgStatus.active,
         },
@@ -93,6 +106,8 @@ export async function signUpPartnerAction(
           email: cleanEmail,
           password_hash: passwordHash,
           full_name: fullName.trim(),
+          job_title: jobTitle?.trim() || null,
+          phone: phone?.trim() || null,
           role: UserRole.partner_user,
           is_active: true,
           email_verified_at: new Date(),

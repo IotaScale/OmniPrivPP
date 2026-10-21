@@ -46,6 +46,11 @@ export default async function HomePage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link href="/become-a-partner">
+              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white">
+                Partner Program
+              </Button>
+            </Link>
             <Link href="/sign-in">
               <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white">
                 Sign In
@@ -53,7 +58,7 @@ export default async function HomePage() {
             </Link>
             <Link href="/sign-up">
               <Button variant="primary" size="sm" className="gap-1.5 shadow-cyan-950 shadow-sm">
-                <span>Register Organization</span>
+                <span>Become a Partner</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>

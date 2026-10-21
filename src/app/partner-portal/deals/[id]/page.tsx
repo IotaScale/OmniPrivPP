@@ -120,7 +120,7 @@ export default async function PartnerDealDetailPage({
               Deal Registration Successfully Submitted!
             </strong>
             <p className="text-xs text-slate-300 mt-0.5">
-              Reference: <strong className="font-mono text-cyan-400">{deal.public_reference}</strong>. Your deal registration has been submitted for OmniPriv review. Protection begins only after approval.
+              Reference: <strong className="font-mono text-cyan-400">{deal.public_reference}</strong>. Your deal registration is awaiting OmniPriv review. Deal protection starts only after approval.
             </p>
           </div>
         </div>
