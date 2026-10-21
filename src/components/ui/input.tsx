@@ -15,9 +15,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-xs font-medium text-slate-300">
+          <label htmlFor={inputId} className="text-sm font-medium text-slate-200">
             {label}
-            {props.required && <span className="text-cyan-400 ml-1">*</span>}
+            {props.required && <span className="text-[#00B8FF] ml-1">*</span>}
           </label>
         )}
         <input
@@ -25,16 +25,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           className={twMerge(
             clsx(
-              'w-full px-3.5 py-2 rounded-lg bg-slate-950/80 border text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-1 transition-all',
+              'w-full h-11 sm:h-12 px-4 rounded-xl bg-[#060b17] border text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 transition-all duration-150',
               error
-                ? 'border-rose-500/80 focus:border-rose-500 focus:ring-rose-500'
-                : 'border-slate-800 focus:border-cyan-500 focus:ring-cyan-500',
+                ? 'border-rose-500/80 focus:border-rose-500 focus:ring-rose-500/20'
+                : 'border-white/[0.12] focus:border-[#00B8FF] focus:ring-[#00B8FF]/20',
               className
             )
           )}
           {...props}
         />
-        {error && <span className="text-xs text-rose-400">{error}</span>}
+        {error && <span className="text-xs text-rose-400 font-medium">{error}</span>}
         {!error && helperText && <span className="text-xs text-slate-500">{helperText}</span>}
       </div>
     );
