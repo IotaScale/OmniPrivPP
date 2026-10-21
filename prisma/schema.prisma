@@ -1,0 +1,338 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  partner_user
+  channel_admin
+}
+
+enum PartnerTier {
+  Registered
+  Silver
+  Gold
+  Platinum
+}
+
+enum OrgStatus {
+  active
+  suspended
+}
+
+enum MembershipRole {
+  partner_owner
+  partner_member
+}
+
+enum DealStatus {
+  draft
+  awaiting_approval
+  approved
+  declined
+  closed_won
+  closed_lost
+  expired
+}
+
+enum LeadStatus {
+  new
+  assigned
+  working
+  qualified
+  disqualified
+  converted
+}
+
+enum LeadAcceptanceStatus {
+  pending
+  accepted
+  declined
+}
+
+enum ResourceCategory {
+  sales_playbook
+  product_collateral
+  technical_enablement
+  certification
+  marketing_asset
+}
+
+model User {
+  id                String       @id @default(cuid())
+  email             String       @unique
+  password_hash     String
+  full_name         String
+  role              UserRole     @default(partner_user)
+  email_verified_at DateTime?
+  is_active         Boolean      @default(true)
+  created_at        DateTime     @default(now())
+  updated_at        DateTime     @updatedAt
+
+  memberships       PartnerMembership[]
+  deals_submitted   DealRegistration[]    @relation("DealsSubmitted")
+  deals_reviewed    DealRegistration[]    @relation("DealsReviewed")
+  status_changes    DealStatusHistory[]
+  leads_assigned    LeadAssignment[]      @relation("LeadsAssignedBy")
+  audit_events      AuditEvent[]
+  notifications     Notification[]
+
+  @@map("users")
+}
+
+model PartnerOrganization {
+  id                      String      @id @default(cuid())
+  legal_name              String
+  display_name            String
+  website                 String
+  country                 String
+  region                  String
+  partner_type            String
+  market_vertical         String?
+  company_summary         String?
+  tier                    PartnerTier @default(Registered)
+  partner_manager_user_id String?
+  status                  OrgStatus   @default(active)
+  created_at              DateTime    @default(now())
+  updated_at              DateTime    @updatedAt
+
+  memberships             PartnerMembership[]
+  deals                   DealRegistration[]
+  lead_assignments        LeadAssignment[]
+  renewals                Renewal[]
+  audit_events            AuditEvent[]
+  notifications           Notification[]
+
+  @@index([tier])
+  @@index([status])
+  @@index([country])
+  @@map("partner_organizations")
+}
+
+model PartnerMembership {
+  id                      String         @id @default(cuid())
+  user_id                 String
+  partner_organization_id String
+  role                    MembershipRole @default(partner_member)
+  invited_by_user_id      String?
+  joined_at               DateTime       @default(now())
+  created_at              DateTime       @default(now())
+  updated_at              DateTime       @updatedAt
+
+  user                    User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, partner_organization_id])
+  @@index([partner_organization_id])
+  @@index([user_id])
+  @@map("partner_memberships")
+}
+
+model DealRegistration {
+  id                            String      @id @default(cuid())
+  public_reference              String      @unique
+  partner_organization_id       String
+  submitted_by_user_id          String
+  customer_legal_name           String
+  customer_domain               String
+  customer_country              String
+  customer_industry             String?
+  customer_contact_name         String
+  customer_contact_email        String
+  customer_contact_phone        String?
+  product_interest              String
+  deployment_type               String
+  estimated_arr                 Float?
+  estimated_deal_value          Float?
+  currency                      String      @default("USD")
+  expected_seat_count           Int?
+  expected_close_date           DateTime?
+  deployment_timeline           String?
+  opportunity_source            String?
+  partner_notes                 String?
+  status                        DealStatus  @default(draft)
+  conflict_detected             Boolean     @default(false)
+  conflict_reason               String?
+  reviewed_by_user_id           String?
+  reviewed_at                   DateTime?
+  admin_decision_reason         String?
+  protection_starts_at          DateTime?
+  protection_expires_at         DateTime?
+  closed_at                     DateTime?
+  converted_from_lead_assignment_id String? @unique
+  created_at                    DateTime    @default(now())
+  updated_at                    DateTime    @updatedAt
+
+  organization                  PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+  submitted_by                  User                @relation("DealsSubmitted", fields: [submitted_by_user_id], references: [id])
+  reviewed_by                   User?               @relation("DealsReviewed", fields: [reviewed_by_user_id], references: [id])
+  status_history                DealStatusHistory[]
+  converted_lead_assignment     LeadAssignment?     @relation("ConvertedDeal", fields: [converted_from_lead_assignment_id], references: [id])
+
+  @@index([partner_organization_id])
+  @@index([status])
+  @@index([customer_domain])
+  @@index([protection_expires_at])
+  @@index([created_at])
+  @@map("deal_registrations")
+}
+
+model DealStatusHistory {
+  id                   String           @id @default(cuid())
+  deal_registration_id String
+  previous_status      DealStatus?
+  new_status           DealStatus
+  changed_by_user_id   String?
+  note                 String?
+  created_at           DateTime         @default(now())
+
+  deal                 DealRegistration @relation(fields: [deal_registration_id], references: [id], onDelete: Cascade)
+  changed_by           User?            @relation(fields: [changed_by_user_id], references: [id])
+
+  @@index([deal_registration_id])
+  @@index([created_at])
+  @@map("deal_status_history")
+}
+
+model Lead {
+  id                   String      @id @default(cuid())
+  public_reference     String      @unique
+  customer_name        String
+  customer_domain      String?
+  contact_first_name   String
+  contact_last_name    String
+  contact_email        String
+  contact_phone        String?
+  company              String
+  country              String
+  region               String?
+  industry             String?
+  lead_source          String
+  product_interest     String?
+  estimated_seat_count Int?
+  customer_comment     String?
+  internal_notes       String?
+  status               LeadStatus  @default(new)
+  created_at           DateTime    @default(now())
+  updated_at           DateTime    @updatedAt
+
+  assignments          LeadAssignment[]
+
+  @@index([status])
+  @@index([customer_domain])
+  @@index([country])
+  @@index([created_at])
+  @@map("leads")
+}
+
+model LeadAssignment {
+  id                            String               @id @default(cuid())
+  lead_id                       String
+  partner_organization_id       String
+  assigned_by_user_id           String
+  assigned_at                   DateTime             @default(now())
+  acceptance_deadline_at        DateTime
+  partner_acceptance_status     LeadAcceptanceStatus @default(pending)
+  accepted_at                   DateTime?
+  declined_at                   DateTime?
+  decline_reason                String?
+  current_status                String               @default("assigned")
+  created_at                    DateTime             @default(now())
+  updated_at                    DateTime             @updatedAt
+
+  lead                          Lead                 @relation(fields: [lead_id], references: [id], onDelete: Cascade)
+  organization                  PartnerOrganization  @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+  assigned_by                   User                 @relation("LeadsAssignedBy", fields: [assigned_by_user_id], references: [id])
+  converted_deal                DealRegistration?    @relation("ConvertedDeal")
+
+  @@index([partner_organization_id])
+  @@index([lead_id])
+  @@index([partner_acceptance_status])
+  @@index([acceptance_deadline_at])
+  @@map("lead_assignments")
+}
+
+model Renewal {
+  id                      String              @id @default(cuid())
+  partner_organization_id String
+  customer_name           String
+  product_plan            String
+  contracted_capacity     String?
+  renewal_date            DateTime
+  contract_value          Float?
+  currency                String              @default("USD")
+  commercial_status       String              @default("upcoming")
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([partner_organization_id])
+  @@index([renewal_date])
+  @@map("renewals")
+}
+
+model ResourceItem {
+  id               String           @id @default(cuid())
+  title            String
+  description      String
+  category         ResourceCategory
+  url              String
+  visible_to_tiers String[]         @default(["Registered", "Silver", "Gold", "Platinum"])
+  is_published     Boolean          @default(true)
+  created_at       DateTime         @default(now())
+  updated_at       DateTime         @updatedAt
+
+  @@index([category])
+  @@index([is_published])
+  @@map("resource_items")
+}
+
+model AuditEvent {
+  id                      String               @id @default(cuid())
+  actor_user_id           String?
+  partner_organization_id String?
+  entity_type             String
+  entity_id               String
+  event_type              String
+  before_data             Json?
+  after_data              Json?
+  metadata                Json?
+  ip_address              String?
+  created_at              DateTime             @default(now())
+
+  actor                   User?                @relation(fields: [actor_user_id], references: [id])
+  organization            PartnerOrganization? @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([partner_organization_id])
+  @@index([actor_user_id])
+  @@index([entity_type, entity_id])
+  @@index([event_type])
+  @@index([created_at])
+  @@map("audit_events")
+}
+
+model Notification {
+  id                      String               @id @default(cuid())
+  user_id                 String?
+  partner_organization_id String?
+  title                   String
+  message                 String
+  link                    String?
+  is_read                 Boolean              @default(false)
+  type                    String               @default("info")
+  created_at              DateTime             @default(now())
+
+  user                    User?                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization            PartnerOrganization? @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([partner_organization_id])
+  @@index([is_read])
+  @@index([created_at])
+  @@map("notifications")
+}
