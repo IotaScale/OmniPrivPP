@@ -195,7 +195,7 @@ export default async function PartnerDashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* 1. TOP SECTION (Kaspersky Channel Model) */}
+      {/* 1. TOP METRICS & QUICK ACTIONS */}
       <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden shadow-lg">
         <div className="absolute right-0 top-0 w-96 h-96 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
 
@@ -488,7 +488,7 @@ export default async function PartnerDashboardPage() {
         </div>
       </div>
 
-      {/* 4. PARTNER TOOLS SECTION (Kaspersky Style) */}
+      {/* 4. PARTNER TOOLS SECTION */}
       <div className="space-y-4 pt-4 border-t border-slate-800/80">
         <div>
           <h2 className="text-lg font-bold text-white tracking-tight">Partner Tools</h2>

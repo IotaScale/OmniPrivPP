@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 import {
   Shield,
   ShieldCheck,
@@ -36,14 +37,7 @@ export default async function HomePage() {
       {/* Header */}
       <header className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-md shadow-cyan-950/40">
-              <Shield className="h-5 w-5" />
-            </div>
-            <span className="font-bold tracking-tight text-white flex items-center gap-2">
-              OmniPriv <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950/90 border border-cyan-800 text-cyan-400 uppercase tracking-wider">Channel Platform</span>
-            </span>
-          </div>
+          <OmniPrivLogo variant="partner" href="/" />
 
           <div className="flex items-center gap-3">
             <Link href="/become-a-partner">

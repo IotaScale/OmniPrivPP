@@ -5,20 +5,14 @@ import Link from 'next/link';
 import { signUpPartnerAction } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 import {
-  Shield,
   Building2,
   User,
-  Lock,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
-  Globe,
-  Briefcase,
-  Phone,
-  Mail,
   ShieldAlert,
-  Award,
 } from 'lucide-react';
 
 export function PartnerSignupWizard() {
@@ -88,17 +82,7 @@ export function PartnerSignupWizard() {
       {/* Top Bar */}
       <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/become-a-partner" className="flex items-center gap-3 group">
-            <div className="h-8 w-8 rounded-lg bg-slate-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:border-cyan-400 transition-colors">
-              <Shield className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-white tracking-tight">OmniPriv</span>
-              <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950/70 border border-cyan-800/50 px-2 py-0.5 rounded uppercase tracking-wider">
-                Partner Registration
-              </span>
-            </div>
-          </Link>
+          <OmniPrivLogo variant="partner" href="/become-a-partner" priority />
 
           <div className="flex items-center gap-3 text-xs">
             <span className="text-slate-400 hidden sm:inline">Already registered?</span>
@@ -119,7 +103,7 @@ export function PartnerSignupWizard() {
             <div className="rounded-xl bg-slate-900/50 border border-slate-800/80 p-6 space-y-6">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 font-mono">
-                  Kaspersky-Model Channel Program
+                  OmniPriv Partner Program
                 </span>
                 <h1 className="text-xl font-bold text-white mt-1 tracking-tight">
                   Company Account Setup

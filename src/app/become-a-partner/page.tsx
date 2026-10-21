@@ -20,6 +20,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -133,16 +134,7 @@ export default async function BecomeAPartnerPage() {
       {/* Top Enterprise Navigation */}
       <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="h-9 w-9 rounded-lg bg-slate-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:border-cyan-400 transition-colors">
-              <Shield className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold tracking-tight text-white flex items-center gap-2">
-                OmniPriv <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest font-mono">Partner Program</span>
-              </span>
-            </div>
-          </Link>
+          <OmniPrivLogo variant="partner" href="/" priority />
 
           <div className="flex items-center gap-3">
             <Link href="/sign-in">
@@ -351,8 +343,8 @@ export default async function BecomeAPartnerPage() {
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-8 relative z-10 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Shield className="h-4 w-4 text-cyan-400" />
+          <div className="flex items-center gap-3">
+            <OmniPrivLogo iconOnly priority={false} />
             <span className="text-slate-400 font-medium">OmniPriv Channel Partner Portal</span>
             <span>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved.</span>
           </div>

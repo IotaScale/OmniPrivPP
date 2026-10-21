@@ -1,22 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Shield, CheckCircle2, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative selection:bg-cyan-500/30 bg-omnipriv-page-gradient">
       <div className="max-w-md w-full mx-auto space-y-6">
-        <div className="flex items-center justify-center gap-2.5">
-          <div className="h-9 w-9 rounded-lg bg-slate-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-            <Shield className="h-5 w-5" />
-          </div>
-          <span className="text-xl font-bold text-white tracking-tight">OmniPriv</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-400 uppercase">
-            Email Verification
-          </span>
+        <div className="flex justify-center mb-2">
+          <OmniPrivLogo variant="partner" href="/" />
         </div>
 
         <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-8 shadow-xl text-center space-y-4">

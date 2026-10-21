@@ -5,26 +5,20 @@ import Link from 'next/link';
 import { signInAction } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Shield, Lock, ArrowRight } from 'lucide-react';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { ArrowRight } from 'lucide-react';
 
 export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, undefined);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-omnipriv-page-gradient">
       {/* Background ambient lighting */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-cyan-500/5 blur-[100px] pointer-events-none rounded-full" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shadow-lg shadow-cyan-950/50">
-            <Shield className="h-5 w-5 text-cyan-400" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              OmniPriv <span className="text-xs font-normal px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 uppercase tracking-wider">Channel Portal</span>
-            </span>
-          </div>
+        <div className="flex justify-center mb-6">
+          <OmniPrivLogo variant="partner" href="/" priority />
         </div>
 
         <div className="text-center mb-8">

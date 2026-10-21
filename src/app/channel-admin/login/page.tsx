@@ -5,26 +5,20 @@ import Link from 'next/link';
 import { signInAdminAction } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShieldAlert, Lock, ArrowRight } from 'lucide-react';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { ArrowRight } from 'lucide-react';
 
 export default function ChannelAdminLoginPage() {
   const [state, formAction, isPending] = useActionState(signInAdminAction, undefined);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-omnipriv-page-gradient">
       {/* Red/amber warning ambient glow for internal console */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-indigo-500/5 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center shadow-lg shadow-indigo-950/50">
-            <ShieldAlert className="h-5 w-5 text-indigo-400" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              OmniPriv <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-indigo-950/80 border border-indigo-800/60 text-indigo-400 uppercase tracking-wider">Internal Channel Ops</span>
-            </span>
-          </div>
+        <div className="flex justify-center mb-6">
+          <OmniPrivLogo variant="admin" href="/channel-admin/login" priority />
         </div>
 
         <div className="text-center mb-8">

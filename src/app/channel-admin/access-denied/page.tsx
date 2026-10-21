@@ -2,13 +2,17 @@ import React from 'react';
 import Link from 'next/link';
 import { ShieldAlert, ArrowLeft, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export default function AccessDeniedPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 sm:px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 sm:px-6 relative overflow-hidden bg-omnipriv-page-gradient">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/5 blur-[140px] pointer-events-none rounded-full" />
 
       <div className="relative z-10 max-w-md w-full text-center space-y-6 bg-slate-900/90 border border-slate-800 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
+        <div className="flex justify-center mb-2">
+          <OmniPrivLogo variant="full" href="/" />
+        </div>
         <div className="mx-auto w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-lg shadow-rose-950/40">
           <ShieldAlert className="h-7 w-7" />
         </div>

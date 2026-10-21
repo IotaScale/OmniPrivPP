@@ -14,6 +14,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -91,16 +92,7 @@ export default async function ChannelAdminDashboardLayout({
       <header className="sticky top-0 z-40 bg-slate-900/95 border-b border-indigo-950/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/channel-admin" className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <ShieldAlert className="h-4 w-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold tracking-tight text-white flex items-center gap-2 text-sm">
-                  OmniPriv <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-indigo-950 border border-indigo-800 text-indigo-400 uppercase tracking-wider">Channel Ops Console</span>
-                </span>
-              </div>
-            </Link>
+            <OmniPrivLogo variant="admin" href="/channel-admin" priority />
           </div>
 
           <div className="flex items-center gap-4">

@@ -2,9 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 import { Prisma, PartnerTier } from '@prisma/client';
-import { Shield, Search, Globe, Award, ExternalLink, ArrowRight, MapPin } from 'lucide-react';
+import { Search, Globe, Award, ExternalLink, ArrowRight, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,15 +55,12 @@ export default async function FindAPartnerPage({
       {/* Top Header */}
       <header className="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-slate-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-              <Shield className="h-4 w-4" />
-            </div>
-            <span className="font-bold text-white tracking-tight">OmniPriv</span>
-            <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800 uppercase">
-              Partner Locator
+          <div className="flex items-center gap-2">
+            <OmniPrivLogo variant="partner" href="/" />
+            <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/70 px-2 py-0.5 rounded border border-cyan-800/60 uppercase tracking-wider hidden sm:inline-block">
+              Locator
             </span>
-          </Link>
+          </div>
 
           <div className="flex items-center gap-3">
             <Link href="/sign-in">

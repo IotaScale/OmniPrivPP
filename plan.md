@@ -161,3 +161,32 @@ This document tracks all completed phases, schema models, route implementations,
   - Next.js 16.4.2 (Turbopack)
   - Zero TypeScript errors (`Finished TypeScript in 5.2s`)
   - All 48 routes compiled successfully.
+
+---
+
+## 7. Official OmniPriv Visual Branding & UI Polish Pass
+
+### Reference Assets Source (`Webomnipriv`)
+- **Logo**: Extracted vector `omnipriv-logo.svg` (200x50 SVG containing the official gradient shield `#00D4FF` to `#0099CC` and bold OmniPriv logotype).
+- **Favicon & App Icons**: Copied `icon.svg`, `favicon.ico`, `favicon-16x16.png`, and `apple-touch-icon.png` into `public/` and `src/app/`.
+- **Color Palette & Theme Tokens**:
+  - Primary Cyan: `#00b8ff` / `#00d4ff`
+  - Space Navy Dark Background: `#030711`
+  - Surface Background: `#0a1628`
+  - Elevated Background: `#0d1e36`
+  - Navy Border: `#133052`
+  - Brand Glows: Atmospheric cyan ambient gradients with `prefers-reduced-motion` compliance.
+
+### Implemented Enhancements
+1. **Centralized Vector Logo (`OmniPrivLogo`)**:
+   - Replaced all ad-hoc shield icons and plain text headers across Partner Portal, Channel Admin, Sign-in, Sign-up, Forgot/Reset Password, Verify Email, Find a Partner, 403 Access Denied, and Home page.
+   - Built with crisp responsive scaling (`variant="partner"`, `"admin"`, `"icon"`, `"full"`).
+2. **Metadata & Favicon Setup**:
+   - Updated `src/app/layout.tsx` metadata with official favicon icons, Apple touch icons, and accurate enterprise PAM channel platform descriptions.
+3. **CSS Design Tokens**:
+   - Centralized OmniPriv tokens in `src/app/globals.css` with atmospheric page gradients, subtle border utilities, and reduced-motion fallbacks.
+4. **Copy & Identity Scrubbing**:
+   - Completely purged non-OmniPriv naming and Kaspersky copy from signup wizard and comments.
+5. **Architectural Integrity**:
+   - Zero changes to database schema, API contracts, RBAC authorization, or multi-tenant scoping.
+

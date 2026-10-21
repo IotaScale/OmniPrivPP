@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,23 +63,14 @@ export default async function PartnerPortalLayout({
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row selection:bg-cyan-500/30">
-      {/* LEFT NAVIGATION SIDEBAR (Kaspersky Sales Workspace Style) */}
+      {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
       <aside className="w-full md:w-64 bg-slate-900/90 border-r border-slate-800/80 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
         {/* Brand / Company Header */}
-        <div className="p-4 border-b border-slate-800/80">
-          <Link href="/partner-portal" className="flex items-center gap-2.5 group">
-            <div className="h-8 w-8 rounded-lg bg-slate-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 group-hover:border-cyan-400 transition-colors shadow-sm">
-              <Shield className="h-4 w-4" />
-            </div>
-            <div>
-              <div className="font-bold text-white text-sm tracking-tight flex items-center gap-1.5">
-                OmniPriv <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-950 border border-cyan-800/70 text-cyan-400">PARTNER</span>
-              </div>
-              <div className="text-[11px] text-slate-400 truncate max-w-[170px]" title={org?.display_name || session.partnerOrgName}>
-                {org?.display_name || session.partnerOrgName}
-              </div>
-            </div>
-          </Link>
+        <div className="p-4 border-b border-slate-800/80 bg-slate-950/40">
+          <OmniPrivLogo variant="partner" href="/partner-portal" priority />
+          <div className="mt-2 text-[11px] text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
+            {org?.display_name || session.partnerOrgName}
+          </div>
 
           {/* Partner Tier Badge */}
           <div className="mt-3 flex items-center justify-between p-2 rounded-lg bg-slate-950/60 border border-slate-800/70 text-xs">
