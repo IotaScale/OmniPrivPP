@@ -8,6 +8,8 @@ interface OmniPrivLogoProps {
   className?: string;
   iconOnly?: boolean;
   priority?: boolean;
+  showBadge?: boolean;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export function OmniPrivLogo({
@@ -16,14 +18,18 @@ export function OmniPrivLogo({
   className = '',
   iconOnly = false,
   priority = true,
+  showBadge = true,
+  size = 'md',
 }: OmniPrivLogoProps) {
+  const heightClass = size === 'sm' ? 'h-7' : size === 'lg' ? 'h-10' : 'h-8';
+
   const content = (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
       {iconOnly ? (
         <div className="relative h-8 w-8 flex-shrink-0">
           <Image
             src="/icon.svg"
-            alt="OmniPriv Logo"
+            alt="OmniPriv"
             width={32}
             height={32}
             className="h-8 w-8 object-contain"
@@ -31,25 +37,25 @@ export function OmniPrivLogo({
           />
         </div>
       ) : (
-        <div className="flex items-center gap-2">
-          <div className="relative h-8 w-[130px] flex-shrink-0">
+        <div className="flex items-center gap-2.5">
+          <div className={`relative ${heightClass} w-auto flex-shrink-0 flex items-center`}>
             <Image
-              src="/omnipriv-logo.svg"
+              src="/omniprivdark.png"
               alt="OmniPriv"
-              width={130}
-              height={32}
-              className="h-8 w-auto object-contain"
+              width={160}
+              height={40}
+              className={`${heightClass} w-auto object-contain`}
               priority={priority}
             />
           </div>
 
-          {variant === 'partner' && (
+          {showBadge && variant === 'partner' && (
             <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#00B8FF]/10 text-[#00B8FF] border border-[#00B8FF]/30 whitespace-nowrap">
               Partner
             </span>
           )}
 
-          {variant === 'admin' && (
+          {showBadge && variant === 'admin' && (
             <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 whitespace-nowrap">
               Channel Admin
             </span>

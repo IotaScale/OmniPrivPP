@@ -12,13 +12,13 @@ export default function ChannelAdminLoginPage() {
   const [state, formAction, isPending] = useActionState(signInAdminAction, undefined);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-omnipriv-page-gradient">
-      {/* Red/amber warning ambient glow for internal console */}
+    <div className="min-h-screen bg-[#030711] text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Subtle warning ambient glow for internal console */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-indigo-500/5 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <div className="flex justify-center mb-6">
-          <OmniPrivLogo variant="admin" href="/channel-admin/login" priority />
+          <OmniPrivLogo variant="admin" href="/channel-admin/login" size="md" priority />
         </div>
 
         <div className="text-center mb-8">
@@ -30,7 +30,7 @@ export default function ChannelAdminLoginPage() {
           </p>
         </div>
 
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-8 shadow-2xl shadow-black/40 backdrop-blur-md">
+        <div className="bg-[#0A1628] border border-[#133052] rounded-2xl p-8 shadow-2xl shadow-black/60 backdrop-blur-md">
           {state?.error && (
             <div className="mb-6 p-4 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-rose-500" />
