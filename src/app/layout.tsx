@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Enterprise B2B Channel Sales, Deal Registration, and Enablement Platform for OmniPriv Privileged Access Management.',
   icons: {
     icon: [
-      { url: '/omnipriv-icon.png', type: 'image/png' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/omnipriv-icon.png?v=3', type: 'image/png' },
+      { url: '/icon.svg?v=3', type: 'image/svg+xml' },
+      { url: '/favicon.ico?v=3', sizes: 'any' },
     ],
-    shortcut: '/omnipriv-icon.png',
-    apple: '/apple-touch-icon.png',
+    shortcut: '/omnipriv-icon.png?v=3',
+    apple: '/apple-touch-icon.png?v=3',
   },
 };
 
