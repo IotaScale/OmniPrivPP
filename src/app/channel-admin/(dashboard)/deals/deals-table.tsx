@@ -55,6 +55,15 @@ interface DealRow {
   }>;
 }
 
+export interface ConflictingDealSummary {
+  id: string;
+  public_reference: string;
+  customer_legal_name: string;
+  status: string;
+  protection_expires_at?: Date | string | null;
+  organization: { display_name: string };
+}
+
 export function ChannelAdminDealsTable({
   deals,
   selectedDeal,
@@ -64,7 +73,7 @@ export function ChannelAdminDealsTable({
 }: {
   deals: DealRow[];
   selectedDeal?: DealRow | null;
-  conflictingDeals?: any[];
+  conflictingDeals?: ConflictingDealSummary[];
   currentStatus?: string;
   currentQuery?: string;
 }) {

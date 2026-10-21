@@ -108,7 +108,7 @@ export async function submitJbpAction(
 
     revalidatePath('/partner-portal/joint-business-plan');
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[JBP_SUBMIT_ERROR]', err);
     return { error: 'Failed to submit Joint Business Plan' };
   }

@@ -152,6 +152,24 @@ describe('OmniPriv Channel Partner Integration Flows', () => {
     });
     partnerOrgBId = orgB.id;
 
+    const userB = await prisma.user.create({
+      data: {
+        email: 'test-flow-owner@nexussec.com',
+        full_name: 'Klaus Schmidt',
+        password_hash: await hashPassword('NexusSecret123!'),
+        role: UserRole.partner_user,
+      },
+    });
+    partnerUserBId = userB.id;
+
+    await prisma.partnerMembership.create({
+      data: {
+        user_id: userB.id,
+        partner_organization_id: orgB.id,
+        role: MembershipRole.partner_owner,
+      },
+    });
+
     // When Partner B checks the same customer domain, conflict MUST be detected!
     const conflictForPartnerB = await detectDomainConflict(normalized, partnerOrgBId);
     expect(conflictForPartnerB.hasConflict).toBe(true);
@@ -218,6 +236,11 @@ describe('OmniPriv Channel Partner Integration Flows', () => {
     expect(canAccessChannelAdmin(partnerUserAContext)).toBe(false);
     expect(canAccessChannelAdmin(partnerUserBContext)).toBe(false);
     expect(canAccessChannelAdmin(adminContext)).toBe(true);
+
+    // Team management boundaries
+    expect(canManageTeam(partnerUserAContext, partnerOrgAId)).toBe(true);
+    expect(canManageTeam(partnerUserBContext, partnerOrgAId)).toBe(false);
+    expect(partnerUserBId).toBeDefined();
   });
 
   it('Flow 5: Lead assignment -> 7-day SLA -> Partner accept -> Deal conversion', async () => {

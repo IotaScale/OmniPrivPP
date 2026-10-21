@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { requirePartnerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 import { enrollCourseAction } from '@/lib/actions/learning';
-import { GraduationCap, Clock, Award, CheckCircle2, PlayCircle, BookOpen, Search } from 'lucide-react';
+import { GraduationCap, Clock, CheckCircle2, PlayCircle, BookOpen, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -17,7 +18,7 @@ export default async function PartnerLearningPage({
   const session = await requirePartnerSession();
   const { track, q } = await searchParams;
 
-  const where: any = { is_published: true };
+  const where: Prisma.CourseWhereInput = { is_published: true };
   if (track) where.track = track;
   if (q && q.trim()) {
     where.OR = [

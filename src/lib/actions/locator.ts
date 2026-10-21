@@ -78,7 +78,7 @@ export async function updateLocatorProfileAction(
 
     revalidatePath('/partner-portal/locator-profile');
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[LOCATOR_PROFILE_ERROR]', err);
     return { error: 'Failed to update locator profile' };
   }

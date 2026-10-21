@@ -86,7 +86,7 @@ export async function submitCommercialRequestAction(
     });
 
     revalidatePath('/partner-portal/commercial-requests');
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[COMMERCIAL_REQUEST_ERROR]', err);
     return { error: 'Failed to submit commercial request. Please try again.' };
   }

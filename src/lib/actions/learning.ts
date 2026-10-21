@@ -48,7 +48,7 @@ export async function enrollCourseAction(formData: FormData) {
     });
 
     revalidatePath('/partner-portal/learning');
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[ENROLL_COURSE_ERROR]', err);
   }
 }

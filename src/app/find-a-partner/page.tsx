@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
-import { Shield, Search, Globe, Award, ExternalLink, ArrowRight, Building2, MapPin } from 'lucide-react';
+import { Prisma, PartnerTier } from '@prisma/client';
+import { Shield, Search, Globe, Award, ExternalLink, ArrowRight, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -14,7 +15,7 @@ export default async function FindAPartnerPage({
 }) {
   const { country, track, tier, q } = await searchParams;
 
-  const where: any = {
+  const where: Prisma.PartnerLocatorProfileWhereInput = {
     opt_in: true,
     is_approved: true,
     is_published: true,
@@ -24,7 +25,7 @@ export default async function FindAPartnerPage({
     where.country = { contains: country, mode: 'insensitive' };
   }
   if (tier) {
-    where.tier = tier;
+    where.tier = tier as PartnerTier;
   }
   if (track) {
     where.tracks = { has: track };

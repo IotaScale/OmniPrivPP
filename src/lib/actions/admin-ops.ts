@@ -1,6 +1,5 @@
 'use server';
 
-import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { requireAdminSession } from '@/lib/auth/session';
 import { revalidatePath } from 'next/cache';
@@ -16,7 +15,7 @@ export async function updatePartnerTierAction(formData: FormData) {
   if (!partnerId || !tier) return;
 
   try {
-    const updated = await prisma.partnerOrganization.update({
+    await prisma.partnerOrganization.update({
       where: { id: partnerId },
       data: {
         tier,
@@ -41,7 +40,7 @@ export async function updatePartnerTierAction(formData: FormData) {
 
     revalidatePath(`/channel-admin/partners/${partnerId}`);
     revalidatePath('/channel-admin/partners');
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[UPDATE_TIER_ERROR]', err);
   }
 }
@@ -79,7 +78,7 @@ export async function updateCommercialRequestStatusAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/commercial-requests');
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[UPDATE_COMMERCIAL_REQUEST_ERROR]', err);
   }
 }
@@ -117,7 +116,7 @@ export async function updateJbpStatusAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/jbp');
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[UPDATE_JBP_ERROR]', err);
   }
 }
