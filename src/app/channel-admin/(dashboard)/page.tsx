@@ -19,6 +19,8 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ChannelAdminDashboardPage() {
   await requireAdminSession();
   const now = new Date();

@@ -6,6 +6,8 @@ import { Prisma } from '@prisma/client';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { ScrollText, Search, Filter, ShieldAlert, ArrowLeft } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ChannelAdminAuditPage({
   searchParams,
 }: {

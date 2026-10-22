@@ -92,13 +92,13 @@ export default async function FindAPartnerPage({
         {/* Filter bar */}
         <form method="GET" action="/find-a-partner" className="mt-8 grid grid-cols-1 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
             <input
               type="text"
               name="q"
               defaultValue={q || ''}
               placeholder="Search partner name..."
-              className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 transition-all"
             />
           </div>
 
@@ -107,22 +107,22 @@ export default async function FindAPartnerPage({
             name="country"
             defaultValue={country || ''}
             placeholder="Filter by country..."
-            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 transition-all"
           />
 
           <select
             name="track"
             defaultValue={track || ''}
-            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 transition-all"
           >
-            <option value="">All Program Tracks</option>
-            <option value="Sell">Sell (VAR / Reseller)</option>
-            <option value="Deploy">Deploy (System Integrator)</option>
-            <option value="Manage">Manage (MSP / MSSP)</option>
-            <option value="Build">Build (Technology Alliance)</option>
+            <option value="" className="bg-slate-900 text-slate-200">All Program Tracks</option>
+            <option value="Sell" className="bg-slate-900 text-slate-200">Sell (VAR / Reseller)</option>
+            <option value="Deploy" className="bg-slate-900 text-slate-200">Deploy (System Integrator)</option>
+            <option value="Manage" className="bg-slate-900 text-slate-200">Manage (MSP / MSSP)</option>
+            <option value="Build" className="bg-slate-900 text-slate-200">Build (Technology Alliance)</option>
           </select>
 
-          <Button type="submit" variant="primary" size="sm" className="text-xs font-semibold">
+          <Button type="submit" variant="primary" size="md" className="text-xs font-semibold h-full py-2.5">
             Search Directory
           </Button>
         </form>

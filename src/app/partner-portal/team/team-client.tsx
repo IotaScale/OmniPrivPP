@@ -8,7 +8,8 @@ import {
 } from '@/lib/actions/partner-management';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Select } from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   Users,
@@ -18,6 +19,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   Crown,
+  X,
 } from 'lucide-react';
 
 interface MemberRow {
@@ -90,11 +92,11 @@ export function TeamManagementClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Users className="h-6 w-6 text-cyan-400" />
-            <span>Team & Access Management</span>
+            <Users className="h-6 w-6 text-[#00B8FF]" />
+            <span>Team & Access Governance</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Manage partner team access, roles, and opportunity registration privileges.
+            Manage partner team authorization, roles, and opportunity registration privileges.
           </p>
         </div>
 
@@ -103,7 +105,7 @@ export function TeamManagementClient({
             variant="primary"
             size="md"
             onClick={() => setShowInviteModal(true)}
-            className="gap-2 shadow-cyan-950/80 shadow-md"
+            className="gap-2 shadow-lg shadow-[#00B8FF]/20"
           >
             <UserPlus className="h-4 w-4" />
             <span>Invite Team Member</span>
@@ -112,8 +114,9 @@ export function TeamManagementClient({
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
-          {error}
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-rose-400 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
@@ -122,16 +125,16 @@ export function TeamManagementClient({
         <CardContent className="pt-6">
           <div className="overflow-x-auto -mx-6">
             <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider text-[11px] border-y border-slate-800">
+              <thead className="bg-[#050B16] text-slate-400 uppercase tracking-wider text-[11px] border-y border-white/[0.08]">
                 <tr>
-                  <th className="py-3 px-6 font-semibold">Team Member</th>
-                  <th className="py-3 px-6 font-semibold">Business Email</th>
-                  <th className="py-3 px-6 font-semibold">Organization Role</th>
-                  <th className="py-3 px-6 font-semibold">Joined Date</th>
-                  {isOwner && <th className="py-3 px-6 font-semibold text-right">Actions</th>}
+                  <th className="py-3.5 px-6 font-semibold">Team Member</th>
+                  <th className="py-3.5 px-6 font-semibold">Business Email</th>
+                  <th className="py-3.5 px-6 font-semibold">Organization Role</th>
+                  <th className="py-3.5 px-6 font-semibold">Joined Date</th>
+                  {isOwner && <th className="py-3.5 px-6 font-semibold text-right">Actions</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-white/[0.06]">
                 {members.map((m) => {
                   const isCurrent = m.user.id === currentUserId;
                   const isSoleOwner =
@@ -139,34 +142,34 @@ export function TeamManagementClient({
                     members.filter((x) => x.role === 'partner_owner').length === 1;
 
                   return (
-                    <tr key={m.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3.5 px-6 font-semibold text-slate-200">
+                    <tr key={m.id} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="py-4 px-6 font-semibold text-slate-200">
                         <div className="flex items-center gap-2">
                           <span>{m.user.full_name}</span>
                           {isCurrent && (
-                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-950 border border-cyan-800 text-cyan-400">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00B8FF]/15 border border-[#00B8FF]/30 text-[#00B8FF] font-medium">
                               You
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="py-3.5 px-6 font-mono text-slate-300">{m.user.email}</td>
-                      <td className="py-3.5 px-6">
+                      <td className="py-4 px-6 font-mono text-slate-300">{m.user.email}</td>
+                      <td className="py-4 px-6">
                         <Badge
                           variant={m.role === 'partner_owner' ? 'default' : 'neutral'}
                           size="sm"
-                          className="gap-1"
+                          className="gap-1 font-semibold"
                         >
-                          {m.role === 'partner_owner' && <Crown className="h-3 w-3" />}
+                          {m.role === 'partner_owner' && <Crown className="h-3 w-3 text-amber-400" />}
                           <span>{m.role === 'partner_owner' ? 'Partner Owner' : 'Partner Member'}</span>
                         </Badge>
                       </td>
-                      <td className="py-3.5 px-6 text-slate-400">
+                      <td className="py-4 px-6 text-slate-400">
                         {new Date(m.joined_at).toLocaleDateString()}
                       </td>
 
                       {isOwner && (
-                        <td className="py-3.5 px-6 text-right">
+                        <td className="py-4 px-6 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <Button
                               variant="ghost"
@@ -211,44 +214,54 @@ export function TeamManagementClient({
 
       {/* Invite Member Modal */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl space-y-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <UserPlus className="h-4 w-4 text-cyan-400" />
-              <span>Invite Team Member</span>
-            </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="max-w-md w-full rounded-2xl bg-gradient-to-b from-[#0c182c] via-[#081222] to-[#060c18] border border-white/[0.1] p-6 shadow-2xl shadow-black/80 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+              <h3 className="text-base font-bold text-white flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-lg bg-[#00B8FF]/10 text-[#00B8FF] flex items-center justify-center">
+                  <UserPlus className="h-4 w-4" />
+                </div>
+                <span>Invite Team Member</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowInviteModal(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
             <p className="text-xs text-slate-400 leading-relaxed">
-              New team members can register deals and work assigned leads under your partner organization.
+              New team members can register customer deals, manage renewals, and complete technical certifications under your partner account.
             </p>
 
             <form onSubmit={handleInvite} className="space-y-4">
-              <Input label="Full Name" name="fullName" placeholder="Sarah Jenkins" required />
+              <Input label="Full Name" name="fullName" placeholder="e.g. Sarah Jenkins" required />
               <Input
-                label="Work Email Address"
+                label="Business Email Address"
                 name="email"
                 type="email"
                 placeholder="sjenkins@partnercompany.com"
                 required
               />
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-300">Access Role</label>
-                <select
-                  name="role"
-                  defaultValue="partner_member"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs"
-                >
-                  <option value="partner_member">Partner Member (Submit deals & work leads)</option>
-                  <option value="partner_owner">Partner Owner (Full team & profile admin)</option>
-                </select>
-              </div>
+              <Select
+                label="Access Role"
+                name="role"
+                defaultValue="partner_member"
+              >
+                <option value="partner_member">Partner Member (Register deals & work leads)</option>
+                <option value="partner_owner">Partner Owner (Full team & profile management)</option>
+              </Select>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex justify-end gap-3 pt-3 border-t border-white/[0.08]">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => setShowInviteModal(false)}
+                  className="border-white/[0.1] text-slate-300"
                 >
                   Cancel
                 </Button>
@@ -257,6 +270,7 @@ export function TeamManagementClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
+                  className="shadow-md shadow-[#00B8FF]/20"
                 >
                   Send Invitation
                 </Button>

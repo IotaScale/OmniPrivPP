@@ -48,6 +48,8 @@ export async function enrollCourseAction(formData: FormData) {
     });
 
     revalidatePath('/partner-portal/learning');
+    revalidatePath('/partner-portal/onboarding');
+    revalidatePath('/partner-portal');
   } catch (err: unknown) {
     console.error('[ENROLL_COURSE_ERROR]', err);
   }

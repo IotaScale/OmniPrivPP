@@ -44,6 +44,8 @@ export async function registerForEventAction(formData: FormData) {
     });
 
     revalidatePath('/partner-portal/events');
+    revalidatePath('/channel-admin/events');
+    revalidatePath('/partner-portal');
   } catch (err: unknown) {
     console.error('[EVENT_REGISTRATION_ERROR]', err);
   }

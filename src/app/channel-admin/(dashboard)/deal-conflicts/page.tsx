@@ -24,12 +24,12 @@ export default async function AdminDealConflictsPage() {
     orderBy: { created_at: 'asc' },
   });
 
-  async function handleDecline(formData: FormData) {
+  async function handleDecline(formData: FormData): Promise<void> {
     'use server';
     await declineDealAction(formData);
   }
 
-  async function handleApprove(formData: FormData) {
+  async function handleApprove(formData: FormData): Promise<void> {
     'use server';
     await approveDealAction(formData);
   }

@@ -49,13 +49,13 @@ export function LocatorForm({ initialData }: { initialData?: LocatorFormData }) 
             </div>
           )}
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
+          <div className="p-4 rounded-xl bg-slate-900/60 border border-white/10">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 name="optIn"
                 defaultChecked={initialData?.optIn}
-                className="mt-0.5 h-4 w-4 rounded border-slate-700 text-cyan-500 focus:ring-cyan-500 bg-slate-900"
+                className="mt-0.5 h-4 w-4 rounded border-slate-700 text-cyan-500 focus:ring-cyan-500 bg-slate-950"
               />
               <div className="space-y-0.5">
                 <span className="text-xs font-semibold text-white block">
@@ -117,7 +117,7 @@ export function LocatorForm({ initialData }: { initialData?: LocatorFormData }) 
               rows={3}
               defaultValue={initialData?.publicDescription || ''}
               placeholder="Short description of your PAM deployment services, cloud security practices, and regional presence..."
-              className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500 resize-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 resize-none transition-all"
             />
           </div>
         </CardContent>
