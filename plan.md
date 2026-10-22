@@ -41,6 +41,7 @@ This document tracks all completed phases, schema models, route implementations,
 | **Phase 17** | Channel Admin Governance: Partner detail (`/channel-admin/partners/[partnerId]`), Programs & Audit Log | Completed | Tier upgrade, Partner Manager assignment, tier criteria & forensic audit viewer |
 | **Phase 18** | Unit tests (Vitest), Next.js 16 production build verification & handoff | Completed | 23/23 tests pass, Next.js 16 build compiles all 48 routes with 0 errors |
 | **Phase 19** | Local PostgreSQL connection: Windows PostgreSQL 18 service (`D:\Program Files\PostgreSQL\18`), `omnipriv_partner` database, `omnipriv` role, `.env` DATABASE_URL, initial migration + seed applied | Completed | 12 tables in public schema; `psql` connection verified; seed created Channel Admin + enablement resources |
+| **Phase 20** | Supabase Cloud PostgreSQL Migration & Project Link (`nyciurohneqvijropvwf`): Configured IPv4 transaction pooler (port 6543) and session pooler (port 5432), synchronized 27 Prisma models/enums, seeded Channel Admin and playbooks, linked Supabase CLI project, verified 23/23 tests | Completed | Live cloud database synchronized via Prisma (`directUrl` + pooled `DATABASE_URL`); 23/23 test suite passing; 48 Next.js routes built |
 
 ---
 
