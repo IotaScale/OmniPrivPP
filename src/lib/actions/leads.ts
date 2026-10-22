@@ -183,9 +183,14 @@ export async function assignLeadAction(formData: FormData) {
           type: 'info',
         },
       });
+
+      return assignment;
     });
 
     revalidatePath('/channel-admin/leads');
+    revalidatePath('/channel-admin');
+    revalidatePath('/partner-portal/leads');
+    revalidatePath('/partner-portal');
     return { success: true };
   } catch (err: unknown) {
     console.error('[ASSIGN_LEAD_ERROR]', err);
@@ -254,6 +259,9 @@ export async function acceptLeadAction(formData: FormData) {
 
     revalidatePath('/partner-portal/leads');
     revalidatePath(`/partner-portal/leads/${assignmentId}`);
+    revalidatePath('/partner-portal');
+    revalidatePath('/channel-admin/leads');
+    revalidatePath('/channel-admin');
     return { success: true, assignment: updated };
   } catch (err: unknown) {
     console.error('[ACCEPT_LEAD_ERROR]', err);
@@ -325,6 +333,9 @@ export async function declineLeadAction(formData: FormData) {
 
     revalidatePath('/partner-portal/leads');
     revalidatePath(`/partner-portal/leads/${assignmentId}`);
+    revalidatePath('/partner-portal');
+    revalidatePath('/channel-admin/leads');
+    revalidatePath('/channel-admin');
     return { success: true };
   } catch (err: unknown) {
     console.error('[DECLINE_LEAD_ERROR]', err);
@@ -376,6 +387,9 @@ export async function updateLeadStatusAction(formData: FormData) {
 
     revalidatePath('/partner-portal/leads');
     revalidatePath(`/partner-portal/leads/${assignmentId}`);
+    revalidatePath('/partner-portal');
+    revalidatePath('/channel-admin/leads');
+    revalidatePath('/channel-admin');
     return { success: true };
   } catch (err: unknown) {
     console.error('[UPDATE_LEAD_PROGRESS_ERROR]', err);

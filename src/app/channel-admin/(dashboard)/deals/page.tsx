@@ -5,6 +5,8 @@ import { DealStatus, Prisma } from '@prisma/client';
 import { ChannelAdminDealsTable, ConflictingDealSummary } from './deals-table';
 import { FileCheck2 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ChannelAdminDealsPage({
   searchParams,
 }: {

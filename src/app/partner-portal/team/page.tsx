@@ -3,6 +3,8 @@ import { requirePartnerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { TeamManagementClient } from './team-client';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PartnerTeamPage() {
   const session = await requirePartnerSession();
   const orgId = session.partnerOrgId!;

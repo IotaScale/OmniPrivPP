@@ -68,6 +68,8 @@ export async function updatePartnerTierAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/partners');
+    revalidatePath('/partner-portal');
+    revalidatePath('/partner-portal/company');
     return { success: true };
   } catch (err: unknown) {
     console.error('[UPDATE_TIER_ERROR]', err);
@@ -181,6 +183,8 @@ export async function createRenewalAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/renewals');
+    revalidatePath('/partner-portal/renewals');
+    revalidatePath('/partner-portal');
     return { success: true };
   } catch (err: unknown) {
     console.error('[CREATE_RENEWAL_ERROR]', err);

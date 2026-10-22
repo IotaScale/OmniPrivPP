@@ -5,6 +5,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { StatusBadge } from '@/components/ui/badge';
 import { RefreshCw, Calendar, DollarSign, ShieldAlert } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PartnerRenewalsPage() {
   const session = await requirePartnerSession();
   const orgId = session.partnerOrgId!;

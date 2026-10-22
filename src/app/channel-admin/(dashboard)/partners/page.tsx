@@ -3,6 +3,8 @@ import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { ChannelAdminPartnersClient } from './partners-client';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ChannelAdminPartnersPage() {
   await requireAdminSession();
 

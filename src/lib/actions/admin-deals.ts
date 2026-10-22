@@ -100,6 +100,10 @@ export async function approveDealAction(formData: FormData) {
 
     revalidatePath('/channel-admin/deals');
     revalidatePath(`/channel-admin/deals/${dealId}`);
+    revalidatePath('/channel-admin');
+    revalidatePath('/partner-portal/deals');
+    revalidatePath(`/partner-portal/deals/${dealId}`);
+    revalidatePath('/partner-portal');
     return { success: true, deal: updated };
   } catch (err: unknown) {
     console.error('[ADMIN_APPROVE_ERROR]', err);
@@ -185,6 +189,11 @@ export async function declineDealAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/deals');
+    revalidatePath(`/channel-admin/deals/${dealId}`);
+    revalidatePath('/channel-admin');
+    revalidatePath('/partner-portal/deals');
+    revalidatePath(`/partner-portal/deals/${dealId}`);
+    revalidatePath('/partner-portal');
     return { success: true, deal: updated };
   } catch (err: unknown) {
     console.error('[ADMIN_DECLINE_ERROR]', err);
@@ -268,6 +277,11 @@ export async function extendProtectionAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/deals');
+    revalidatePath(`/channel-admin/deals/${dealId}`);
+    revalidatePath('/channel-admin');
+    revalidatePath('/partner-portal/deals');
+    revalidatePath(`/partner-portal/deals/${dealId}`);
+    revalidatePath('/partner-portal');
     return { success: true };
   } catch (err: unknown) {
     console.error('[EXTEND_PROTECTION_ERROR]', err);
@@ -340,6 +354,11 @@ export async function setDealOutcomeAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/deals');
+    revalidatePath(`/channel-admin/deals/${dealId}`);
+    revalidatePath('/channel-admin');
+    revalidatePath('/partner-portal/deals');
+    revalidatePath(`/partner-portal/deals/${dealId}`);
+    revalidatePath('/partner-portal');
     return { success: true };
   } catch (err: unknown) {
     console.error('[SET_OUTCOME_ERROR]', err);
