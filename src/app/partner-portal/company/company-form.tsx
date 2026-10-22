@@ -82,7 +82,7 @@ export function CompanyProfileForm({
           )}
 
           {/* Locked Fields Section */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-[#050B16]/90 border border-white/[0.08] space-y-4">
+          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 dark:bg-[#050B16]/90 border border-white/[0.08] space-y-4">
             <div className="flex items-center gap-2 text-slate-300 text-xs font-semibold uppercase tracking-wider pb-2 border-b border-white/[0.06]">
               <Lock className="h-3.5 w-3.5 text-[#00B8FF]" />
               <span>Channel Governance Locked Attributes</span>
@@ -107,7 +107,7 @@ export function CompanyProfileForm({
           </div>
 
           {/* Editable Fields Section */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-[#050B16]/70 border border-white/[0.06] space-y-5">
+          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
               <Globe className="h-4 w-4 text-[#00B8FF]" />
               <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
@@ -163,7 +163,7 @@ export function CompanyProfileForm({
                   defaultValue={org.companySummary || ''}
                   disabled={!isOwner}
                   placeholder="Enterprise security competencies, customer base focus, technical PAM certifications..."
-                  className="w-full p-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y disabled:opacity-60"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y disabled:opacity-60"
                 />
               </div>
             </div>

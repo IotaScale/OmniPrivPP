@@ -172,7 +172,7 @@ export default function SignInPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#133052]/60 py-5 text-center text-xs text-slate-500 max-w-7xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
+      <footer className="border-t border-slate-800/60 dark:border-[#133052]/60 py-5 text-center text-xs text-slate-500 max-w-7xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
         <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. AI-Powered Privileged Access Management.</div>
         <div className="flex items-center gap-4 text-slate-500">
           <Link href="/become-a-partner" className="hover:text-slate-400 transition-colors">

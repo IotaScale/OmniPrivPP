@@ -196,7 +196,7 @@ export default async function PartnerDashboardPage() {
   return (
     <div className="space-y-8">
       {/* 1. TOP METRICS & QUICK ACTIONS */}
-      <div className="rounded-3xl bg-gradient-to-r from-[#0b172b] via-[#091426] to-[#050b16] border border-white/[0.1] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden shadow-[0_16px_50px_rgba(0,0,0,0.4)]">
+      <div className="rounded-3xl bg-gradient-to-r from-slate-900 dark:from-[#0b172b] via-slate-900 dark:via-[#091426] to-slate-950 dark:to-[#050b16] border border-white/[0.1] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden shadow-[0_16px_50px_rgba(0,0,0,0.4)]">
         <div className="absolute right-0 top-0 w-96 h-96 bg-[#00B8FF]/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 space-y-2">
@@ -251,7 +251,7 @@ export default async function PartnerDashboardPage() {
 
       {/* Announcements Notice */}
       {announcements.length > 0 && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#00B8FF]/10 via-[#0a182e]/60 to-transparent border border-[#00B8FF]/30 text-xs text-slate-300 flex items-start gap-3 shadow-md">
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#00B8FF]/10 via-slate-900/60 dark:via-[#0a182e]/60 to-transparent border border-[#00B8FF]/30 text-xs text-slate-300 flex items-start gap-3 shadow-md">
           <span className="h-2 w-2 rounded-full bg-[#00B8FF] mt-1.5 shrink-0 shadow-[0_0_8px_#00B8FF]" />
           <div className="space-y-0.5">
             <strong className="text-[#00B8FF] font-semibold">{announcements[0].title}</strong>
@@ -263,7 +263,7 @@ export default async function PartnerDashboardPage() {
       {/* 2. REAL LIVE METRIC CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Open Deal Registrations */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Open Deal Registrations</span>
             <FileSpreadsheet className="h-4 w-4 text-[#00B8FF]" />
@@ -273,7 +273,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Awaiting OmniPriv Review */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-amber-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-amber-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Awaiting Review</span>
             <Clock className="h-4 w-4 text-amber-400" />
@@ -283,7 +283,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Protected Opportunities */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-emerald-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-emerald-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Protected Opportunities</span>
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
@@ -293,7 +293,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Assigned Leads Requiring Action */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-blue-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-blue-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Assigned Leads</span>
             <Inbox className="h-4 w-4 text-blue-400" />
@@ -303,7 +303,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Upcoming Renewals */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-purple-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-purple-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Upcoming Renewals</span>
             <RefreshCw className="h-4 w-4 text-purple-400" />
@@ -503,7 +503,7 @@ export default async function PartnerDashboardPage() {
             return (
               <div
                 key={tool.title}
-                className="p-6 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/40 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden"
+                className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/40 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">

@@ -11,7 +11,7 @@ export function Card({
     <div
       className={twMerge(
         clsx(
-          'relative rounded-2xl bg-gradient-to-b from-[#0c182c]/95 via-[#081222]/95 to-[#060c18]/95 border border-white/[0.08] shadow-[0_16px_40px_rgba(0,0,0,0.45)] text-slate-100 backdrop-blur-md overflow-hidden ring-1 ring-white/[0.03]',
+          'relative rounded-2xl bg-gradient-to-b from-slate-900/95 via-slate-900/95 to-slate-950/95 border border-white/[0.08] shadow-[0_4px_20px_rgba(15,23,42,0.06)] text-slate-100 backdrop-blur-md overflow-hidden ring-1 ring-white/[0.03] dark:from-[#0c182c]/95 dark:via-[#081222]/95 dark:to-[#060c18]/95 dark:shadow-[0_16px_40px_rgba(0,0,0,0.45)]',
           className
         )
       )}
@@ -102,7 +102,7 @@ export function CardFooter({
     <div
       className={twMerge(
         clsx(
-          'px-6 sm:px-8 py-4 sm:py-5 border-t border-white/[0.06] bg-[#040813]/90 flex items-center justify-between',
+          'px-6 sm:px-8 py-4 sm:py-5 border-t border-white/[0.06] bg-slate-950/80 dark:bg-[#040813]/90 flex items-center justify-between',
           className
         )
       )}
