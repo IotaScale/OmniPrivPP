@@ -190,7 +190,7 @@ export default async function FindAPartnerPage({
 
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        OmniPriv Authorized Channel Directory &bull; Zero Trust Privileged Access Management
+        OmniPriv Authorized Channel Directory &bull; AI-Powered Privileged Access Management
       </footer>
     </div>
   );

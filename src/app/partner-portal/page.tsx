@@ -186,7 +186,7 @@ export default async function PartnerDashboardPage() {
     },
     {
       title: 'Technical Enablement',
-      description: 'Architecture whitepapers, sizing calculators, and zero-trust implementation guides.',
+      description: 'AI-PAM architecture blueprints, MCP agent gateway setup, and isolated vault deployment guides.',
       icon: Cpu,
       href: '/partner-portal/resources?category=technical_enablement',
       ctaText: 'View Tech Guides',
@@ -210,7 +210,7 @@ export default async function PartnerDashboardPage() {
             </Badge>
           </div>
           <p className="text-sm text-slate-400">
-            {companyName} &bull; Channel Sales & Deal Protection Workspace
+            {companyName} &bull; AI-Powered PAM & Deal Protection Workspace
           </p>
           {org?.partner_manager_name && (
             <div className="pt-1 text-xs text-slate-400">

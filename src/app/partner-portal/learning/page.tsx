@@ -48,7 +48,7 @@ export default async function PartnerLearningPage({
             <span>Partner Learning & Training</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Build PAM domain mastery, zero-trust technical competence, and complete official certification tracks.
+            Build AI-PAM domain mastery, AI agent governance competence, and complete official certification tracks.
           </p>
         </div>
       </div>

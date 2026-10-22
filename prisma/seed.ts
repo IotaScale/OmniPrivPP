@@ -54,36 +54,43 @@ async function main() {
   // 2. Seed Standard Enablement Resources
   const standardResources = [
     {
-      title: 'OmniPriv PAM Enterprise Channel Sales Playbook 2026',
-      description: 'Comprehensive guide covering qualification criteria, competitive positioning against legacy vaults, and pricing packaging.',
+      title: 'OmniPriv AI-PAM Enterprise Channel Sales Playbook 2026',
+      description: 'Comprehensive guide covering qualification criteria, competitive positioning against legacy vaults (CyberArk, BeyondTrust), and 9-module platform packaging.',
       category: ResourceCategory.sales_playbook,
       url: 'https://docs.omnipriv.com/playbooks/channel-sales-2026.pdf',
       visible_to_tiers: ['Registered', 'Silver', 'Gold', 'Platinum'],
     },
     {
-      title: 'OmniPriv Architecture & Zero Trust Technical Whitepaper',
-      description: 'Deep-dive technical blueprint for security architects detailing ephemeral credential brokers, micro-segmentation, and zero-standing privilege.',
+      title: 'OmniPriv AI-PAM Engine Architecture & MCP Tool Governance Blueprint',
+      description: 'Deep-dive technical blueprint for security architects detailing 39 behavioral features, 10s auto-block sweep, and 53 permission-gated MCP tool controls.',
       category: ResourceCategory.technical_enablement,
-      url: 'https://docs.omnipriv.com/technical/zero-trust-architecture.pdf',
+      url: 'https://docs.omnipriv.com/technical/ai-pam-architecture.pdf',
+      visible_to_tiers: ['Registered', 'Silver', 'Gold', 'Platinum'],
+    },
+    {
+      title: 'OmniPriv Isolated Vault (KEK/DEK/SEK) & Key Hierarchy Technical Whitepaper',
+      description: 'Architectural guide explaining three-level key encryption hierarchy (Key Encryption Key, per-org Data Encryption Key, per-secret Secret Encryption Key) and automatic rotation.',
+      category: ResourceCategory.technical_enablement,
+      url: 'https://docs.omnipriv.com/technical/three-level-vault-hierarchy.pdf',
       visible_to_tiers: ['Registered', 'Silver', 'Gold', 'Platinum'],
     },
     {
       title: 'OmniPriv vs Legacy PAM (CyberArk, BeyondTrust) Battlecard',
-      description: 'Direct comparison matrix highlighting deployment speed, licensing transparency, and cloud-native architecture advantages.',
+      description: 'Direct comparison matrix highlighting AI-PAM real-time ML detection, MCP agent governance, and stack consolidation advantages.',
       category: ResourceCategory.product_collateral,
       url: 'https://docs.omnipriv.com/collateral/battlecard-q1-2026.pdf',
       visible_to_tiers: ['Silver', 'Gold', 'Platinum'],
     },
     {
       title: 'OmniPriv Certified Implementation Engineer (OCIE) Exam Blueprint',
-      description: 'Curriculum, hands-on lab prerequisites, and sample questions for partner engineers seeking technical certification.',
+      description: 'Curriculum, hands-on lab prerequisites, and sample questions for partner engineers seeking technical certification on the 9-module platform.',
       category: ResourceCategory.certification,
       url: 'https://academy.omnipriv.com/certification/ocie-blueprint.pdf',
       visible_to_tiers: ['Registered', 'Silver', 'Gold', 'Platinum'],
     },
     {
       title: 'Partner Co-Marketing Guidelines & Enterprise Brand Kit',
-      description: 'Approved logo assets, typography rules, enterprise solution brief templates, and email banner assets for joint campaigns.',
+      description: 'Approved logo assets, typography rules, enterprise solution brief templates, and email banner assets for joint AI-PAM campaigns.',
       category: ResourceCategory.marketing_asset,
       url: 'https://assets.omnipriv.com/brand/partner-brand-kit-2026.zip',
       visible_to_tiers: ['Registered', 'Silver', 'Gold', 'Platinum'],
@@ -106,32 +113,32 @@ async function main() {
   // 3. Seed Courses
   const standardCourses = [
     {
-      title: 'OmniPriv PAM Fundamentals & Value Selling',
-      description: 'Master enterprise privileged access management value drivers, buyer personas, and competitive objection handling.',
+      title: 'OmniPriv AI-PAM Fundamentals & 9 Platform Modules',
+      description: 'Master enterprise AI-PAM value drivers, buyer personas, and consolidation of identity security across people, machines, and AI agents.',
       track: 'Sales',
       level: 'Fundamental',
       duration_minutes: 45,
       modules_count: 4,
     },
     {
-      title: 'Technical Architecture & Credential Vaulting',
-      description: 'Learn how OmniPriv orchestrates zero-standing privileges, ephemeral secrets, and multi-cloud infrastructure credentials.',
+      title: 'Secure AI Agents & 53 MCP Tools Governance',
+      description: 'Learn how OmniPriv governs autonomous AI agent access, prompt-injection guards, and deterministic tool-level authorization.',
       track: 'Presales',
       level: 'Intermediate',
       duration_minutes: 90,
       modules_count: 6,
     },
     {
-      title: 'Zero-Trust Session Recording & Micro-segmentation',
-      description: 'Advanced configuration of SSH/RDP session interception, AI behavioral threat detection, and forensic playback.',
+      title: 'Isolated Credential Vaulting (3-Level KEK/DEK/SEK)',
+      description: 'Master three-level key hierarchies, automated credential rotation, and VPN-free brokered RDP/SSH gateways.',
       track: 'Technical',
       level: 'Advanced',
       duration_minutes: 120,
       modules_count: 8,
     },
     {
-      title: 'Multi-Tenant PAM for MSPs & Managed Services',
-      description: 'Operational guidelines for deploying and managing multi-tenant customer vaults, monthly licensing, and compliance reporting.',
+      title: 'AI Threat Protection: 39 Behavioral Features & 10s Auto-Block',
+      description: 'Advanced configuration of machine learning session anomaly detection, impossible travel, and automated 10-second session termination.',
       track: 'Technical',
       level: 'Intermediate',
       duration_minutes: 60,
@@ -152,7 +159,7 @@ async function main() {
     {
       code: 'OCSP',
       name: 'OmniPriv Certified Sales Professional',
-      description: 'Validates commercial expertise in qualifying PAM requirements, ROI articulation, and competitive sales execution.',
+      description: 'Validates commercial expertise in qualifying AI-PAM requirements, ROI articulation, and competitive sales execution against legacy vaults.',
       track: 'Sell',
       level: 'Fundamental',
       validity_months: 24,
@@ -160,7 +167,7 @@ async function main() {
     {
       code: 'OCIE',
       name: 'OmniPriv Certified Implementation Engineer',
-      description: 'Validates hands-on deployment competence for enterprise zero-trust privileged architecture and policy enforcement.',
+      description: 'Validates hands-on deployment competence for AI agent security, 3-level key vaults, and deterministic policy enforcement.',
       track: 'Deploy',
       level: 'Advanced',
       validity_months: 24,
@@ -168,7 +175,7 @@ async function main() {
     {
       code: 'OCSE',
       name: 'OmniPriv Certified Security Expert',
-      description: 'Demonstrates deep mastery of session monitoring, PAM automation APIs, and high-availability multi-region cluster management.',
+      description: 'Demonstrates deep mastery of ML behavioral threat detection, HMAC-SHA256 audit chaining, and high-availability clustered deployments.',
       track: 'Manage',
       level: 'Expert',
       validity_months: 24,
@@ -186,28 +193,28 @@ async function main() {
   // 5. Seed Campaigns
   const standardCampaigns = [
     {
-      title: 'Replace Legacy Vaults Q1 2026 Campaign',
-      summary: 'Turnkey demand-gen package targeting CISOs running antiquated, costly legacy on-premise vault architectures.',
-      related_product: 'OmniPriv Enterprise PAM',
+      title: 'Consolidate Legacy PAM into OmniPriv AI-PAM Q1 2026',
+      summary: 'Turnkey demand-gen package targeting CISOs running antiquated, fragmented vaults and unmonitored AI agents.',
+      related_product: 'OmniPriv AI-PAM Enterprise Platform',
       target_audience: 'CISOs, VPs of Infrastructure, Security Operations Directors',
       start_date: new Date('2026-01-01'),
       end_date: new Date('2026-06-30'),
       status: 'active',
       assets_url: 'https://assets.omnipriv.com/campaigns/legacy-vault-replacement.zip',
       email_copy: 'Subject: Eliminating PAM complexity and 6-figure maintenance renewals in 2026',
-      social_copy: 'Is your legacy credential vault slowing down your cloud migration? Discover how OmniPriv delivers zero-standing privileges in weeks.',
+      social_copy: 'Is your legacy credential vault slowing down your cloud migration? Discover how OmniPriv delivers AI-powered PAM in weeks.',
     },
     {
-      title: 'Zero-Trust Compliance & Audit Acceleration',
-      summary: 'Target organizations preparing for SOC2, ISO27001, PCI-DSS 4.0, or NIS2 compliance requirements.',
-      related_product: 'OmniPriv Compliance Suite',
-      target_audience: 'Compliance Officers, IT Auditors, GRC Teams',
+      title: 'Secure AI Agents & Autonomous Workflows Campaign',
+      summary: 'Target enterprise DevOps, Security, and Engineering leaders deploying AI agents without privileged governance.',
+      related_product: 'OmniPriv Secure AI Agents',
+      target_audience: 'Head of AI, CISO, Lead Platform Architect',
       start_date: new Date('2026-02-01'),
       end_date: new Date('2026-08-31'),
       status: 'active',
-      assets_url: 'https://assets.omnipriv.com/campaigns/compliance-accelerator.zip',
-      email_copy: 'Subject: Achieving automated privileged session compliance in 30 days',
-      social_copy: 'Auditors asking for proof of privileged access controls? OmniPriv provides immutable session playback and instant compliance logs.',
+      assets_url: 'https://assets.omnipriv.com/campaigns/ai-agent-governance.zip',
+      email_copy: 'Subject: Governing autonomous AI agents with 53 permission-gated MCP tools',
+      social_copy: 'AI agents making unmonitored tool calls? OmniPriv delivers prompt-injection guards and deterministic tool-level authorization.',
     },
   ];
 
@@ -222,24 +229,24 @@ async function main() {
   // 6. Seed Events & Webinars
   const standardEvents = [
     {
-      title: 'Quarterly Global Partner Briefing: Product Roadmap & Incentives',
+      title: 'Quarterly Global Partner Briefing: AI-PAM Engine Roadmap & Incentives',
       event_type: 'partner_briefing',
-      description: 'Exclusive executive briefing with OmniPriv Product Leadership and Channel Strategy team.',
+      description: 'Exclusive executive briefing with OmniPriv Product Leadership on MCP agent security and 2026 partner incentives.',
       starts_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // In 7 days
       duration_minutes: 60,
       timezone: 'UTC',
-      product_area: 'Enterprise PAM & AI Copilot',
+      product_area: 'AI-PAM Engine & Agent Security',
       meeting_link: 'https://webinar.omnipriv.com/briefing-q1-2026',
     },
     {
-      title: 'Hands-on Technical Lab: Ephemeral Broker Deployment',
+      title: 'Hands-on Technical Lab: Deploying 53 MCP Tool Guards & VPN-Free Access',
       event_type: 'technical_workshop',
-      description: 'Live interactive technical deep dive for Solutions Architects and Implementation Engineers.',
+      description: 'Live interactive technical workshop configuring AI-PAM session brokers and deterministic policy engines.',
       starts_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // In 14 days
       duration_minutes: 90,
       timezone: 'UTC',
-      product_area: 'Ephemeral Credential Broker',
-      meeting_link: 'https://webinar.omnipriv.com/lab-ephemeral-broker',
+      product_area: 'Secure AI Agents & MCP Gateway',
+      meeting_link: 'https://webinar.omnipriv.com/lab-mcp-governance',
     },
   ];
 

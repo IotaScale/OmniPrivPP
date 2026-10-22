@@ -64,18 +64,18 @@ export default async function HomePage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10 space-y-8 my-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-semibold tracking-wide uppercase">
           <ShieldCheck className="h-4 w-4" />
-          <span>Enterprise Privileged Access Management Channel Sales</span>
+          <span>AI-Powered Privileged Access Management Channel Sales</span>
         </div>
 
         <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
-          Accelerate Your Enterprise PAM Pipeline With{' '}
+          Accelerate Your AI-PAM Pipeline With{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
             Exclusive Deal Protection
           </span>
         </h1>
 
         <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          The authorized B2B channel partner portal for OmniPriv. Register customer opportunities, obtain 90-day exclusive deal protections, receive qualified inbound leads, and access certified sales enablement.
+          The authorized B2B channel partner portal for OmniPriv. Register customer opportunities for the full 9-module AI-PAM platform, govern AI agents across 53 MCP tools, lock in 90-day deal protection, and access certified partner enablement.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">

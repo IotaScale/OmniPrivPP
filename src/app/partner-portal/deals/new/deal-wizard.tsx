@@ -49,7 +49,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
     customerContactName: initialData?.customerContactName || '',
     customerContactEmail: initialData?.customerContactEmail || '',
     customerContactPhone: initialData?.customerContactPhone || '',
-    productInterest: initialData?.productInterest || 'OmniPriv Enterprise PAM Platform',
+    productInterest: initialData?.productInterest || 'OmniPriv AI-PAM Enterprise Platform (Full 9-Module Suite)',
     deploymentType: 'Cloud SaaS (Dedicated Tenant)',
     estimatedDealValue: '',
     estimatedArr: '',
@@ -342,10 +342,12 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                     onChange={handleChange}
                     required
                   >
-                    <option value="OmniPriv Enterprise PAM Platform">OmniPriv Enterprise PAM Platform</option>
-                    <option value="OmniPriv Cloud-Native PAM (SaaS)">OmniPriv Cloud-Native PAM (SaaS)</option>
-                    <option value="OmniPriv Zero-Trust Privilege Broker">OmniPriv Zero-Trust Privilege Broker</option>
-                    <option value="OmniPriv Endpoint Privilege Management">OmniPriv Endpoint Privilege Management</option>
+                    <option value="OmniPriv AI-PAM Enterprise Platform (Full 9-Module Suite)">OmniPriv AI-PAM Enterprise Platform (Full 9-Module Suite)</option>
+                    <option value="OmniPriv Secure AI Agents & MCP Tool Governance">OmniPriv Secure AI Agents & MCP Tool Governance</option>
+                    <option value="OmniPriv Isolated Credential Vault (3-Level KEK/DEK/SEK)">OmniPriv Isolated Credential Vault (3-Level KEK/DEK/SEK)</option>
+                    <option value="OmniPriv Secure Remote Access (VPN-Free RDP/SSH Proxy)">OmniPriv Secure Remote Access (VPN-Free RDP/SSH Proxy)</option>
+                    <option value="OmniPriv AI Threat Protection (39 Behavioral Features & 10s Auto-Block)">OmniPriv AI Threat Protection (39 Behavioral Features & 10s Auto-Block)</option>
+                    <option value="OmniPriv Audit & Compliance Suite (HMAC-SHA256 Chained Logs)">OmniPriv Audit & Compliance Suite (HMAC-SHA256 Chained Logs)</option>
                   </Select>
 
                   <Select

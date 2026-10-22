@@ -3,10 +3,10 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'OmniPriv Channel Partner Portal | Zero Trust PAM Platform',
+    default: 'OmniPriv Channel Partner Portal | AI-Powered PAM Platform',
     template: '%s | OmniPriv Partner Portal',
   },
-  description: 'Enterprise B2B Channel Sales, Deal Registration, and Enablement Platform for OmniPriv Privileged Access Management.',
+  description: 'Enterprise B2B Channel Partner Portal for OmniPriv AI-Powered Privileged Access Management. Deal Registration, AI Agent Security, and Commercial Enablement.',
   icons: {
     icon: [
       { url: '/omnipriv-icon.png?v=3', type: 'image/png' },

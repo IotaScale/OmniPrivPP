@@ -259,7 +259,7 @@ describe('OmniPriv Channel Partner Integration Flows', () => {
         contact_email: 'f.zahra@ega.ae',
         country: 'United Arab Emirates',
         lead_source: 'OmniPriv Cybersecurity Summit 2026',
-        product_interest: 'OmniPriv Zero-Trust Privilege Broker',
+        product_interest: 'OmniPriv AI-PAM Enterprise Platform',
         status: LeadStatus.assigned,
       },
     });
