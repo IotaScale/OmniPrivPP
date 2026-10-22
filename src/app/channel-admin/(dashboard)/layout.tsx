@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -100,6 +101,8 @@ export default async function ChannelAdminDashboardLayout({
               <span className="text-slate-200 font-medium">{session.fullName}</span>
               <span className="text-indigo-400 font-mono text-[10px]">CHANNEL ADMIN</span>
             </div>
+
+            <ThemeToggle />
 
             <form action={signOutAction}>
               <button

@@ -122,7 +122,7 @@ export default async function AdminJbpPage() {
                     type="submit"
                     name="status"
                     value="approved"
-                    className="px-3 py-1 rounded text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold flex items-center gap-1"
+                    className="px-3 py-1 rounded text-xs bg-emerald-600 hover:bg-emerald-500 text-[#ffffff] font-semibold flex items-center gap-1"
                   >
                     <CheckCircle2 className="h-3 w-3" />
                     <span>Approve JBP</span>

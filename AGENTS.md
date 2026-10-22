@@ -17,6 +17,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 5. **Argon2id Hashing**: Always use Argon2id for password hashing.
 6. **Async Headers/Cookies/Params**: In Next.js 16 App Router, `cookies()`, `headers()`, `params`, and `searchParams` are Promises and must be awaited.
 7. **Always update `plan.md`** before and after implementing major phases.
+8. **No Git Actions**: Never run `git add`, `git commit`, `git push`, `git stash`, or any other staging/version-control command on your own. The user performs all Git operations manually. You may only make working-tree file edits.
 
 OmniPriv Partner Portal — Master Build Prompt
 Use this prompt with the coding agent that will build or repair the portal.

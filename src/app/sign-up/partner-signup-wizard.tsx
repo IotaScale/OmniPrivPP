@@ -68,9 +68,9 @@ export function PartnerSignupWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060b17] text-slate-100 flex flex-col justify-between selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-[#00B8FF]/30">
       {/* 1. Compact Branded Header */}
-      <header className="border-b border-white/[0.08] bg-[#060b17]/90 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-white/[0.08] bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <OmniPrivLogo variant="full" showBadge={false} size="md" href="/" priority />
 
@@ -90,9 +90,9 @@ export function PartnerSignupWizard() {
       {/* 2. Main Registration Experience */}
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Dominant Form Surface */}
-        <div className="bg-[#0A1628] border border-white/[0.08] rounded-2xl shadow-xl shadow-black/40 overflow-hidden">
+        <div className="bg-slate-900 border border-white/[0.08] rounded-2xl shadow-xl shadow-black/40 overflow-hidden">
           {/* Form Header with Integrated Horizontal Stepper */}
-          <div className="p-6 sm:p-8 border-b border-white/[0.08] bg-[#0A1628]">
+          <div className="p-6 sm:p-8 border-b border-white/[0.08] bg-slate-900">
             <div className="space-y-2">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Create Your OmniPriv Partner Account
@@ -116,7 +116,7 @@ export function PartnerSignupWizard() {
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0 ${
                     step === 1
-                      ? 'bg-[#00B8FF] text-slate-950 ring-4 ring-[#00B8FF]/20'
+                      ? 'bg-[#00B8FF] text-[#020617] ring-4 ring-[#00B8FF]/20'
                       : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                   }`}
                 >
@@ -138,7 +138,7 @@ export function PartnerSignupWizard() {
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0 ${
                     step === 2
-                      ? 'bg-[#00B8FF] text-slate-950 ring-4 ring-[#00B8FF]/20'
+                      ? 'bg-[#00B8FF] text-[#020617] ring-4 ring-[#00B8FF]/20'
                       : 'bg-slate-800 text-slate-400 border border-white/[0.08]'
                   }`}
                 >
@@ -190,7 +190,7 @@ export function PartnerSignupWizard() {
                         value={formData.companyLegalName}
                         onChange={handleInputChange}
                         placeholder="Apex Cyber Defense Ltd"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                       {(step1Errors.companyLegalName || state?.fieldErrors?.companyLegalName?.[0]) && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">
@@ -211,7 +211,7 @@ export function PartnerSignupWizard() {
                         value={formData.website}
                         onChange={handleInputChange}
                         placeholder="apexcyber.com"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                       {(step1Errors.website || state?.fieldErrors?.website?.[0]) && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">
@@ -234,7 +234,7 @@ export function PartnerSignupWizard() {
                         value={formData.country}
                         onChange={handleInputChange}
                         placeholder="United States, Germany, Singapore"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                       {(step1Errors.country || state?.fieldErrors?.country?.[0]) && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">
@@ -252,7 +252,7 @@ export function PartnerSignupWizard() {
                         name="partnerType"
                         value={formData.partnerType}
                         onChange={handleInputChange}
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       >
                         <option value="Reseller">Reseller (VAR / Distributor)</option>
                         <option value="System Integrator">System Integrator (SI / Consulting)</option>
@@ -273,7 +273,7 @@ export function PartnerSignupWizard() {
                       value={formData.primaryFocus}
                       onChange={handleInputChange}
                       placeholder="Privileged Access Management (PAM), Cloud Security, Identity Governance"
-                      className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                      className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                     />
                   </div>
 
@@ -288,7 +288,7 @@ export function PartnerSignupWizard() {
                       value={formData.companyDescription}
                       onChange={handleInputChange}
                       placeholder="Brief summary of your cybersecurity practice, target verticals, or commercial regions..."
-                      className="w-full p-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all resize-none"
+                      className="w-full p-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all resize-none"
                     />
                   </div>
 
@@ -299,7 +299,7 @@ export function PartnerSignupWizard() {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="h-12 px-6 rounded-xl bg-[#00B8FF] hover:bg-[#0099CC] text-slate-950 font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8FF]/10"
+                      className="h-12 px-6 rounded-xl bg-[#00B8FF] hover:bg-[#0099CC] text-[#020617] font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8FF]/10"
                     >
                       <span>Continue to Administrator Account</span>
                       <ArrowRight className="w-4 h-4" />
@@ -312,7 +312,7 @@ export function PartnerSignupWizard() {
               {step === 2 && (
                 <div className="space-y-5 animate-in fade-in duration-150">
                   {/* Selected Company Summary */}
-                  <div className="p-4 rounded-xl bg-[#060b17] border border-white/[0.08] flex items-center justify-between">
+                  <div className="p-4 rounded-xl bg-slate-950 border border-white/[0.08] flex items-center justify-between">
                     <div>
                       <div className="text-xs text-slate-400">Registering Organization</div>
                       <div className="text-sm font-semibold text-white">
@@ -342,7 +342,7 @@ export function PartnerSignupWizard() {
                         value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="Alex Morgan"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                       {state?.fieldErrors?.fullName?.[0] && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">{state.fieldErrors.fullName[0]}</p>
@@ -361,7 +361,7 @@ export function PartnerSignupWizard() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="alex@apexcyber.com"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                       {state?.fieldErrors?.email?.[0] && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">{state.fieldErrors.email[0]}</p>
@@ -381,7 +381,7 @@ export function PartnerSignupWizard() {
                         value={formData.jobTitle}
                         onChange={handleInputChange}
                         placeholder="VP of Alliances / Practice Lead"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                     </div>
 
@@ -396,7 +396,7 @@ export function PartnerSignupWizard() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         placeholder="+1 (555) 019-2834"
-                        className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                       />
                     </div>
                   </div>
@@ -413,7 +413,7 @@ export function PartnerSignupWizard() {
                       value={formData.password}
                       onChange={handleInputChange}
                       placeholder="Minimum 8 characters with numbers & symbols"
-                      className="w-full h-12 px-4 rounded-xl bg-[#060b17] border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                      className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
                     />
                     {state?.fieldErrors?.password?.[0] && (
                       <p className="mt-1 text-xs text-rose-400 font-medium">{state.fieldErrors.password[0]}</p>
@@ -421,7 +421,7 @@ export function PartnerSignupWizard() {
                   </div>
 
                   <div className="pt-2">
-                    <label className="flex items-start gap-3 p-4 rounded-xl bg-[#060b17] border border-white/[0.08] cursor-pointer hover:border-white/[0.16] transition-colors">
+                    <label className="flex items-start gap-3 p-4 rounded-xl bg-slate-950 border border-white/[0.08] cursor-pointer hover:border-white/[0.16] transition-colors">
                       <input
                         type="checkbox"
                         name="termsAccepted"
@@ -455,7 +455,7 @@ export function PartnerSignupWizard() {
                     <button
                       type="submit"
                       disabled={isPending || !formData.termsAccepted}
-                      className="h-12 px-7 rounded-xl bg-[#00B8FF] hover:bg-[#0099CC] text-slate-950 font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8FF]/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="h-12 px-7 rounded-xl bg-[#00B8FF] hover:bg-[#0099CC] text-[#020617] font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8FF]/10 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isPending ? (
                         <>

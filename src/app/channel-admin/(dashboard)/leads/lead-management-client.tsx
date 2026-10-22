@@ -432,7 +432,7 @@ export function LeadManagementClient({
                 name="csvFile"
                 accept=".csv"
                 required
-                className="w-full text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500"
+                className="w-full text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-[#ffffff] hover:file:bg-indigo-500"
               />
 
               <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">

@@ -6,15 +6,21 @@ import { signInAdminAction } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { ArrowRight } from 'lucide-react';
 
 export default function ChannelAdminLoginPage() {
   const [state, formAction, isPending] = useActionState(signInAdminAction, undefined);
 
   return (
-    <div className="min-h-screen bg-[#030711] text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Subtle warning ambient glow for internal console */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-indigo-500/5 blur-[120px] pointer-events-none rounded-full" />
+
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <div className="flex justify-center mb-6">
@@ -30,7 +36,7 @@ export default function ChannelAdminLoginPage() {
           </p>
         </div>
 
-        <div className="bg-[#0A1628] border border-[#133052] rounded-2xl p-8 shadow-2xl shadow-black/60 backdrop-blur-md">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl shadow-black/60 backdrop-blur-md">
           {state?.error && (
             <div className="mb-6 p-4 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-rose-500" />

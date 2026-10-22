@@ -40,11 +40,19 @@ export function OmniPrivLogo({
         <div className="flex items-center gap-2.5">
           <div className={`relative ${heightClass} w-auto flex-shrink-0 flex items-center`}>
             <Image
+              src="/omnipriv-light.png"
+              alt="OmniPriv"
+              width={160}
+              height={40}
+              className={`${heightClass} w-auto object-contain dark:hidden`}
+              priority={priority}
+            />
+            <Image
               src="/omniprivdark.png"
               alt="OmniPriv"
               width={160}
               height={40}
-              className={`${heightClass} w-auto object-contain`}
+              className={`${heightClass} w-auto object-contain hidden dark:block`}
               priority={priority}
             />
           </div>

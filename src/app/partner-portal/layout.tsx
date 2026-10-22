@@ -16,6 +16,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,18 +63,18 @@ export default async function PartnerPortalLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#060b17] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
       {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
-      <aside className="w-full md:w-64 bg-[#0A1628]/95 border-r border-white/[0.08] flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
+      <aside className="w-full md:w-64 bg-slate-900/95 border-r border-white/[0.08] flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
         {/* Brand / Company Header */}
-        <div className="p-4 border-b border-white/[0.08] bg-[#060b17]/60">
+        <div className="p-4 border-b border-white/[0.08] bg-slate-950/60">
           <OmniPrivLogo variant="partner" href="/partner-portal" priority />
           <div className="mt-2 text-[11px] text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
             {org?.display_name || session.partnerOrgName}
           </div>
 
           {/* Partner Tier Badge */}
-          <div className="mt-3 flex items-center justify-between p-2 rounded-xl bg-[#060b17] border border-white/[0.08] text-xs">
+          <div className="mt-3 flex items-center justify-between p-2 rounded-xl bg-slate-950 border border-white/[0.08] text-xs">
             <span className="text-slate-400 text-[11px]">Partner Tier:</span>
             <Badge variant={tierVariantMap[org?.tier || 'Registered'] || 'default'} size="sm" className="gap-1 font-semibold">
               <Award className="h-3 w-3" />
@@ -98,7 +99,7 @@ export default async function PartnerPortalLayout({
         </div>
 
         {/* Authenticated User Profile & Sign Out Footer */}
-        <div className="p-3 border-t border-white/[0.08] bg-[#060b17]/70 flex items-center justify-between text-xs">
+        <div className="p-3 border-t border-white/[0.08] bg-slate-950/70 flex items-center justify-between text-xs">
           <div className="flex flex-col min-w-0 pr-2">
             <span className="text-slate-200 font-medium truncate" title={session.fullName}>
               {session.fullName}
@@ -123,7 +124,7 @@ export default async function PartnerPortalLayout({
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-20 bg-[#060b17]/90 backdrop-blur-md border-b border-white/[0.08] h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-slate-950/90 backdrop-blur-md border-b border-white/[0.08] h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3 text-xs text-slate-400">
             <span className="font-semibold text-slate-200">{org?.display_name || session.partnerOrgName}</span>
             <span>&bull;</span>
@@ -131,6 +132,8 @@ export default async function PartnerPortalLayout({
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
+
             <Link
               href="/partner-portal"
               className="relative p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"

@@ -100,7 +100,7 @@ export default async function ChannelAdminAuditPage({
 
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs transition-colors"
+              className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[#ffffff] font-medium text-xs transition-colors"
             >
               Filter Audit Log
             </button>

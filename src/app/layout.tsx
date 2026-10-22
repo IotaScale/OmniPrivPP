@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: {
@@ -24,9 +25,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark h-full antialiased">
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
-        {children}
+    <html lang="en" suppressHydrationWarning className="h-full antialiased">
+      <head>
+        {/* Apply the persisted theme (dark by default) before first paint. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('omnipriv-theme');if(t!=='light'&&t!=='dark'){t='dark';}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){document.documentElement.classList.add('dark');}})();`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

@@ -188,7 +188,7 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge !== undefined && (
-                    <span className="ml-2 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-cyan-500 text-slate-950 shrink-0">
+                    <span className="ml-2 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-cyan-500 text-[#020617] shrink-0">
                       {item.badge}
                     </span>
                   )}

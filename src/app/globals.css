@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: `dark:` variants and theme variables are driven by
+   the presence of `.dark` on <html>. Dark is the application default. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ─────────────────────────────────────────────────────────────
    OmniPriv Brand Design System Tokens (Source: Webomnipriv)
 ───────────────────────────────────────────────────────────── */
 :root {
+  color-scheme: light;
+
   /* Official OmniPriv Brand Colors */
   --omnipriv-primary: #00b8ff;
   --omnipriv-primary-dark: #0090cc;
@@ -25,7 +31,47 @@
   --omnipriv-dark-hover: #102644;
   --omnipriv-dark-border: #133052;
 
-  /* Surfaces & Borders */
+  /* Light theme — Surfaces & Borders */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --card-border: rgba(15, 23, 42, 0.08);
+  --card-border-cyan: rgba(0, 152, 204, 0.25);
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* Light theme — Functional Tokens */
+  --primary: #00b8ff;
+  --primary-foreground: #030711;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #00b8ff;
+  --accent-foreground: #030711;
+  --destructive: #e11d48;
+  --destructive-foreground: #ffffff;
+  --border: rgba(15, 23, 42, 0.1);
+  --input: #ffffff;
+  --input-border: rgba(15, 23, 42, 0.15);
+  --ring: #00b8ff;
+
+  /* Light theme — Atmospheric Glows & Gradients */
+  --glow-primary: 0 0 20px rgba(0, 184, 255, 0.18);
+  --glow-sm: 0 0 12px rgba(0, 184, 255, 0.1);
+  --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+
+  --page-gradient: linear-gradient(180deg, #ffffff 0%, #f4f7fb 35%, #ffffff 100%);
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Dark theme — Surfaces & Borders */
   --background: #030711;
   --foreground: #f1f5f9;
   --card: #0a1628;
@@ -35,7 +81,7 @@
   --popover: #0a1628;
   --popover-foreground: #f1f5f9;
 
-  /* Functional Tokens */
+  /* Dark theme — Functional Tokens */
   --primary: #00b8ff;
   --primary-foreground: #030711;
   --secondary: #0d1e36;
@@ -51,10 +97,61 @@
   --input-border: rgba(255, 255, 255, 0.12);
   --ring: #00b8ff;
 
-  /* Atmospheric Glows & Gradients */
+  /* Dark theme — Atmospheric Glows & Gradients */
   --glow-primary: 0 0 20px rgba(0, 184, 255, 0.22);
   --glow-sm: 0 0 12px rgba(0, 184, 255, 0.12);
   --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+
+  --page-gradient: linear-gradient(180deg, #030711 0%, #0a1628 35%, #030711 100%);
+  --scrollbar-track: #030711;
+  --scrollbar-thumb: #0d1e36;
+  --scrollbar-thumb-hover: #133052;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Light-theme palette remap.
+
+   The app is written dark-first (e.g. `bg-slate-950`, `text-slate-100`,
+   `text-white`, `border-white/[…]`). Tailwind v4 utilities resolve color
+   utilities to `var(--color-*)`, so re-pointing those variables in the
+   light theme flips the whole interface without touching every class.
+───────────────────────────────────────────────────────────── */
+:root:not(.dark) {
+  /* Invert the neutral slate scale so dark-first classes render light-first. */
+  --color-slate-50: #020617;
+  --color-slate-100: #0f172a;
+  --color-slate-200: #1e293b;
+  --color-slate-300: #334155;
+  --color-slate-400: #475569;
+  --color-slate-500: #64748b;
+  --color-slate-600: #94a3b8;
+  --color-slate-700: #cbd5e1;
+  --color-slate-800: #e2e8f0;
+  --color-slate-900: #f1f5f9;
+  --color-slate-950: #f8fafc;
+
+  /* `text-white` and white/[opacity] borders/tints become dark-based. */
+  --color-white: #0f172a;
+
+  /* Accent text shades darken for readable contrast on light surfaces. */
+  --color-cyan-200: #164e63;
+  --color-cyan-300: #155e75;
+  --color-cyan-400: #0e7490;
+  --color-blue-200: #1e3a8a;
+  --color-blue-300: #1e40af;
+  --color-blue-400: #1d4ed8;
+  --color-indigo-200: #312e81;
+  --color-indigo-300: #3730a3;
+  --color-indigo-400: #4338ca;
+  --color-amber-200: #78350f;
+  --color-amber-300: #92400e;
+  --color-amber-400: #b45309;
+  --color-emerald-200: #064e3b;
+  --color-emerald-300: #065f46;
+  --color-emerald-400: #047857;
+  --color-rose-200: #881337;
+  --color-rose-300: #9f1239;
+  --color-rose-400: #be123c;
 }
 
 body {
@@ -85,19 +182,19 @@ body {
 }
 
 .bg-omnipriv-page-gradient {
-  background-image: linear-gradient(180deg, #030711 0%, #0a1628 35%, #030711 100%);
+  background-image: var(--page-gradient);
 }
 
 .glow-omnipriv {
-  box-shadow: 0 0 25px rgba(0, 184, 255, 0.25);
+  box-shadow: var(--glow-primary);
 }
 
 .border-omnipriv-cyan {
-  border-color: rgba(0, 184, 255, 0.3);
+  border-color: var(--card-border-cyan);
 }
 
 .border-omnipriv-subtle {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--card-border);
 }
 
 /* Smooth, high-contrast scrollbar */
@@ -106,14 +203,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #030711;
+  background: var(--scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
-  background: #0d1e36;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #133052;
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* Reduced motion accessibility */

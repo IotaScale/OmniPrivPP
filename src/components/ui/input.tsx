@@ -25,7 +25,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           className={twMerge(
             clsx(
-              'w-full h-11 sm:h-12 px-4 rounded-xl bg-[#060b17] border text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 transition-all duration-150',
+              'w-full h-11 sm:h-12 px-4 rounded-xl bg-slate-950 border text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 transition-all duration-150',
               error
                 ? 'border-rose-500/80 focus:border-rose-500 focus:ring-rose-500/20'
                 : 'border-white/[0.12] focus:border-[#00B8FF] focus:ring-[#00B8FF]/20',

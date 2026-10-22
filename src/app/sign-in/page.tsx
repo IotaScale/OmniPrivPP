@@ -6,13 +6,14 @@ import { signInAction } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, undefined);
 
   return (
-    <div className="min-h-screen bg-[#030711] text-slate-100 flex flex-col justify-between selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-[#00B8FF]/30">
       {/* Top ambient highlight */}
       <div
         className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[360px] pointer-events-none rounded-full"
@@ -20,6 +21,11 @@ export default function SignInPage() {
           background: 'radial-gradient(ellipse at top, rgba(0, 184, 255, 0.08) 0%, transparent 70%)',
         }}
       />
+
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 z-30">
+        <ThemeToggle />
+      </div>
 
       {/* Main split-view container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex items-center justify-center relative z-10">
@@ -44,7 +50,7 @@ export default function SignInPage() {
 
             {/* Core Channel Highlights - Visible on tablet and desktop */}
             <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-xl bg-[#0A1628]/80 border border-[#133052] space-y-1.5">
+              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1.5">
                 <div className="flex items-center gap-2 text-white font-semibold text-sm">
                   <span className="w-2 h-2 rounded-full bg-[#00B8FF]" />
                   90-Day Deal Protection
@@ -54,7 +60,7 @@ export default function SignInPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#0A1628]/80 border border-[#133052] space-y-1.5">
+              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1.5">
                 <div className="flex items-center gap-2 text-white font-semibold text-sm">
                   <span className="w-2 h-2 rounded-full bg-[#00B8FF]" />
                   Vendor Lead Distribution
@@ -65,7 +71,7 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center gap-6 pt-4 text-xs text-slate-500 border-t border-[#133052]/60">
+            <div className="hidden lg:flex items-center gap-6 pt-4 text-xs text-slate-500 border-t border-slate-800/60">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
                 Zero Trust Architecture
@@ -83,7 +89,7 @@ export default function SignInPage() {
 
           {/* Right Zone: Authentication Form Card */}
           <div className="lg:col-span-5 w-full max-w-md mx-auto">
-            <div className="rounded-2xl bg-[#0A1628] border border-[#133052] p-7 sm:p-9 shadow-2xl shadow-black/60 relative overflow-hidden">
+            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-7 sm:p-9 shadow-2xl shadow-black/60 relative overflow-hidden">
               <div className="mb-6 space-y-1.5">
                 <h2 className="text-xl font-bold text-white tracking-tight">
                   Sign in to the OmniPriv Partner Portal
@@ -132,7 +138,7 @@ export default function SignInPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full mt-2 font-semibold bg-[#00B8FF] hover:bg-[#0099CC] text-slate-950 transition-colors shadow-lg shadow-[#00B8FF]/10"
+                  className="w-full mt-2 font-semibold bg-[#00B8FF] hover:bg-[#0099CC] text-[#020617] transition-colors shadow-lg shadow-[#00B8FF]/10"
                   isLoading={isPending}
                 >
                   <span>Sign In to Partner Portal</span>
@@ -141,7 +147,7 @@ export default function SignInPage() {
               </form>
 
               {/* Secondary Navigation */}
-              <div className="mt-6 pt-6 border-t border-[#133052] space-y-3 text-center">
+              <div className="mt-6 pt-6 border-t border-slate-800 space-y-3 text-center">
                 <div className="text-xs text-slate-400">
                   New partner company?{' '}
                   <Link
@@ -166,7 +172,7 @@ export default function SignInPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#133052]/60 py-5 text-center text-xs text-slate-500 max-w-7xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
+      <footer className="border-t border-slate-800/60 py-5 text-center text-xs text-slate-500 max-w-7xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
         <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. Zero Trust Privileged Access Management.</div>
         <div className="flex items-center gap-4 text-slate-500">
           <Link href="/become-a-partner" className="hover:text-slate-400 transition-colors">
