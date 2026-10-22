@@ -36,6 +36,7 @@ This document tracks all completed phases, schema migrations, route implementati
 | **Phase 12** | Audit log (`/channel-admin/audit`) & in-app notifications system | Completed | Multi-parameter filtering on immutable audit events |
 | **Phase 13** | UI/UX refinement, enterprise dark/light contrast, mobile responsiveness & keyboard accessibility | Completed | High density, professional PAM enterprise aesthetic |
 | **Phase 14** | Unit tests (Vitest), end-to-end flows, production build validation & documentation | Completed | 23/23 tests pass, Next.js build clean with 0 errors |
+| **Phase 15** | Local PostgreSQL connection: Windows PostgreSQL 18 service (`D:\Program Files\PostgreSQL\18`), `omnipriv_partner` database, `omnipriv` role, `.env` DATABASE_URL, initial migration + seed applied | Completed | 12 tables in public schema; `psql` connection verified; seed created Channel Admin + enablement resources |
 
 ---
 

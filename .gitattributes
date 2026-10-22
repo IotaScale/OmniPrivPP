@@ -1,0 +1,4 @@
+# Keep Prisma-generated files on LF line endings so Windows checkouts don't
+# trigger CRLF conversion warnings for these files.
+*.sql  text eol=lf
+*.toml text eol=lf
