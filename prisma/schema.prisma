@@ -88,6 +88,9 @@ model User {
   certifications      PartnerCertification[]
   event_registrations EventRegistration[]
   terms_acceptances   TermsAcceptance[]
+  support_tickets_created  SupportTicket[]  @relation("TicketsCreated")
+  support_tickets_assigned SupportTicket[]  @relation("TicketsAssigned")
+  ticket_messages          TicketMessage[]
 
   @@map("users")
 }
@@ -124,6 +127,7 @@ model PartnerOrganization {
   joint_business_plans    JointBusinessPlan[]
   terms_acceptances       TermsAcceptance[]
   locator_profile         PartnerLocatorProfile?
+  support_tickets         SupportTicket[]
 
   @@index([tier])
   @@index([status])
@@ -599,3 +603,82 @@ model Announcement {
   @@index([published_at])
   @@map("announcements")
 }
+
+enum TicketPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum TicketStatus {
+  open
+  in_progress
+  awaiting_partner
+  resolved
+  closed
+}
+
+model SupportTicket {
+  id                      String              @id @default(cuid())
+  ticket_number           String              @unique
+  subject                 String
+  category                String              // ai_pam_engine, mcp_governance, vault_encryption, remote_access_proxy, licensing_billing, general
+  priority                TicketPriority      @default(medium)
+  status                  TicketStatus        @default(open)
+  partner_organization_id String?
+  created_by_user_id      String
+  assigned_to_user_id     String?
+  resolved_at             DateTime?
+  closed_at               DateTime?
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+
+  created_by              User                @relation("TicketsCreated", fields: [created_by_user_id], references: [id], onDelete: Cascade)
+  assigned_to             User?               @relation("TicketsAssigned", fields: [assigned_to_user_id], references: [id], onDelete: SetNull)
+  organization            PartnerOrganization? @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+  messages                TicketMessage[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([partner_organization_id])
+  @@index([created_by_user_id])
+  @@index([assigned_to_user_id])
+  @@map("support_tickets")
+}
+
+model TicketMessage {
+  id               String         @id @default(cuid())
+  ticket_id        String
+  sender_user_id   String
+  message          String
+  is_internal_note Boolean        @default(false)
+  attachments      String[]       @default([])
+  created_at       DateTime       @default(now())
+
+  ticket           SupportTicket  @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
+  sender           User           @relation(fields: [sender_user_id], references: [id], onDelete: Cascade)
+
+  @@index([ticket_id])
+  @@index([sender_user_id])
+  @@map("ticket_messages")
+}
+
+model SupportFaq {
+  id            String    @id @default(cuid())
+  question      String
+  answer        String
+  category      String    // AI-PAM Engine, MCP Tool Controls, Key Hierarchy & Vaulting, Proxy Gateway, Deal & Tier Support, Billing & Licensing
+  tags          String[]  @default([])
+  order_index   Int       @default(0)
+  is_published  Boolean   @default(true)
+  view_count    Int       @default(0)
+  helpful_count Int       @default(0)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  @@index([category])
+  @@index([is_published])
+  @@map("support_faqs")
+}
+

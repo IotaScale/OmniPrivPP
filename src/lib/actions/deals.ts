@@ -92,6 +92,7 @@ export async function submitDealRegistrationAction(
   const conflict = await detectDomainConflict(normalizedDomain, partnerOrgId);
   const publicReference = await generateDealReference();
 
+  let redirectUrl: string | null = null;
   try {
     const newDeal = await prisma.$transaction(async (tx) => {
       // 1. Create Deal Registration
@@ -213,16 +214,17 @@ export async function submitDealRegistrationAction(
     revalidatePath('/channel-admin/deals');
     revalidatePath('/channel-admin');
 
-    redirect(`/partner-portal/deals/${newDeal.id}?submitted=true`);
+    redirectUrl = `/partner-portal/deals/${newDeal.id}?submitted=true`;
   } catch (err: unknown) {
-    // If it's a Next.js redirect exception, rethrow
-    if (err && typeof err === 'object' && 'digest' in err && typeof (err as { digest: string }).digest === 'string' && (err as { digest: string }).digest.startsWith('NEXT_REDIRECT')) {
-      throw err;
-    }
-
     console.error('[SUBMIT_DEAL_ERROR]', err);
     return {
       error: 'Failed to submit deal registration. Please verify your connection and try again.',
     };
   }
+
+  if (redirectUrl) {
+    redirect(redirectUrl);
+  }
+
+  return { success: true };
 }

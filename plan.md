@@ -222,5 +222,28 @@ This document tracks all completed phases, schema models, route implementations,
 - **Seeded Collateral & Courses**: Refreshed `prisma/seed.ts` with authentic OmniPriv collateral (AI-PAM competitive battlecards, MCP tool governance blueprints, 3-level key vault architecture whitepaper, legacy PAM migration playbooks).
 - **Quality & Baseline Integrity**: Verified typecheck (`tsc --noEmit`), Vitest suite (23/23 tests passed), and pristine database reset with only `admin@omnipriv.internal`.
 
+---
+
+## 10. Phase 23: Standalone Support Portal (`support-portal/`) for Vercel Subdomain Deployment
+
+- **Dedicated Next.js 16 Application (`support-portal/`)**:
+  - Independent root directory configured for separate Vercel deployment (e.g. `support.omnipriv.com` or `support-omnipriv.vercel.app`).
+  - Shares the production PostgreSQL database (Supabase pooler) without duplicating user credentials or wiping data.
+- **Shared Authentication & Session**:
+  - Seamless login via existing partner or Channel Administrator accounts (`users` table with Argon2id verification).
+  - Compatible session validation via `omnipriv_support_session` and SSO support with `omnipriv_session`.
+- **AI-PAM Knowledge Base & FAQs (`/faq`)**:
+  - Real database-backed FAQ search engine (`support_faqs` table) covering the 39-feature behavioral engine, 53 MCP tool controls, 3-level key vaults, and deal protection.
+  - Category filters, real-time query matching, interactive accordion answers, and community helpfulness counters.
+- **Incident & Ticketing Helpdesk (`/tickets`)**:
+  - Ticket creation wizard (`/tickets/new`) with severity selection (Urgent, High, Medium, Low) and auto-generated tracking numbers (`OPT-2026-XXXXX`).
+  - Threaded conversation workspace (`/tickets/[ticketId]`) supporting replies, status transitions (`open`, `in_progress`, `awaiting_partner`, `resolved`, `closed`), and internal staff notes locked for Channel Admins.
+  - Strict tenant isolation: partner organizations only view and update their own tickets; Channel Admins have cross-organizational triage and resolution controls.
+- **Independent Build & Verification**:
+  - `support-portal`: All 8 routes build with Turbopack with 0 errors.
+  - Root Partner Portal: All 48 routes build with Turbopack with 0 errors.
+  - Database preserved without any destructive reset (`db:clean` avoided).
+
+
 
 

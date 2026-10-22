@@ -12,6 +12,7 @@ import {
   RefreshCw,
   ScrollText,
   LogOut,
+  Headphones,
 } from 'lucide-react';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
@@ -27,7 +28,7 @@ export default async function ChannelAdminDashboardLayout({
   const session = await requireAdminSession();
 
   // Query live counts for badges
-  const [dealsReviewCount, conflictsCount, leadsPendingCount, requestsPendingCount, jbpPendingCount] = await Promise.all([
+  const [dealsReviewCount, conflictsCount, leadsPendingCount, requestsPendingCount, jbpPendingCount, supportTicketsCount] = await Promise.all([
     prisma.dealRegistration.count({
       where: { status: DealStatus.awaiting_approval },
     }),
@@ -42,6 +43,9 @@ export default async function ChannelAdminDashboardLayout({
     }),
     prisma.jointBusinessPlan.count({
       where: { status: 'submitted' },
+    }),
+    prisma.supportTicket.count({
+      where: { status: { in: ['open', 'in_progress', 'awaiting_partner'] } },
     }),
   ]);
 
@@ -83,6 +87,12 @@ export default async function ChannelAdminDashboardLayout({
       href: '/channel-admin/jbp',
       icon: ScrollText,
       badge: jbpPendingCount > 0 ? jbpPendingCount : undefined,
+    },
+    {
+      label: 'Support Tickets',
+      href: '/channel-admin/support-tickets',
+      icon: Headphones,
+      badge: supportTicketsCount > 0 ? supportTicketsCount : undefined,
     },
     { label: 'Audit Log', href: '/channel-admin/audit-log', icon: ScrollText },
   ];
