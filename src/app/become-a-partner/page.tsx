@@ -40,52 +40,52 @@ export default async function BecomeAPartnerPage() {
       title: 'Sell OmniPriv',
       subtitle: 'Value-Added Resellers & Distributors',
       description:
-        'Deliver market-leading Privileged Access Management to commercial and enterprise clients. Earn up to 35% margin on registered deals with guaranteed pricing protection.',
+        'Deliver modern AI-Powered Privileged Access Management to commercial and enterprise clients. Earn up to 35% margin on registered opportunities with guaranteed pricing protection.',
       icon: TrendingUp,
       badge: 'VAR / Distributor',
       benefits: [
-        'Guaranteed 90-day deal protection',
-        'Direct co-selling with OmniPriv enterprise reps',
-        'Tier-based margin discounts & incentives',
+        'Guaranteed 90-day deal price protection',
+        'Direct co-selling with OmniPriv enterprise specialists',
+        'Tier-based margin discounts & MDF funding',
       ],
     },
     {
       title: 'Deploy OmniPriv',
       subtitle: 'System Integrators & Consultants',
       description:
-        'Architect and deploy Zero-Trust privileged access, just-in-time credentialing, and session recording into complex multi-cloud and on-premise hybrid environments.',
+        'Architect and deploy secure AI agent governance, 53 permission-gated MCP tool controls, brokered VPN-free RDP/SSH gateways, and HMAC-SHA256 hash-chained audit trails.',
       icon: Cpu,
       badge: 'Systems Integrator',
       benefits: [
-        'Comprehensive technical implementation guides',
-        'Direct access to Level 3 Solution Architects',
-        'Professional services revenue enablement',
+        'Comprehensive technical architecture blueprints',
+        'Direct access to Level 3 Solutions Architects',
+        'Professional services & implementation revenue',
       ],
     },
     {
       title: 'Manage OmniPriv',
       subtitle: 'MSPs & MSSPs',
       description:
-        'Embed OmniPriv multi-tenant PAM into your managed security service catalog. Offer credential rotation, vaulting, and compliance audit services as a monthly recurring model.',
+        'Embed OmniPriv into your managed security services catalog. Deliver automated credential rotation, Just-in-Time (JIT) access, 10-second anomaly auto-block, and signed compliance reports across 42 controls.',
       icon: Layers,
       badge: 'MSP / MSSP',
       benefits: [
-        'Multi-tenant management architecture',
-        'Monthly consumption and flexible licensing',
-        'White-labeled client compliance reporting',
+        'Multi-tenant management & policy engine',
+        'Monthly consumption and flexible seat licensing',
+        'Automated compliance reporting across 6 frameworks',
       ],
     },
     {
       title: 'Build / Technology Alliance',
       subtitle: 'ISVs & Technology Partners',
       description:
-        'Integrate your identity provider, SIEM, SOAR, or cloud workload protection platforms with OmniPriv secure REST APIs and event stream webhooks.',
+        'Integrate your identity provider, SIEM, SOAR, cloud platforms, or AI agent toolchains (Anthropic, OpenAI, Okta, Splunk, Kubernetes) with OmniPriv deterministic policy APIs.',
       icon: ShieldCheck,
       badge: 'Alliance Partner',
       benefits: [
-        'Bi-directional API integrations & SDKs',
-        'Joint go-to-market solution briefs',
-        'Technology alliance marketplace listing',
+        'Bi-directional REST API integrations & webhooks',
+        'Joint go-to-market solution briefs & co-branding',
+        'OmniPriv Technology Alliance partner directory listing',
       ],
     },
   ];
@@ -156,18 +156,18 @@ export default async function BecomeAPartnerPage() {
       <section className="relative pt-20 pb-16 md:pt-28 md:pb-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-8 shadow-sm">
           <Award className="h-3.5 w-3.5 text-cyan-400" />
-          <span>OmniPriv Global Channel Partner Ecosystem</span>
+          <span>AI-Powered Privileged Access Management &bull; Global Partner Program</span>
         </div>
 
         <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl mx-auto">
-          Grow your privileged-access business with{' '}
+          Secure AI Access. Control Every Privileged Move with{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-200 to-blue-400">
             OmniPriv
           </span>
         </h1>
 
         <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-          Value-added resellers, system integrators, MSPs/MSSPs, and technology alliance partners use the OmniPriv Partner Portal to register customer opportunities, secure guaranteed margin protection, work assigned demand-gen leads, and scale enterprise Zero-Trust deployments.
+          AI, automation, applications, and human identities are reshaping privileged access. Join the OmniPriv Channel Partner Program to deliver AI-driven controls, Just-in-Time access, isolated 3-level credential vaulting, and complete session visibility.
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -188,20 +188,20 @@ export default async function BecomeAPartnerPage() {
         {/* Metric indicators */}
         <div className="mt-16 pt-10 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-6 text-left">
           <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
+            <div className="text-2xl font-bold text-white font-mono">39 Features</div>
+            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">ML Behavioral Scoring</div>
+          </div>
+          <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
+            <div className="text-2xl font-bold text-white font-mono">53 Tools</div>
+            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Permission-Gated MCP</div>
+          </div>
+          <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
+            <div className="text-2xl font-bold text-white font-mono">10s Sweep</div>
+            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Auto-Block Grace Engine</div>
+          </div>
+          <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
             <div className="text-2xl font-bold text-white font-mono">90 Days</div>
-            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Deal Price Protection</div>
-          </div>
-          <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
-            <div className="text-2xl font-bold text-white font-mono">&lt; 48 Hours</div>
-            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Deal Review SLA</div>
-          </div>
-          <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
-            <div className="text-2xl font-bold text-white font-mono">100% Direct</div>
-            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Partner Attribution</div>
-          </div>
-          <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/70">
-            <div className="text-2xl font-bold text-white font-mono">Tier-Based</div>
-            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Margin & MDF Support</div>
+            <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Guaranteed Deal Protection</div>
           </div>
         </div>
       </section>
@@ -215,7 +215,7 @@ export default async function BecomeAPartnerPage() {
               Tailored Programs for Every Partner Business Model
             </p>
             <p className="mt-3 text-slate-400 text-sm">
-              Whether you resell software, implement Zero-Trust architectures, deliver 24/7 managed security, or build integrations, OmniPriv provides dedicated tools and margin protection.
+              Whether you resell software, implement AI agent governance, deliver 24/7 managed security, or build integrations, OmniPriv provides dedicated tools, 90-day deal protection, and generous margin bands.
             </p>
           </div>
 

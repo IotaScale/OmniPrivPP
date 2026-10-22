@@ -44,12 +44,12 @@ export default async function PartnerTermsPage() {
       summary: 'Specifies 90-day exclusive opportunity protection, domain conflict arbitration procedures, and deal extension rules.',
     },
     {
-      title: 'Zero Trust Security & Non-Disclosure Addendum',
+      title: 'OmniPriv Security & Non-Disclosure Addendum',
       version: 'v2026.1',
       type: 'Confidentiality & Data Security',
       acceptedOn: org?.created_at,
       status: 'Active & Binding',
-      summary: 'Enforces strict separation of commercial channel metadata from customer PAM tenant access, encryption keys, and secrets.',
+      summary: 'Enforces strict separation of commercial channel metadata from customer PAM tenant access, 3-level key vaults (KEK/DEK/SEK), and secrets.',
     },
   ];
 

@@ -186,7 +186,7 @@ export default async function PartnerDashboardPage() {
     },
     {
       title: 'Technical Enablement',
-      description: 'Architecture whitepapers, sizing calculators, and zero-trust implementation guides.',
+      description: 'AI-PAM architecture blueprints, MCP agent gateway setup, and isolated vault deployment guides.',
       icon: Cpu,
       href: '/partner-portal/resources?category=technical_enablement',
       ctaText: 'View Tech Guides',
@@ -196,8 +196,8 @@ export default async function PartnerDashboardPage() {
   return (
     <div className="space-y-8">
       {/* 1. TOP METRICS & QUICK ACTIONS */}
-      <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden shadow-lg">
-        <div className="absolute right-0 top-0 w-96 h-96 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="rounded-3xl bg-gradient-to-r from-[#0b172b] via-[#091426] to-[#050b16] border border-white/[0.1] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden shadow-[0_16px_50px_rgba(0,0,0,0.4)]">
+        <div className="absolute right-0 top-0 w-96 h-96 bg-[#00B8FF]/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-3">
@@ -210,7 +210,7 @@ export default async function PartnerDashboardPage() {
             </Badge>
           </div>
           <p className="text-sm text-slate-400">
-            {companyName} &bull; Channel Sales & Deal Protection Workspace
+            {companyName} &bull; AI-Powered PAM & Deal Protection Workspace
           </p>
           {org?.partner_manager_name && (
             <div className="pt-1 text-xs text-slate-400">
@@ -225,19 +225,19 @@ export default async function PartnerDashboardPage() {
             <Button
               variant="primary"
               size="sm"
-              className="gap-1.5 text-xs font-semibold shadow-sm shadow-cyan-950"
+              className="gap-1.5 text-xs font-semibold shadow-md shadow-[#00B8FF]/20"
             >
               <FilePlus2 className="h-3.5 w-3.5" />
               <span>Register a Deal</span>
             </Button>
           </Link>
           <Link href="/partner-portal/leads">
-            <Button variant="outline" size="sm" className="text-xs">
+            <Button variant="outline" size="sm" className="text-xs border-white/[0.12] text-slate-300">
               <span>View Leads</span>
             </Button>
           </Link>
           <Link href="/partner-portal/commercial-requests/new">
-            <Button variant="outline" size="sm" className="text-xs">
+            <Button variant="outline" size="sm" className="text-xs border-white/[0.12] text-slate-300">
               <span>Request Trial / POC</span>
             </Button>
           </Link>
@@ -251,10 +251,10 @@ export default async function PartnerDashboardPage() {
 
       {/* Announcements Notice */}
       {announcements.length > 0 && (
-        <div className="p-4 rounded-xl bg-cyan-950/30 border border-cyan-800/40 text-xs text-slate-300 flex items-start gap-3">
-          <span className="h-2 w-2 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#00B8FF]/10 via-[#0a182e]/60 to-transparent border border-[#00B8FF]/30 text-xs text-slate-300 flex items-start gap-3 shadow-md">
+          <span className="h-2 w-2 rounded-full bg-[#00B8FF] mt-1.5 shrink-0 shadow-[0_0_8px_#00B8FF]" />
           <div className="space-y-0.5">
-            <strong className="text-cyan-300 font-semibold">{announcements[0].title}</strong>
+            <strong className="text-[#00B8FF] font-semibold">{announcements[0].title}</strong>
             <p className="text-slate-400">{announcements[0].content}</p>
           </div>
         </div>
@@ -263,19 +263,19 @@ export default async function PartnerDashboardPage() {
       {/* 2. REAL LIVE METRIC CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Open Deal Registrations */}
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span>Open Deal Registrations</span>
-            <FileSpreadsheet className="h-4 w-4 text-cyan-400" />
+            <span className="font-medium">Open Deal Registrations</span>
+            <FileSpreadsheet className="h-4 w-4 text-[#00B8FF]" />
           </div>
           <div className="text-2xl font-bold text-white font-mono">{openDealsCount}</div>
           <div className="text-[11px] text-slate-500 mt-1">Active registered pipeline</div>
         </div>
 
         {/* Awaiting OmniPriv Review */}
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-amber-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span>Awaiting OmniPriv Review</span>
+            <span className="font-medium">Awaiting Review</span>
             <Clock className="h-4 w-4 text-amber-400" />
           </div>
           <div className="text-2xl font-bold text-amber-300 font-mono">{awaitingReviewCount}</div>
@@ -283,9 +283,9 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Protected Opportunities */}
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-emerald-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span>Protected Opportunities</span>
+            <span className="font-medium">Protected Opportunities</span>
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="text-2xl font-bold text-emerald-400 font-mono">{protectedDealsCount}</div>
@@ -293,9 +293,9 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Assigned Leads Requiring Action */}
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-blue-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span>Assigned Leads Requiring Action</span>
+            <span className="font-medium">Assigned Leads</span>
             <Inbox className="h-4 w-4 text-blue-400" />
           </div>
           <div className="text-2xl font-bold text-blue-400 font-mono">{assignedLeadsActionCount}</div>
@@ -303,9 +303,9 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Upcoming Renewals */}
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-purple-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span>Upcoming Renewals</span>
+            <span className="font-medium">Upcoming Renewals</span>
             <RefreshCw className="h-4 w-4 text-purple-400" />
           </div>
           <div className="text-2xl font-bold text-purple-400 font-mono">{upcomingRenewalsCount}</div>
@@ -497,35 +497,37 @@ export default async function PartnerDashboardPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {partnerTools.map((tool) => {
             const Icon = tool.icon;
             return (
               <div
                 key={tool.title}
-                className="p-5 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between group"
+                className="p-6 rounded-2xl bg-gradient-to-b from-[#0c182c]/90 via-[#081222]/90 to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/40 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="h-9 w-9 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-cyan-400 group-hover:border-cyan-500/40 transition-colors">
-                      <Icon className="h-4 w-4" />
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="h-10 w-10 rounded-xl bg-[#00B8FF]/10 border border-[#00B8FF]/20 flex items-center justify-center text-[#00B8FF] group-hover:scale-105 group-hover:bg-[#00B8FF]/15 transition-all">
+                      <Icon className="h-5 w-5" />
                     </div>
                     {tool.badge && (
-                      <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                      <span className="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shadow-sm">
                         {tool.badge}
                       </span>
                     )}
                   </div>
-                  <h3 className="text-sm font-bold text-white">{tool.title}</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{tool.description}</p>
+                  <h3 className="text-base font-bold text-white tracking-tight">{tool.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">{tool.description}</p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-slate-800/60">
+                <div className="mt-6 pt-4 border-t border-white/[0.06]">
                   <Link href={tool.href}>
                     <Button
                       variant={tool.primary ? 'primary' : 'outline'}
                       size="sm"
-                      className="w-full text-xs font-medium justify-between"
+                      className={`w-full text-xs font-semibold justify-between ${
+                        tool.primary ? 'shadow-md shadow-[#00B8FF]/20' : 'border-white/[0.1] text-slate-300 hover:text-white'
+                      }`}
                     >
                       <span>{tool.ctaText}</span>
                       <ArrowRight className="h-3.5 w-3.5" />

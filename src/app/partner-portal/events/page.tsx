@@ -41,7 +41,7 @@ export default async function PartnerEventsPage() {
             <span>Events, Briefings & Technical Labs</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Join live executive roadmap briefings, architecture masterclasses, and hands-on zero-trust deployment labs.
+            Join live executive roadmap briefings, architecture masterclasses, and hands-on AI-PAM deployment labs.
           </p>
         </div>
       </div>

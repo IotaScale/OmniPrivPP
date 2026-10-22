@@ -74,15 +74,15 @@ export default function SignInPage() {
             <div className="hidden lg:flex items-center gap-6 pt-4 text-xs text-slate-500 border-t border-slate-800/60">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
-                Zero Trust Architecture
+                AI-Powered PAM
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
-                Multi-Tenant Scoped
+                39 Behavioral Features
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
-                Strict PAM Separation
+                53 MCP Tool Controls
               </span>
             </div>
           </div>
@@ -172,8 +172,8 @@ export default function SignInPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/60 py-5 text-center text-xs text-slate-500 max-w-7xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
-        <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. Zero Trust Privileged Access Management.</div>
+      <footer className="border-t border-[#133052]/60 py-5 text-center text-xs text-slate-500 max-w-7xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
+        <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. AI-Powered Privileged Access Management.</div>
         <div className="flex items-center gap-4 text-slate-500">
           <Link href="/become-a-partner" className="hover:text-slate-400 transition-colors">
             Program Overview

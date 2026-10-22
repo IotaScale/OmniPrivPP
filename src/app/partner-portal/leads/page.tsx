@@ -8,6 +8,8 @@ import { StatusBadge } from '@/components/ui/badge';
 import { Inbox, Clock, AlertTriangle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { evaluateLeadSla } from '@/lib/utils/sla';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PartnerLeadsPage() {
   const session = await requirePartnerSession();
   const orgId = session.partnerOrgId!;

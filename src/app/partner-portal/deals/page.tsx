@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/badge';
 import { FileSpreadsheet, FilePlus2, Search, Filter, ShieldCheck, ArrowRight } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PartnerDealsListPage({
   searchParams,
 }: {

@@ -77,6 +77,8 @@ export async function updateLocatorProfileAction(
     });
 
     revalidatePath('/partner-portal/locator-profile');
+    revalidatePath('/find-a-partner');
+    revalidatePath('/channel-admin/partners');
     return { success: true };
   } catch (err: unknown) {
     console.error('[LOCATOR_PROFILE_ERROR]', err);

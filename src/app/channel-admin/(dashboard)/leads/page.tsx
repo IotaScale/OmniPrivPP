@@ -3,6 +3,8 @@ import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { LeadManagementClient } from './lead-management-client';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ChannelAdminLeadsPage() {
   await requireAdminSession();
 

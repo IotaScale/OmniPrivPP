@@ -8,6 +8,7 @@ import { generateDealReference } from '@/lib/utils/reference';
 import { logAuditEvent } from '@/lib/audit';
 import { DealStatus, UserRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 const DealSubmissionSchema = z.object({
   customerLegalName: z.string().min(2, 'Customer legal name is required'),
@@ -206,6 +207,11 @@ export async function submitDealRegistrationAction(
 
       return deal;
     });
+
+    revalidatePath('/partner-portal/deals');
+    revalidatePath('/partner-portal');
+    revalidatePath('/channel-admin/deals');
+    revalidatePath('/channel-admin');
 
     redirect(`/partner-portal/deals/${newDeal.id}?submitted=true`);
   } catch (err: unknown) {

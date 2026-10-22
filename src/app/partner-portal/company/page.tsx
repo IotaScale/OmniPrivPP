@@ -4,6 +4,8 @@ import { prisma } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { CompanyProfileForm } from './company-form';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PartnerCompanyPage() {
   const session = await requirePartnerSession();
 

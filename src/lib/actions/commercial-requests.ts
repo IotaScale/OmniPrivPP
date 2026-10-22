@@ -86,6 +86,9 @@ export async function submitCommercialRequestAction(
     });
 
     revalidatePath('/partner-portal/commercial-requests');
+    revalidatePath('/partner-portal');
+    revalidatePath('/channel-admin/commercial-requests');
+    revalidatePath('/channel-admin');
   } catch (err: unknown) {
     console.error('[COMMERCIAL_REQUEST_ERROR]', err);
     return { error: 'Failed to submit commercial request. Please try again.' };

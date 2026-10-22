@@ -15,7 +15,7 @@ export function PartnerSignupWizard() {
     country: '',
     region: '',
     partnerType: 'Reseller',
-    primaryFocus: 'Privileged Access Management (PAM) & Zero Trust',
+    primaryFocus: 'Privileged Access Management (PAM) & AI Identity Security',
     companyDescription: '',
     fullName: '',
     email: '',
@@ -479,7 +479,7 @@ export function PartnerSignupWizard() {
 
       {/* 3. Enterprise Footer */}
       <footer className="border-t border-white/[0.08] py-6 text-center text-xs text-slate-500 max-w-5xl mx-auto px-4 w-full flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. Zero Trust Privileged Access Management.</div>
+        <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. AI-Powered Privileged Access Management.</div>
         <div className="flex items-center gap-4 text-slate-500">
           <Link href="/become-a-partner" className="hover:text-slate-400 transition-colors">Program Overview</Link>
           <span>•</span>

@@ -40,6 +40,8 @@ export async function updatePartnerTierAction(formData: FormData) {
 
     revalidatePath(`/channel-admin/partners/${partnerId}`);
     revalidatePath('/channel-admin/partners');
+    revalidatePath('/partner-portal');
+    revalidatePath('/partner-portal/company');
   } catch (err: unknown) {
     console.error('[UPDATE_TIER_ERROR]', err);
   }
@@ -78,6 +80,8 @@ export async function updateCommercialRequestStatusAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/commercial-requests');
+    revalidatePath('/partner-portal/commercial-requests');
+    revalidatePath('/partner-portal');
   } catch (err: unknown) {
     console.error('[UPDATE_COMMERCIAL_REQUEST_ERROR]', err);
   }
@@ -116,6 +120,7 @@ export async function updateJbpStatusAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/jbp');
+    revalidatePath('/partner-portal/joint-business-plan');
   } catch (err: unknown) {
     console.error('[UPDATE_JBP_ERROR]', err);
   }

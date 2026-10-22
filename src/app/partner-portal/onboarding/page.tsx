@@ -42,8 +42,8 @@ export default async function PartnerOnboardingPage() {
     },
     {
       id: 3,
-      title: 'OmniPriv Products, Editions & PAM Architecture',
-      description: 'Understand Zero-Trust session brokering, ephemeral credentialing, and multi-tenant vaults.',
+      title: 'OmniPriv AI-PAM Engine & 9 Platform Modules',
+      description: 'Understand AI-PAM real-time ML scoring (39 features), 53 permission-gated MCP tools, and 3-level key vaulting (KEK/DEK/SEK).',
       completed: true,
       href: '/partner-portal/resources',
       cta: 'Explore Whitepapers',
@@ -66,8 +66,8 @@ export default async function PartnerOnboardingPage() {
     },
     {
       id: 6,
-      title: 'Technical Enablement & Implementation Guides',
-      description: 'Study deployment blueprints, ephemeral broker setups, and enterprise high availability.',
+      title: 'Technical Enablement & AI Agent Security Deployment',
+      description: 'Study deployment blueprints for VPN-free RDP/SSH gateways, prompt-injection guards, and 10s auto-block anomaly rules.',
       completed: true,
       href: '/partner-portal/resources?category=technical_enablement',
       cta: 'Read Tech Guides',

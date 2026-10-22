@@ -107,6 +107,8 @@ export async function submitJbpAction(
     });
 
     revalidatePath('/partner-portal/joint-business-plan');
+    revalidatePath('/channel-admin/jbp');
+    revalidatePath('/partner-portal');
     return { success: true };
   } catch (err: unknown) {
     console.error('[JBP_SUBMIT_ERROR]', err);
