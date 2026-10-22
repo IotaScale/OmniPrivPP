@@ -67,6 +67,8 @@ model User {
   email             String       @unique
   password_hash     String
   full_name         String
+  job_title         String?
+  phone             String?
   role              UserRole     @default(partner_user)
   email_verified_at DateTime?
   is_active         Boolean      @default(true)
@@ -80,6 +82,11 @@ model User {
   leads_assigned    LeadAssignment[]      @relation("LeadsAssignedBy")
   audit_events      AuditEvent[]
   notifications     Notification[]
+  commercial_requests CommercialRequest[]  @relation("CommercialRequestsByUser")
+  course_enrollments  CourseEnrollment[]
+  certifications      PartnerCertification[]
+  event_registrations EventRegistration[]
+  terms_acceptances   TermsAcceptance[]
 
   @@map("users")
 }
@@ -92,10 +99,13 @@ model PartnerOrganization {
   country                 String
   region                  String
   partner_type            String
+  primary_focus           String?
   market_vertical         String?
   company_summary         String?
   tier                    PartnerTier @default(Registered)
   partner_manager_user_id String?
+  partner_manager_name    String?     @default("Sarah Jenkins (Channel Director)")
+  partner_manager_email   String?     @default("sarah.jenkins@omnipriv.internal")
   status                  OrgStatus   @default(active)
   created_at              DateTime    @default(now())
   updated_at              DateTime    @updatedAt
@@ -106,6 +116,13 @@ model PartnerOrganization {
   renewals                Renewal[]
   audit_events            AuditEvent[]
   notifications           Notification[]
+  commercial_requests     CommercialRequest[]
+  course_enrollments      CourseEnrollment[]
+  partner_certifications  PartnerCertification[]
+  event_registrations     EventRegistration[]
+  joint_business_plans    JointBusinessPlan[]
+  terms_acceptances       TermsAcceptance[]
+  locator_profile         PartnerLocatorProfile?
 
   @@index([tier])
   @@index([status])
@@ -335,4 +352,249 @@ model Notification {
   @@index([is_read])
   @@index([created_at])
   @@map("notifications")
+}
+
+model CommercialRequest {
+  id                      String              @id @default(cuid())
+  public_reference        String              @unique
+  partner_organization_id String
+  requested_by_user_id    String
+  request_type            String              // poc, customer_trial, nfr_license, quote_request, order_assistance, license_expansion
+  status                  String              @default("submitted") // draft, submitted, in_review, approved, rejected, fulfilled
+  title                   String
+  customer_name           String?
+  seats_nodes             Int?
+  details                 String
+  admin_notes             String?
+  fulfilled_at            DateTime?
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+  requested_by            User                @relation("CommercialRequestsByUser", fields: [requested_by_user_id], references: [id])
+
+  @@index([partner_organization_id])
+  @@index([status])
+  @@index([created_at])
+  @@map("commercial_requests")
+}
+
+model Course {
+  id               String             @id @default(cuid())
+  title            String
+  description      String
+  track            String             // Sales, Presales, Technical
+  level            String             // Fundamental, Intermediate, Advanced
+  duration_minutes Int                @default(60)
+  modules_count    Int                @default(4)
+  is_published     Boolean            @default(true)
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @updatedAt
+
+  enrollments      CourseEnrollment[]
+
+  @@index([track])
+  @@index([level])
+  @@map("courses")
+}
+
+model CourseEnrollment {
+  id                      String              @id @default(cuid())
+  course_id               String
+  user_id                 String
+  partner_organization_id String
+  status                  String              @default("in_progress") // enrolled, in_progress, completed
+  progress_percent        Int                 @default(0)
+  completed_at            DateTime?
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+
+  course                  Course              @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  user                    User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@unique([course_id, user_id])
+  @@index([partner_organization_id])
+  @@index([user_id])
+  @@map("course_enrollments")
+}
+
+model Certification {
+  id                      String                 @id @default(cuid())
+  code                    String                 @unique // e.g. OCSP, OCIE, OCSE
+  name                    String
+  description             String
+  track                   String                 // Sell, Deploy, Manage
+  level                   String
+  validity_months         Int                    @default(24)
+  created_at              DateTime               @default(now())
+
+  partner_certifications  PartnerCertification[]
+
+  @@map("certifications")
+}
+
+model PartnerCertification {
+  id                      String              @id @default(cuid())
+  certification_id        String
+  user_id                 String
+  partner_organization_id String
+  certificate_number      String              @unique
+  issued_at               DateTime            @default(now())
+  expires_at              DateTime
+  status                  String              @default("active") // active, expiring_soon, expired
+  verified_by_admin       Boolean             @default(true)
+  created_at              DateTime            @default(now())
+
+  certification           Certification       @relation(fields: [certification_id], references: [id], onDelete: Cascade)
+  user                    User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([partner_organization_id])
+  @@index([user_id])
+  @@index([status])
+  @@map("partner_certifications")
+}
+
+model Campaign {
+  id               String    @id @default(cuid())
+  title            String
+  summary          String
+  related_product  String
+  target_audience  String
+  start_date       DateTime
+  end_date         DateTime?
+  status           String    @default("active") // active, upcoming, ended
+  assets_url       String?
+  email_copy       String?
+  social_copy      String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  @@index([status])
+  @@map("campaigns")
+}
+
+model Event {
+  id               String              @id @default(cuid())
+  title            String
+  event_type       String              // webinar, technical_workshop, partner_briefing, summit
+  description      String
+  starts_at        DateTime
+  duration_minutes Int                 @default(60)
+  timezone         String              @default("UTC")
+  product_area     String
+  recording_url    String?
+  meeting_link     String?
+  is_published     Boolean             @default(true)
+  created_at       DateTime            @default(now())
+  updated_at       DateTime            @updatedAt
+
+  registrations    EventRegistration[]
+
+  @@index([starts_at])
+  @@index([is_published])
+  @@map("events")
+}
+
+model EventRegistration {
+  id                      String              @id @default(cuid())
+  event_id                String
+  user_id                 String
+  partner_organization_id String
+  registered_at           DateTime            @default(now())
+  attended                Boolean             @default(false)
+
+  event                   Event               @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  user                    User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, user_id])
+  @@index([partner_organization_id])
+  @@index([user_id])
+  @@map("event_registrations")
+}
+
+model JointBusinessPlan {
+  id                      String              @id @default(cuid())
+  partner_organization_id String
+  year                    Int
+  growth_goals            String
+  revenue_target          Float
+  focus_products          String
+  target_industries       String
+  key_accounts            String?
+  technical_plan          String?
+  marketing_activities    String?
+  milestones              String?
+  status                  String              @default("draft") // draft, submitted, under_review, changes_requested, approved, archived
+  admin_feedback          String?
+  submitted_at            DateTime?
+  approved_at             DateTime?
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([partner_organization_id])
+  @@index([year])
+  @@index([status])
+  @@map("joint_business_plans")
+}
+
+model TermsAcceptance {
+  id                      String              @id @default(cuid())
+  user_id                 String
+  partner_organization_id String
+  terms_version           String
+  policy_name             String
+  accepted_at             DateTime            @default(now())
+  ip_address              String?
+
+  user                    User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([partner_organization_id])
+  @@index([user_id])
+  @@map("terms_acceptances")
+}
+
+model PartnerLocatorProfile {
+  id                      String              @id @default(cuid())
+  partner_organization_id String              @unique
+  opt_in                  Boolean             @default(false)
+  is_approved             Boolean             @default(false)
+  is_published            Boolean             @default(false)
+  public_company_name     String
+  public_description      String?
+  website                 String?
+  country                 String
+  region                  String?
+  city                    String?
+  partner_type            String
+  tracks                  String[]            @default([])
+  industry_focus          String[]            @default([])
+  tier                    PartnerTier         @default(Registered)
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+
+  organization            PartnerOrganization @relation(fields: [partner_organization_id], references: [id], onDelete: Cascade)
+
+  @@index([is_published])
+  @@index([country])
+  @@map("partner_locator_profiles")
+}
+
+model Announcement {
+  id               String    @id @default(cuid())
+  title            String
+  content          String
+  priority         String    @default("normal") // normal, important, critical
+  is_published     Boolean   @default(true)
+  published_at     DateTime  @default(now())
+  created_at       DateTime  @default(now())
+
+  @@index([is_published])
+  @@index([published_at])
+  @@map("announcements")
 }

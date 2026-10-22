@@ -14,6 +14,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,12 +26,21 @@ export default async function ChannelAdminDashboardLayout({
   const session = await requireAdminSession();
 
   // Query live counts for badges
-  const [dealsReviewCount, leadsPendingCount] = await Promise.all([
+  const [dealsReviewCount, conflictsCount, leadsPendingCount, requestsPendingCount, jbpPendingCount] = await Promise.all([
     prisma.dealRegistration.count({
       where: { status: DealStatus.awaiting_approval },
     }),
+    prisma.dealRegistration.count({
+      where: { conflict_detected: true, status: DealStatus.awaiting_approval },
+    }),
     prisma.leadAssignment.count({
       where: { partner_acceptance_status: LeadAcceptanceStatus.pending },
+    }),
+    prisma.commercialRequest.count({
+      where: { status: 'submitted' },
+    }),
+    prisma.jointBusinessPlan.count({
+      where: { status: 'submitted' },
     }),
   ]);
 
@@ -38,19 +48,42 @@ export default async function ChannelAdminDashboardLayout({
     { label: 'Overview', href: '/channel-admin', icon: LayoutDashboard },
     { label: 'Partners', href: '/channel-admin/partners', icon: Building2 },
     {
-      label: 'Deals Review',
+      label: 'Deals',
       href: '/channel-admin/deals',
       icon: FileCheck2,
       badge: dealsReviewCount > 0 ? dealsReviewCount : undefined,
     },
     {
-      label: 'Leads Routing',
+      label: 'Conflicts',
+      href: '/channel-admin/deal-conflicts',
+      icon: ShieldAlert,
+      badge: conflictsCount > 0 ? conflictsCount : undefined,
+    },
+    {
+      label: 'Leads',
       href: '/channel-admin/leads',
       icon: Inbox,
       badge: leadsPendingCount > 0 ? leadsPendingCount : undefined,
     },
-    { label: 'Commercial Renewals', href: '/channel-admin/renewals', icon: RefreshCw },
-    { label: 'Audit Trail', href: '/channel-admin/audit', icon: ScrollText },
+    {
+      label: 'Requests',
+      href: '/channel-admin/commercial-requests',
+      icon: ScrollText,
+      badge: requestsPendingCount > 0 ? requestsPendingCount : undefined,
+    },
+    { label: 'Renewals', href: '/channel-admin/renewals', icon: RefreshCw },
+    { label: 'Programs', href: '/channel-admin/programs', icon: Building2 },
+    { label: 'Resources', href: '/channel-admin/resources', icon: ScrollText },
+    { label: 'Learning', href: '/channel-admin/learning', icon: ScrollText },
+    { label: 'Campaigns', href: '/channel-admin/campaigns', icon: ScrollText },
+    { label: 'Events', href: '/channel-admin/events', icon: ScrollText },
+    {
+      label: 'JBP',
+      href: '/channel-admin/jbp',
+      icon: ScrollText,
+      badge: jbpPendingCount > 0 ? jbpPendingCount : undefined,
+    },
+    { label: 'Audit Log', href: '/channel-admin/audit-log', icon: ScrollText },
   ];
 
   return (
@@ -59,16 +92,7 @@ export default async function ChannelAdminDashboardLayout({
       <header className="sticky top-0 z-40 bg-slate-900/95 border-b border-indigo-950/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/channel-admin" className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <ShieldAlert className="h-4 w-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold tracking-tight text-white flex items-center gap-2 text-sm">
-                  OmniPriv <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-indigo-950 border border-indigo-800 text-indigo-400 uppercase tracking-wider">Channel Ops Console</span>
-                </span>
-              </div>
-            </Link>
+            <OmniPrivLogo variant="admin" href="/channel-admin" priority />
           </div>
 
           <div className="flex items-center gap-4">

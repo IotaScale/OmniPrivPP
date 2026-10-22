@@ -95,8 +95,8 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
         {/* Step dots */}
         <div className="flex items-center gap-2">
           {[
-            { num: 1, label: 'Customer' },
-            { num: 2, label: 'Opportunity' },
+            { num: 1, label: 'Deal Details' },
+            { num: 2, label: 'Product Details' },
             { num: 3, label: 'Review & Submit' },
           ].map((s) => (
             <div key={s.num} className="flex items-center gap-2">
@@ -134,16 +134,16 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
       <form action={formAction}>
         <input type="hidden" name="leadAssignmentId" value={formData.leadAssignmentId} />
 
-        {/* STEP 1: Customer Details */}
+        {/* STEP 1: Deal Details */}
         {currentStep === 1 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-cyan-400" />
-                <span>Step 1: Customer Details & Normalized Domain</span>
+                <span>Step 1: Deal Details</span>
               </CardTitle>
               <CardDescription>
-                Provide the legal entity and primary domain of the prospective client.
+                Provide the legal entity, primary domain, and contact details for the customer opportunity.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -253,16 +253,16 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
           </Card>
         )}
 
-        {/* STEP 2: Opportunity Details */}
+        {/* STEP 2: Product Details */}
         {currentStep === 2 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Layers className="h-4 w-4 text-cyan-400" />
-                <span>Step 2: Opportunity & Scope Details</span>
+                <span>Step 2: Product Details</span>
               </CardTitle>
               <CardDescription>
-                Specify the PAM solution plan, capacity, expected value, and timelines.
+                OmniPriv product interest, deployment model, expected seat count, and estimated deal value.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -401,7 +401,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-cyan-400" />
-                <span>Step 3: Review Opportunity & Confirm Declaration</span>
+                <span>Step 3: Review & Submit</span>
               </CardTitle>
               <CardDescription>
                 Verify commercial facts before submitting to OmniPriv Channel review.

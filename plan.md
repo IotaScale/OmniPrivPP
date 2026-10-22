@@ -1,12 +1,12 @@
-# OmniPriv Channel Partner Portal — Implementation Plan
+# OmniPriv Channel Partner Portal — Master Architecture & Implementation Plan
 
-This document tracks all completed phases, schema migrations, route implementations, security boundaries, testing, and operational status for the standalone OmniPriv Channel Partner Portal.
+This document tracks all completed phases, schema models, route implementations, security boundaries, testing, and operational status for the production-grade standalone OmniPriv Channel Partner Portal.
 
 ---
 
 ## 1. Architecture & Stack Overview
 
-- **Framework**: Next.js 16 (App Router, Server Components & Server Actions)
+- **Framework**: Next.js 16 (App Router, Server Components & Server Actions, Turbopack)
 - **Language**: TypeScript (strict mode)
 - **Database**: PostgreSQL (v16/18)
 - **ORM**: Prisma ORM with native PostgreSQL migrations & schema synchronization
@@ -23,75 +23,171 @@ This document tracks all completed phases, schema migrations, route implementati
 | Phase | Description | Status | Verification / Notes |
 |-------|-------------|--------|----------------------|
 | **Phase 1** | Repository setup, Docker Compose, `.env.example`, `plan.md`, `AGENTS.md`, `README.md` | Completed | Docker compose, env templates, and agent rules active |
-| **Phase 2** | PostgreSQL schema (`prisma/schema.prisma`), Prisma Client, idempotent seed (`prisma/seed.ts`) | Completed | 11 relational models with indexes, foreign keys & seed routine |
-| **Phase 3** | Authentication & sessions: Argon2id hashing, secure cookies, `/sign-up`, `/sign-in`, Channel Admin seed | Completed | Auto-provisioning transaction & instant workspace access |
-| **Phase 4** | RBAC middleware & route protection (`partner_owner`, `partner_member`, `channel_admin`), 403 screen | Completed | Server-side boundary enforcement & in-app 403 screen |
-| **Phase 5** | Partner layout & workspace shell (topbar, navigation, active organization context) | Completed | Exclusively scoped to authenticated organization |
-| **Phase 6** | Partner Overview dashboard (`/partner-portal`) with real data & purposeful empty states | Completed | Zero fake charts, live DB queries & actionable cards |
+| **Phase 2** | PostgreSQL schema (`prisma/schema.prisma`), Prisma Client, idempotent seed (`prisma/seed.ts`) | Completed | 24 relational models with indexes, foreign keys & comprehensive seed routine |
+| **Phase 3** | Authentication & sessions: Argon2id hashing, secure cookies, `/partners/register`, `/sign-in`, Channel Admin seed | Completed | Auto-provisioning transaction & instant workspace access with zero application waiting gates |
+| **Phase 4** | RBAC middleware & route protection (`partner_owner`, `partner_member`, `channel_admin`), in-app 403 screen | Completed | Server-side boundary enforcement & in-app 403 screen |
+| **Phase 5** | Partner layout & workspace shell (topbar, navigation, active organization context) | Completed | Exclusively scoped to authenticated organization with 4 major navigation categories |
+| **Phase 6** | Partner Overview dashboard (`/partner-portal`) with real PostgreSQL data & purposeful empty states | Completed | Zero fake charts, live DB queries, announcements, assigned Partner Manager & quick actions |
 | **Phase 7** | Deal registration 3-step wizard (`/partner-portal/deals/new`) + domain normalization & conflict detection | Completed | Submits into `awaiting_approval` with audit & admin notification |
 | **Phase 8** | Deal list (`/partner-portal/deals`) & detail view (`/partner-portal/deals/[id]`) with status timeline | Completed | Multi-tenant isolated, status badge & next step guidance |
-| **Phase 9** | Channel Admin console (`/channel-admin/*`) deal approval, 90-day protection & extension workflow | Completed | Approval grants exactly 90-day protection window |
-| **Phase 10** | Lead operations: Inbound leads, assignment to partners, 7-day SLA deadline, partner accept/decline/convert | Completed | CSV import, SLA calculations, lead-to-deal conversion |
+| **Phase 9** | Channel Admin console (`/channel-admin/*`) deal approval, 90-day protection & domain conflict arbitration | Completed | Approval grants exactly 90-day protection window, conflict arbitration queue |
+| **Phase 10** | Lead operations: Inbound leads, assignment to partners, 7-day SLA deadline, partner accept/decline/convert | Completed | CSV import, SLA countdown calculations, lead-to-deal conversion |
 | **Phase 11** | Renewals (`/partner-portal/renewals`), Resources (`/partner-portal/resources`), Company & Team management | Completed | Last-owner removal protection & tier-restricted collateral |
-| **Phase 12** | Audit log (`/channel-admin/audit`) & in-app notifications system | Completed | Multi-parameter filtering on immutable audit events |
-| **Phase 13** | UI/UX refinement, enterprise dark/light contrast, mobile responsiveness & keyboard accessibility | Completed | High density, professional PAM enterprise aesthetic |
-| **Phase 14** | Unit tests (Vitest), end-to-end flows, production build validation & documentation | Completed | 23/23 tests pass, Next.js build clean with 0 errors |
-| **Phase 15** | Local PostgreSQL connection: Windows PostgreSQL 18 service (`D:\Program Files\PostgreSQL\18`), `omnipriv_partner` database, `omnipriv` role, `.env` DATABASE_URL, initial migration + seed applied | Completed | 12 tables in public schema; `psql` connection verified; seed created Channel Admin + enablement resources |
+| **Phase 12** | Commercial Requests (`/partner-portal/commercial-requests`): PoC, Customer Trial, NFR lab license, Quote | Completed | Multi-request workflow with admin fulfillment queue (`/channel-admin/commercial-requests`) |
+| **Phase 13** | Enablement Suite: Onboarding 9-step checklist, Learning catalog & progress, Certifications tracking | Completed | Database-backed completions, course enrollment action, admin course manager |
+| **Phase 14** | Marketing & Channel Growth: Co-Marketing Campaigns, Events & Webinars registration | Completed | Database-driven asset bundles, webinar RSVP, admin campaign & event managers |
+| **Phase 15** | Joint Business Plans (`/partner-portal/joint-business-plan` & `/channel-admin/jbp`) | Completed | Annual target setting, quarterly milestones, notes, admin review & status lifecycle |
+| **Phase 16** | Legal & Directory: Terms & Policies (`/partner-portal/terms`), Public Partner Locator (`/find-a-partner`) | Completed | Partner opt-in/edit (`/partner-portal/locator-profile`), admin approval requirement |
+| **Phase 17** | Channel Admin Governance: Partner detail (`/channel-admin/partners/[partnerId]`), Programs & Audit Log | Completed | Tier upgrade, Partner Manager assignment, tier criteria & forensic audit viewer |
+| **Phase 18** | Unit tests (Vitest), Next.js 16 production build verification & handoff | Completed | 23/23 tests pass, Next.js 16 build compiles all 48 routes with 0 errors |
+| **Phase 19** | Local PostgreSQL connection: Windows PostgreSQL 18 service (`D:\Program Files\PostgreSQL\18`), `omnipriv_partner` database, `omnipriv` role, `.env` DATABASE_URL, initial migration + seed applied | Completed | 12 tables in public schema; `psql` connection verified; seed created Channel Admin + enablement resources |
 
 ---
 
-## 3. Database Schema Models
+## 3. Database Schema Models (PostgreSQL Source of Truth)
 
 - [x] `User`: id, email (unique), password_hash, full_name, email_verified_at, is_active, timestamps
-- [x] `PartnerOrganization`: id, legal_name, display_name, website, country, region, partner_type, market_vertical, company_summary, tier (Registered/Silver/Gold/Platinum), status (active/suspended), timestamps
-- [x] `PartnerMembership`: id, user_id, partner_organization_id, role (partner_owner/partner_member), invited_by_user_id, joined_at, timestamps (unique on [user_id, partner_organization_id])
-- [x] `DealRegistration`: id, public_reference (OPR-YYYY-XXXXXX), partner_organization_id, submitted_by_user_id, customer_legal_name, customer_domain, customer_country, customer_industry, customer_contact_name, customer_contact_email, customer_contact_phone, product_interest, deployment_type, estimated_arr, estimated_deal_value, currency, expected_seat_count, expected_close_date, deployment_timeline, opportunity_source, partner_notes, status (draft, awaiting_approval, approved, declined, closed_won, closed_lost, expired), conflict_detected, conflict_reason, reviewed_by_user_id, reviewed_at, admin_decision_reason, protection_starts_at, protection_expires_at, closed_at, timestamps
+- [x] `PartnerOrganization`: id, legal_name, display_name, website, country, region, partner_type, market_vertical, company_summary, tier (Registered/Silver/Gold/Platinum), status, partner_manager_name, partner_manager_email, timestamps
+- [x] `PartnerMembership`: id, user_id, partner_organization_id, role (partner_owner/partner_member), joined_at, timestamps
+- [x] `DealRegistration`: id, public_reference (OPR-YYYY-XXXXXX), partner_organization_id, submitted_by_user_id, customer_legal_name, customer_domain, customer_country, customer_industry, customer_contact_name, customer_contact_email, customer_contact_phone, product_interest, deployment_type, estimated_arr, estimated_deal_value, currency, expected_seat_count, expected_close_date, deployment_timeline, opportunity_source, partner_notes, status, conflict_detected, conflict_reason, reviewed_by_user_id, reviewed_at, admin_decision_reason, protection_starts_at, protection_expires_at, closed_at, timestamps
 - [x] `DealStatusHistory`: id, deal_registration_id, previous_status, new_status, changed_by_user_id, note, created_at
 - [x] `Lead`: id, public_reference, customer_name, customer_domain, contact_first_name, contact_last_name, contact_email, contact_phone, company, country, region, industry, lead_source, product_interest, estimated_seat_count, customer_comment, internal_notes, status, timestamps
-- [x] `LeadAssignment`: id, lead_id, partner_organization_id, assigned_by_user_id, assigned_at, acceptance_deadline_at, partner_acceptance_status (pending, accepted, declined), accepted_at, declined_at, decline_reason, current_status, converted_deal_registration_id, timestamps
+- [x] `LeadAssignment`: id, lead_id, partner_organization_id, assigned_by_user_id, assigned_at, acceptance_deadline_at, partner_acceptance_status, accepted_at, declined_at, decline_reason, current_status, converted_deal_registration_id, timestamps
 - [x] `Renewal`: id, partner_organization_id, customer_name, product_plan, contracted_capacity, renewal_date, contract_value, currency, commercial_status, timestamps
 - [x] `ResourceItem`: id, title, description, category, url, visible_to_tiers, is_published, timestamps
 - [x] `AuditEvent`: id, actor_user_id, partner_organization_id, entity_type, entity_id, event_type, before_data, after_data, metadata, ip_address, created_at
 - [x] `Notification`: id, user_id, partner_organization_id, title, message, link, is_read, type, created_at
+- [x] `CommercialRequest`: id, public_reference, partner_organization_id, requested_by_user_id, request_type (poc, customer_trial, nfr_license, quote_request, license_expansion, order_support), customer_name, customer_domain, seats_requested, notes, status (submitted, in_review, approved, rejected, fulfilled), admin_notes, fulfilled_at, timestamps
+- [x] `Course`: id, title, slug, track (sales, presales, technical), level (beginner, intermediate, advanced), duration_minutes, description, modules_count, is_published, timestamps
+- [x] `CourseEnrollment`: id, course_id, user_id, partner_organization_id, status (enrolled, in_progress, completed), progress_percent, completed_at, timestamps
+- [x] `Certification`: id, name, code, track, validity_months, description, timestamps
+- [x] `PartnerCertification`: id, certification_id, user_id, partner_organization_id, certificate_number, issued_at, expires_at, status, timestamps
+- [x] `Campaign`: id, title, code, summary, product, target_audience, start_date, end_date, status, asset_count, downloadable_assets, timestamps
+- [x] `Event`: id, title, event_type (webinar, hands_on_lab, partner_briefing, executive_summit), description, start_time, duration_minutes, timezone, product_area, recording_url, status, timestamps
+- [x] `EventRegistration`: id, event_id, user_id, partner_organization_id, registered_at, attended
+- [x] `JointBusinessPlan`: id, partner_organization_id, year, growth_goals, revenue_target, pipeline_target, focus_products, target_industries, key_accounts, technical_plan, marketing_plan, q1_milestones, q2_milestones, q3_milestones, q4_milestones, status (draft, submitted, under_review, changes_requested, approved, archived), admin_feedback, timestamps
+- [x] `TermsAcceptance`: id, user_id, partner_organization_id, terms_type, version, ip_address, accepted_at
+- [x] `PartnerLocatorProfile`: id, partner_organization_id (unique), is_published, opt_in, public_company_name, public_website, country, city, partner_type, tiers, certified_engineers_count, specializations, overview, reviewed_by_user_id, reviewed_at, timestamps
+- [x] `Announcement`: id, title, summary, category, is_active, pinned, published_at, timestamps
 
 ---
 
-## 4. Protected Routes & Authorization Matrix
+## 4. Complete Route Map & Authorization Matrix
 
-| Route | Minimum Role Required | Scope | Status |
-|-------|----------------------|-------|--------|
-| `/` | Public | Landing page / Session redirect | Implemented |
-| `/sign-up`, `/sign-in` | Public / Guest | Unauthenticated | Implemented |
-| `/partner-portal` | `partner_member` or `partner_owner` | Scoped to user's `partner_organization_id` | Implemented |
-| `/partner-portal/deals` | `partner_member` or `partner_owner` | Own deals list with filters | Implemented |
-| `/partner-portal/deals/new` | `partner_member` or `partner_owner` | 3-step registration wizard | Implemented |
-| `/partner-portal/deals/[id]` | `partner_member` or `partner_owner` | Own deal detail + timeline | Implemented |
-| `/partner-portal/leads` | `partner_member` or `partner_owner` | Own assigned leads + SLA | Implemented |
-| `/partner-portal/leads/[id]` | `partner_member` or `partner_owner` | Accept/decline & deal conversion | Implemented |
-| `/partner-portal/renewals` | `partner_member` or `partner_owner` | Own renewals only | Implemented |
-| `/partner-portal/resources` | `partner_member` or `partner_owner` | Filtered by partner tier | Implemented |
-| `/partner-portal/company` | `partner_owner` (view for member) | Own organization | Implemented |
-| `/partner-portal/team` | `partner_owner` | Team invitations & last-owner protection | Implemented |
-| `/channel-admin/login` | Public / Guest | Unauthenticated admin login | Implemented |
-| `/channel-admin/access-denied` | Public / Partner | In-app 403 Security Boundary | Implemented |
-| `/channel-admin` | `channel_admin` | Global cross-partner dashboard | Implemented |
-| `/channel-admin/partners` | `channel_admin` | Partner management & tier updates | Implemented |
-| `/channel-admin/deals` | `channel_admin` | Approval queue & 90-day protection | Implemented |
-| `/channel-admin/leads` | `channel_admin` | Inbound lead routing & CSV import | Implemented |
-| `/channel-admin/renewals` | `channel_admin` | Global commercial renewals | Implemented |
-| `/channel-admin/audit` | `channel_admin` | Immutable forensic audit log | Implemented |
+### Public Routes
+| Route | Access | Purpose |
+|-------|--------|---------|
+| `/` | Public | Home redirect to portal or program landing |
+| `/partners` | Public | Branded Partner Program landing page |
+| `/partners/register` | Public | Enterprise partner company registration wizard |
+| `/become-a-partner` | Public | Program overview & value proposition |
+| `/sign-in` | Public / Guest | Partner authentication with Argon2id |
+| `/sign-up` | Public / Guest | Registration alternative |
+| `/forgot-password` | Public | Self-service password recovery initiation |
+| `/reset-password` | Public | Secure tokenized password reset |
+| `/verify-email` | Public | Instant email verification confirmation |
+| `/find-a-partner` | Public | Searchable OmniPriv Certified Partner Directory |
+
+### Authenticated Partner Workspace (`/partner-portal/*`)
+*Strictly scoped by authenticated session `partner_organization_id`.*
+
+| Route | Minimum Role | Module Description |
+|-------|--------------|--------------------|
+| `/partner-portal` | `partner_member` | Live KPI cards, SLA alerts, announcements, Partner Manager, quick actions |
+| `/partner-portal/deals` | `partner_member` | Deal registrations list, search, filters, pagination, protection warnings |
+| `/partner-portal/deals/new` | `partner_member` | 3-step opportunity wizard with real-time domain conflict engine |
+| `/partner-portal/deals/[id]` | `partner_member` | Opportunity details, immutable status timeline & history, admin feedback |
+| `/partner-portal/leads` | `partner_member` | Vendor-assigned leads list, 7-day SLA countdown badge |
+| `/partner-portal/leads/[id]` | `partner_member` | Lead detail, accept/decline actions, prefilled Deal Registration conversion |
+| `/partner-portal/renewals` | `partner_member` | Commercial renewals list, expiry countdown, assistance requests |
+| `/partner-portal/commercial-requests` | `partner_member` | Commercial requests list (PoC, Trials, NFR lab license, Quotes) |
+| `/partner-portal/commercial-requests/new` | `partner_member` | Request submission form with customer & seat parameters |
+| `/partner-portal/resources` | `partner_member` | Searchable sales battlecards, technical datasheets, brand guides |
+| `/partner-portal/onboarding` | `partner_member` | 9-step guided enablement checklist with completion tracker |
+| `/partner-portal/learning` | `partner_member` | Role-based training catalog (Sales, Presales, Technical) with instant enrollment |
+| `/partner-portal/certifications` | `partner_member` | Active, expiring & expired certifications with renewal instructions |
+| `/partner-portal/joint-business-plan` | `partner_member` | Annual growth targets, quarterly milestones, submission to Partner Manager |
+| `/partner-portal/campaigns` | `partner_member` | Co-marketing campaign packs, email templates, social copy |
+| `/partner-portal/events` | `partner_member` | Technical webinars & lab schedule with 1-click RSVP |
+| `/partner-portal/company` | `partner_member` | Company profile, business vertical, legal location |
+| `/partner-portal/team` | `partner_owner` | Team invitations, role assignments, last-owner removal protection |
+| `/partner-portal/terms` | `partner_member` | Legal agreements, partner code of conduct, and accepted policy versions |
+| `/partner-portal/locator-profile` | `partner_owner` | Public directory profile editor, specializations, opt-in moderation request |
+
+### Internal Channel Admin Console (`/channel-admin/*`)
+*Strictly restricted to `channel_admin` role. Returns in-app `403 Access Denied` to partners.*
+
+| Route | Role | Governance Capability |
+|-------|------|----------------------|
+| `/channel-admin/login` | Public / Admin | Admin portal login |
+| `/channel-admin/access-denied` | Any | In-app 403 Security Boundary UI |
+| `/channel-admin` | `channel_admin` | Cross-partner operational KPIs, pipeline value, SLA risk queue |
+| `/channel-admin/partners` | `channel_admin` | Global partner directory, status filtering, tier breakdown |
+| `/channel-admin/partners/[partnerId]` | `channel_admin` | Partner tier promotion, Partner Manager assignment, audit history |
+| `/channel-admin/deals` | `channel_admin` | Deal approval queue, 90-day protection assignment, term extensions |
+| `/channel-admin/deal-conflicts` | `channel_admin` | Customer domain conflict arbitration, evidence review, claim ruling |
+| `/channel-admin/leads` | `channel_admin` | Inbound lead creation, CSV batch import, multi-partner routing |
+| `/channel-admin/renewals` | `channel_admin` | Commercial renewal tracking across partner network |
+| `/channel-admin/commercial-requests` | `channel_admin` | Review, approve, reject, or fulfill PoC/Trial/NFR requests |
+| `/channel-admin/programs` | `channel_admin` | Program tiers, margin schedules, and track criteria |
+| `/channel-admin/resources` | `channel_admin` | Enablement asset publishing and tier visibility settings |
+| `/channel-admin/learning` | `channel_admin` | Curriculum management and course authoring |
+| `/channel-admin/campaigns` | `channel_admin` | Co-marketing campaign creator and pack distributor |
+| `/channel-admin/events` | `channel_admin` | Partner event and webinar scheduler |
+| `/channel-admin/jbp` | `channel_admin` | Partner Joint Business Plan review and feedback queue |
+| `/channel-admin/audit-log` | `channel_admin` | Immutable security audit trail with actor and entity tracking |
 
 ---
 
-## 5. Test Suite Verification
+## 5. Security & Isolation Verification
+
+1. **Zero Mock Data in Production**: All dashboards, lists, and metrics directly query PostgreSQL via Prisma.
+2. **Multi-Tenant Server Isolation**: Every partner query strictly derives `partner_organization_id` from the trusted authenticated session.
+3. **Hard PAM Separation**: The portal contains zero access paths to customer PAM tenants, vaults, credentials, privileged sessions, session recordings, or HSM encryption keys.
+4. **Channel Admin Boundary**: Any partner accessing `/channel-admin/*` is immediately blocked by server-side session checks and redirected to `/channel-admin/access-denied` (in-app 403 UI).
+5. **Argon2id Hashing**: Password hashing uses Argon2id with salt generation.
+6. **Immutable Audit Events**: All critical state changes (registration, approval, decline, extension, conflict resolution, lead conversion, request fulfillment) append an immutable `AuditEvent`.
+
+---
+
+## 6. Test Suite & Verification Results
 
 - **Unit & Integration Suite (`npm test`)**:
-  - `domain.test.ts`: FQDN parsing, subdomain stripping, protocol normalization (6/6 tests passing)
-  - `sla-and-protection.test.ts`: 90-day protection date calculation & 7-day lead SLA (4/4 tests passing)
-  - `rbac-and-transitions.test.ts`: Permission evaluation, boundary enforcement & deal transitions (8/8 tests passing)
-  - `flows.test.ts`: Database integration flows covering registration, deal creation, conflict detection, approval, 90-day protection, multi-tenant isolation, and lead conversion (5/5 tests passing)
-  - **Total**: 23/23 tests passing in < 1 second.
-- **Production Build Pipeline (`npm run build`)**:
-  - Zero TypeScript compile errors.
-  - Zero routing errors.
-  - All 21 app routes generated and validated.
+  - `domain.test.ts`: FQDN parsing, subdomain stripping, protocol normalization (6/6 passing)
+  - `sla-and-protection.test.ts`: 90-day protection date calculation & 7-day lead SLA (4/4 passing)
+  - `rbac-and-transitions.test.ts`: Permission evaluation, boundary enforcement & deal transitions (8/8 passing)
+  - `flows.test.ts`: Complete database integration flows covering registration, deal creation, conflict detection, approval, 90-day protection, multi-tenant isolation, and lead conversion (5/5 passing)
+  - **Result**: 23/23 tests passing in < 1 second.
+- **Production Build (`npm run build`)**:
+  - Next.js 16.4.2 (Turbopack)
+  - Zero TypeScript errors (`Finished TypeScript in 5.2s`)
+  - All 48 routes compiled successfully.
+
+---
+
+## 7. Official OmniPriv Visual Branding & UI Polish Pass
+
+### Reference Assets Source (`Webomnipriv`)
+- **Logo**: Extracted vector `omnipriv-logo.svg` (200x50 SVG containing the official gradient shield `#00D4FF` to `#0099CC` and bold OmniPriv logotype).
+- **Favicon & App Icons**: Copied `icon.svg`, `favicon.ico`, `favicon-16x16.png`, and `apple-touch-icon.png` into `public/` and `src/app/`.
+- **Color Palette & Theme Tokens**:
+  - Primary Cyan: `#00b8ff` / `#00d4ff`
+  - Space Navy Dark Background: `#030711`
+  - Surface Background: `#0a1628`
+  - Elevated Background: `#0d1e36`
+  - Navy Border: `#133052`
+  - Brand Glows: Atmospheric cyan ambient gradients with `prefers-reduced-motion` compliance.
+
+### Implemented Enhancements
+1. **Centralized Vector Logo (`OmniPrivLogo`)**:
+   - Replaced all ad-hoc shield icons and plain text headers across Partner Portal, Channel Admin, Sign-in, Sign-up, Forgot/Reset Password, Verify Email, Find a Partner, 403 Access Denied, and Home page.
+   - Built with crisp responsive scaling (`variant="partner"`, `"admin"`, `"icon"`, `"full"`).
+2. **Metadata & Favicon Setup**:
+   - Updated `src/app/layout.tsx` metadata with official favicon icons, Apple touch icons, and accurate enterprise PAM channel platform descriptions.
+3. **CSS Design Tokens**:
+   - Centralized OmniPriv tokens in `src/app/globals.css` with atmospheric page gradients, subtle border utilities, and reduced-motion fallbacks.
+4. **Copy & Identity Scrubbing**:
+   - Completely purged non-OmniPriv naming and Kaspersky copy from signup wizard and comments.
+5. **Architectural Integrity**:
+   - Zero changes to database schema, API contracts, RBAC authorization, or multi-tenant scoping.
+

@@ -2,7 +2,7 @@ import React from 'react';
 import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { DealStatus, Prisma } from '@prisma/client';
-import { ChannelAdminDealsTable } from './deals-table';
+import { ChannelAdminDealsTable, ConflictingDealSummary } from './deals-table';
 import { FileCheck2 } from 'lucide-react';
 
 export default async function ChannelAdminDealsPage({
@@ -46,7 +46,7 @@ export default async function ChannelAdminDealsPage({
   });
 
   let selectedDeal = null;
-  let conflictingDeals: any[] = [];
+  let conflictingDeals: ConflictingDealSummary[] = [];
 
   if (selectedId) {
     selectedDeal = await prisma.dealRegistration.findUnique({

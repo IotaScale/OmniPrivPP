@@ -2,10 +2,19 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'OmniPriv Channel Partner Portal',
-  description: 'B2B Channel Sales Platform for OmniPriv Privileged Access Management',
+  title: {
+    default: 'OmniPriv Channel Partner Portal | Zero Trust PAM Platform',
+    template: '%s | OmniPriv Partner Portal',
+  },
+  description: 'Enterprise B2B Channel Sales, Deal Registration, and Enablement Platform for OmniPriv Privileged Access Management.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/omnipriv-icon.png?v=3', type: 'image/png' },
+      { url: '/icon.svg?v=3', type: 'image/svg+xml' },
+      { url: '/favicon.ico?v=3', sizes: 'any' },
+    ],
+    shortcut: '/omnipriv-icon.png?v=3',
+    apple: '/apple-touch-icon.png?v=3',
   },
 };
 

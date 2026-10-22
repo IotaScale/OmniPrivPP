@@ -3,20 +3,19 @@ import Link from 'next/link';
 import { requirePartnerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { signOutAction } from '@/lib/actions/auth';
+import { PartnerSidebarNav } from './sidebar-nav';
 import {
   Shield,
-  LayoutDashboard,
-  FileSpreadsheet,
-  Inbox,
-  RefreshCw,
-  BookOpen,
-  Building,
-  Users,
-  LogOut,
-  Bell,
   Award,
+  Bell,
+  LogOut,
+  Building,
+  PlusCircle,
+  ExternalLink,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +26,7 @@ export default async function PartnerPortalLayout({
 }) {
   const session = await requirePartnerSession();
 
-  // Query live organization and notification stats from PostgreSQL
+  // Query live organization, lead count, and unread notification count
   const org = await prisma.partnerOrganization.findUnique({
     where: { id: session.partnerOrgId },
     select: {
@@ -36,15 +35,24 @@ export default async function PartnerPortalLayout({
       display_name: true,
       tier: true,
       status: true,
+      partner_type: true,
     },
   });
 
-  const unreadCount = await prisma.notification.count({
-    where: {
-      partner_organization_id: session.partnerOrgId,
-      is_read: false,
-    },
-  });
+  const [unreadCount, pendingLeadsCount] = await Promise.all([
+    prisma.notification.count({
+      where: {
+        partner_organization_id: session.partnerOrgId,
+        is_read: false,
+      },
+    }),
+    prisma.leadAssignment.count({
+      where: {
+        partner_organization_id: session.partnerOrgId,
+        partner_acceptance_status: 'pending',
+      },
+    }),
+  ]);
 
   const tierVariantMap: Record<string, 'default' | 'success' | 'warning' | 'info'> = {
     Registered: 'default',
@@ -53,101 +61,101 @@ export default async function PartnerPortalLayout({
     Platinum: 'success',
   };
 
-  const navLinks = [
-    { label: 'Overview', href: '/partner-portal', icon: LayoutDashboard },
-    { label: 'Deal Registrations', href: '/partner-portal/deals', icon: FileSpreadsheet },
-    { label: 'Assigned Leads', href: '/partner-portal/leads', icon: Inbox },
-    { label: 'Renewals', href: '/partner-portal/renewals', icon: RefreshCw },
-    { label: 'Enablement Resources', href: '/partner-portal/resources', icon: BookOpen },
-    { label: 'Company Profile', href: '/partner-portal/company', icon: Building },
-    { label: 'Team', href: '/partner-portal/team', icon: Users },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
-      {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-slate-900/90 border-b border-slate-800 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/partner-portal" className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                <Shield className="h-4 w-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold tracking-tight text-white flex items-center gap-2 text-sm">
-                  OmniPriv <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-950/90 border border-cyan-800/80 text-cyan-400">PARTNER</span>
-                </span>
-              </div>
-            </Link>
-
-            <div className="hidden md:flex items-center gap-2 pl-4 border-l border-slate-800 text-xs">
-              <span className="text-slate-400 font-medium">{org?.display_name || session.partnerOrgName}</span>
-              <Badge variant={tierVariantMap[org?.tier || 'Registered'] || 'default'} size="sm">
-                <Award className="h-3 w-3" />
-                {org?.tier || 'Registered'}
-              </Badge>
-            </div>
+    <div className="min-h-screen bg-[#060b17] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
+      {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
+      <aside className="w-full md:w-64 bg-[#0A1628]/95 border-r border-white/[0.08] flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
+        {/* Brand / Company Header */}
+        <div className="p-4 border-b border-white/[0.08] bg-[#060b17]/60">
+          <OmniPrivLogo variant="partner" href="/partner-portal" priority />
+          <div className="mt-2 text-[11px] text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
+            {org?.display_name || session.partnerOrgName}
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* Partner Tier Badge */}
+          <div className="mt-3 flex items-center justify-between p-2 rounded-xl bg-[#060b17] border border-white/[0.08] text-xs">
+            <span className="text-slate-400 text-[11px]">Partner Tier:</span>
+            <Badge variant={tierVariantMap[org?.tier || 'Registered'] || 'default'} size="sm" className="gap-1 font-semibold">
+              <Award className="h-3 w-3" />
+              <span>{org?.tier || 'Registered'}</span>
+            </Badge>
+          </div>
+        </div>
+
+        {/* Sidebar Navigation Items */}
+        <div className="flex-1 overflow-y-auto">
+          <PartnerSidebarNav unreadLeadsCount={pendingLeadsCount} />
+        </div>
+
+        {/* Quick Deal Registration CTA in Sidebar */}
+        <div className="p-3 border-t border-white/[0.08]">
+          <Link href="/partner-portal/deals/new">
+            <Button variant="primary" size="sm" className="w-full gap-2 text-xs font-semibold shadow-md shadow-[#00B8FF]/10">
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span>Register a Deal</span>
+            </Button>
+          </Link>
+        </div>
+
+        {/* Authenticated User Profile & Sign Out Footer */}
+        <div className="p-3 border-t border-white/[0.08] bg-[#060b17]/70 flex items-center justify-between text-xs">
+          <div className="flex flex-col min-w-0 pr-2">
+            <span className="text-slate-200 font-medium truncate" title={session.fullName}>
+              {session.fullName}
+            </span>
+            <span className="text-slate-500 text-[11px] truncate capitalize">
+              {session.membershipRole?.replace('_', ' ') || 'Partner User'}
+            </span>
+          </div>
+
+          <form action={signOutAction}>
+            <button
+              type="submit"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-20 bg-[#060b17]/90 backdrop-blur-md border-b border-white/[0.08] h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-3 text-xs text-slate-400">
+            <span className="font-semibold text-slate-200">{org?.display_name || session.partnerOrgName}</span>
+            <span>&bull;</span>
+            <span className="text-slate-400">{org?.partner_type || 'Authorized Partner'}</span>
+          </div>
+
+          <div className="flex items-center gap-3">
             <Link
               href="/partner-portal"
-              className="relative p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors"
+              className="relative p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
               title="Notifications"
             >
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-slate-900" />
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-slate-950" />
               )}
             </Link>
 
-            <div className="hidden sm:flex flex-col text-right text-xs">
-              <span className="text-slate-200 font-medium">{session.fullName}</span>
-              <span className="text-slate-500 capitalize">{session.membershipRole?.replace('_', ' ')}</span>
-            </div>
-
-            <form action={signOutAction}>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
-                title="Sign Out"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </button>
-            </form>
+            <Link href="/partner-portal/deals/new" className="hidden sm:inline-flex">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/10">
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span>New Registration</span>
+              </Button>
+            </Link>
           </div>
-        </div>
+        </header>
 
-        {/* Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60 overflow-x-auto">
-          <nav className="flex space-x-1 py-1.5">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all whitespace-nowrap"
-                >
-                  <Icon className="h-3.5 w-3.5 text-slate-400" />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-600">
-        OmniPriv Privileged Access Management — Authorized Channel Partner Portal
-      </footer>
+        {/* Child Page Content */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
