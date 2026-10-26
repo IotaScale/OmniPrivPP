@@ -60,11 +60,11 @@ export default async function PartnerPortalLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 dark:bg-[#090d16] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
       {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
-      <aside className="w-full md:w-64 bg-[#0a0f1a] border-r border-slate-800 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
+      <aside className="w-full md:w-64 bg-slate-900 dark:bg-[#0a0f1a] border-r border-slate-800 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
         {/* Brand / Company Header */}
-        <div className="p-4 border-b border-slate-800 bg-[#080c16]">
+        <div className="p-4 border-b border-slate-800 bg-slate-950 dark:bg-[#080c16]">
           <OmniPrivLogo variant="partner" href="/partner-portal" priority />
           <div className="mt-2 text-xs text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
             {org?.display_name || session.partnerOrgName}
@@ -96,7 +96,7 @@ export default async function PartnerPortalLayout({
         </div>
 
         {/* Authenticated User Profile & Sign Out Footer */}
-        <div className="p-3 border-t border-slate-800 bg-[#080c16] flex items-center justify-between text-xs">
+        <div className="p-3 border-t border-slate-800 bg-slate-950 dark:bg-[#080c16] flex items-center justify-between text-xs">
           <div className="flex flex-col min-w-0 pr-2">
             <span className="text-slate-200 font-medium truncate" title={session.fullName}>
               {session.fullName}
@@ -121,7 +121,7 @@ export default async function PartnerPortalLayout({
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-20 bg-[#090d16]/95 backdrop-blur-md border-b border-slate-800 h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-slate-950/95 dark:bg-[#090d16]/95 backdrop-blur-md border-b border-slate-800 h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3 text-xs text-slate-400">
             <span className="font-semibold text-slate-200">{org?.display_name || session.partnerOrgName}</span>
             <span>&bull;</span>
@@ -138,7 +138,7 @@ export default async function PartnerPortalLayout({
             >
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-[#090d16]" />
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-slate-950 dark:ring-[#090d16]" />
               )}
             </Link>
 

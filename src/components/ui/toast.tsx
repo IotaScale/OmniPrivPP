@@ -82,10 +82,10 @@ export function Toaster() {
           role="status"
           className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-2xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-bottom-3 ${
             t.type === 'success'
-              ? 'bg-[#0f172a]/95 border-emerald-500/30 text-white'
+              ? 'bg-slate-900/95 dark:bg-[#0f172a]/95 border-emerald-500/30 text-white'
               : t.type === 'error'
-              ? 'bg-[#0f172a]/95 border-rose-500/30 text-white'
-              : 'bg-[#0f172a]/95 border-cyan-500/30 text-white'
+              ? 'bg-slate-900/95 dark:bg-[#0f172a]/95 border-rose-500/30 text-white'
+              : 'bg-slate-900/95 dark:bg-[#0f172a]/95 border-cyan-500/30 text-white'
           }`}
         >
           <div className="shrink-0 mt-0.5">
