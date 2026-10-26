@@ -79,7 +79,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
 
         <div className="flex items-center gap-3">
           <a
-            href="http://localhost:3001/tickets"
+            href={`${process.env.NEXT_PUBLIC_SUPPORT_PORTAL_URL || 'http://localhost:3001'}/tickets`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 transition-all"
@@ -224,7 +224,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
                     {t._count.messages} {t._count.messages === 1 ? 'message' : 'messages'}
                   </span>
                   <a
-                    href={`http://localhost:3001/tickets/${t.id}`}
+                    href={`${process.env.NEXT_PUBLIC_SUPPORT_PORTAL_URL || 'http://localhost:3001'}/tickets/${t.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-colors shadow-sm"
