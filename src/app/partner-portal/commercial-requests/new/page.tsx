@@ -30,7 +30,7 @@ export default function NewCommercialRequestPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-[#00B8FF]/10 border border-[#00B8FF]/20 text-[#00B8FF] flex items-center justify-center shrink-0 shadow-inner">
+            <div className="h-10 w-10 rounded-xl bg-[#00B8DB]/10 border border-[#00B8DB]/20 text-[#00B8DB] flex items-center justify-center shrink-0 shadow-inner">
               <FileQuestion className="h-5 w-5" />
             </div>
             <div>
@@ -54,7 +54,7 @@ export default function NewCommercialRequestPage() {
             {/* Panel A: Request Scope */}
             <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
               <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
-                <Layers className="h-4 w-4 text-[#00B8FF]" />
+                <Layers className="h-4 w-4 text-[#00B8DB]" />
                 <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
                   Scope & Classification
                 </span>
@@ -107,14 +107,14 @@ export default function NewCommercialRequestPage() {
             {/* Panel B: Technical Justification */}
             <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-3">
               <label className="text-xs sm:text-sm font-medium text-slate-200 block">
-                Detailed Scope & Justification <span className="text-[#00B8FF]">*</span>
+                Detailed Scope & Justification <span className="text-[#00B8DB]">*</span>
               </label>
               <textarea
                 name="details"
                 rows={4}
                 required
                 placeholder="Describe the opportunity context, technical requirements, success criteria, timeline, and distributor involvement..."
-                className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y"
+                className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
               />
               {state?.fieldErrors?.details?.[0] && (
                 <p className="text-xs text-rose-400 font-medium">{state.fieldErrors.details[0]}</p>
@@ -133,7 +133,7 @@ export default function NewCommercialRequestPage() {
               variant="primary"
               size="md"
               disabled={isPending}
-              className="gap-2 shadow-lg shadow-[#00B8FF]/20"
+              className="gap-2 shadow-lg shadow-[#00B8DB]/20"
             >
               {isPending ? (
                 <span>Submitting Request...</span>

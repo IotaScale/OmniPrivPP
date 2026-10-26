@@ -27,7 +27,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
     <Card>
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[#00B8FF]/10 border border-[#00B8FF]/20 text-[#00B8FF] flex items-center justify-center shrink-0 shadow-inner">
+          <div className="h-10 w-10 rounded-xl bg-[#00B8DB]/10 border border-[#00B8DB]/20 text-[#00B8DB] flex items-center justify-center shrink-0 shadow-inner">
             <TrendingUp className="h-5 w-5" />
           </div>
           <div>
@@ -60,7 +60,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
           {/* Panel A: Commercial Targets */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
-              <Target className="h-4 w-4 text-[#00B8FF]" />
+              <Target className="h-4 w-4 text-[#00B8DB]" />
               <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
                 Revenue Targets & Industry Focus
               </span>
@@ -98,7 +98,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
 
             <div className="space-y-1.5">
               <label className="text-xs sm:text-sm font-medium text-slate-200 block">
-                Commercial Growth Strategy <span className="text-[#00B8FF]">*</span>
+                Commercial Growth Strategy <span className="text-[#00B8DB]">*</span>
               </label>
               <textarea
                 name="growthGoals"
@@ -106,7 +106,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
                 required
                 defaultValue={initialData?.growthGoals || ''}
                 placeholder="Outline your commercial expansion plans, sales team incentives, and co-selling strategy with OmniPriv reps..."
-                className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y"
+                className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
               />
               {state?.fieldErrors?.growthGoals?.[0] && (
                 <p className="text-xs text-rose-400 font-medium">{state.fieldErrors.growthGoals[0]}</p>
@@ -117,7 +117,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
           {/* Panel B: Accounts & Technical Capacity */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
-              <Award className="h-4 w-4 text-[#00B8FF]" />
+              <Award className="h-4 w-4 text-[#00B8DB]" />
               <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
                 Target Accounts & Technical Enablement
               </span>
@@ -133,7 +133,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
                   rows={3}
                   defaultValue={initialData?.keyAccounts || ''}
                   placeholder="Specific enterprise accounts targeted for PAM displacement..."
-                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
                 />
               </div>
 
@@ -146,7 +146,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
                   rows={3}
                   defaultValue={initialData?.technicalPlan || ''}
                   placeholder="Staff certifications planned (OCIE/OCSE), lab setups..."
-                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
                 />
               </div>
             </div>
@@ -155,7 +155,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
           {/* Panel C: Demand Gen & Milestones */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
-              <Megaphone className="h-4 w-4 text-[#00B8FF]" />
+              <Megaphone className="h-4 w-4 text-[#00B8DB]" />
               <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
                 Demand Gen & Quarterly Milestones
               </span>
@@ -171,7 +171,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
                   rows={3}
                   defaultValue={initialData?.marketingActivities || ''}
                   placeholder="Planned webinars, executive roundtables, joint email campaigns..."
-                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
                 />
               </div>
 
@@ -184,7 +184,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
                   rows={3}
                   defaultValue={initialData?.milestones || ''}
                   placeholder="Q1: 2 deals registered, Q2: 4 engineers certified..."
-                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
                 />
               </div>
             </div>
@@ -197,7 +197,7 @@ export function JbpForm({ initialData }: { initialData?: JbpFormData }) {
             variant="primary"
             size="md"
             disabled={isPending}
-            className="gap-2 shadow-lg shadow-[#00B8FF]/20 font-semibold text-xs sm:text-sm"
+            className="gap-2 shadow-lg shadow-[#00B8DB]/20 font-semibold text-xs sm:text-sm"
           >
             {isPending ? (
               <span>Saving Plan...</span>

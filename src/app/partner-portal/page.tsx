@@ -298,9 +298,9 @@ export default async function PartnerDashboardPage() {
       </div>
 
       {/* 3. PIPELINE STATUS OR PURPOSEFUL EMPTY STATES */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
         {/* Deal Registrations Section */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="space-y-3 flex flex-col">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
               <FileSpreadsheet className="h-4 w-4 text-cyan-400" />
@@ -315,7 +315,7 @@ export default async function PartnerDashboardPage() {
           </div>
 
           {recentDeals.length > 0 ? (
-            <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+            <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
               {recentDeals.map((deal) => (
                 <div
                   key={deal.id}
@@ -349,7 +349,7 @@ export default async function PartnerDashboardPage() {
             </div>
           ) : (
             /* Purposeful Empty State for Deals */
-            <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-dashed border-slate-800 p-8 text-center space-y-3">
+            <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-dashed border-slate-800 p-8 text-center space-y-3 flex-1">
               <div className="h-10 w-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 mx-auto">
                 <FilePlus2 className="h-5 w-5" />
               </div>
@@ -371,10 +371,8 @@ export default async function PartnerDashboardPage() {
           )}
         </div>
 
-        {/* Assigned Leads & Renewals Side Panel */}
-        <div className="lg:col-span-5 space-y-5">
-          {/* Assigned Leads */}
-          <div className="space-y-2.5">
+        {/* Assigned Leads */}
+        <div className="space-y-2.5 flex flex-col">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
                 <Inbox className="h-4 w-4 text-blue-400" />
@@ -389,7 +387,7 @@ export default async function PartnerDashboardPage() {
             </div>
 
             {recentLeads.length > 0 ? (
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
                 {recentLeads.map((assignment) => (
                   <div key={assignment.id} className="p-3 flex items-center justify-between gap-3 text-xs">
                     <div className="min-w-0">
@@ -417,7 +415,7 @@ export default async function PartnerDashboardPage() {
               </div>
             ) : (
               /* Purposeful Empty State for Leads */
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400 flex-1">
                 <Inbox className="h-5 w-5 text-slate-500 mx-auto mb-1.5" />
                 <div className="font-medium text-slate-300">No leads have been assigned to your company yet.</div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
@@ -425,10 +423,10 @@ export default async function PartnerDashboardPage() {
                 </p>
               </div>
             )}
-          </div>
+        </div>
 
-          {/* Renewals */}
-          <div className="space-y-2.5">
+        {/* Renewals */}
+        <div className="space-y-2.5 flex flex-col">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
                 <RefreshCw className="h-4 w-4 text-purple-400" />
@@ -443,7 +441,7 @@ export default async function PartnerDashboardPage() {
             </div>
 
             {recentRenewals.length > 0 ? (
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
                 {recentRenewals.map((renewal) => (
                   <div key={renewal.id} className="p-3 flex items-center justify-between gap-3 text-xs">
                     <div>
@@ -460,7 +458,7 @@ export default async function PartnerDashboardPage() {
               </div>
             ) : (
               /* Purposeful Empty State for Renewals */
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400 flex-1">
                 <RefreshCw className="h-5 w-5 text-slate-500 mx-auto mb-1.5" />
                 <div className="font-medium text-slate-300">No renewals are currently due.</div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
@@ -468,7 +466,6 @@ export default async function PartnerDashboardPage() {
                 </p>
               </div>
             )}
-          </div>
         </div>
       </div>
 

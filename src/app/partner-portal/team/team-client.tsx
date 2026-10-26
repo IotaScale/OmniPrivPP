@@ -92,7 +92,7 @@ export function TeamManagementClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Users className="h-6 w-6 text-[#00B8FF]" />
+            <Users className="h-6 w-6 text-[#00B8DB]" />
             <span>Team & Access Governance</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -105,7 +105,7 @@ export function TeamManagementClient({
             variant="primary"
             size="md"
             onClick={() => setShowInviteModal(true)}
-            className="gap-2 shadow-lg shadow-[#00B8FF]/20"
+            className="gap-2 shadow-lg shadow-[#00B8DB]/20"
           >
             <UserPlus className="h-4 w-4" />
             <span>Invite Team Member</span>
@@ -147,7 +147,7 @@ export function TeamManagementClient({
                         <div className="flex items-center gap-2">
                           <span>{m.user.full_name}</span>
                           {isCurrent && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00B8FF]/15 border border-[#00B8FF]/30 text-[#00B8FF] font-medium">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00B8DB]/15 border border-[#00B8DB]/30 text-[#00B8DB] font-medium">
                               You
                             </span>
                           )}
@@ -218,7 +218,7 @@ export function TeamManagementClient({
           <div className="max-w-md w-full rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <h3 className="text-base font-bold text-white flex items-center gap-2.5">
-                <div className="h-8 w-8 rounded-lg bg-[#00B8FF]/10 text-[#00B8FF] flex items-center justify-center">
+                <div className="h-8 w-8 rounded-lg bg-[#00B8DB]/10 text-[#00B8DB] flex items-center justify-center">
                   <UserPlus className="h-4 w-4" />
                 </div>
                 <span>Invite Team Member</span>
@@ -270,7 +270,7 @@ export function TeamManagementClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                  className="shadow-md shadow-[#00B8FF]/20"
+                  className="shadow-md shadow-[#00B8DB]/20"
                 >
                   Send Invitation
                 </Button>

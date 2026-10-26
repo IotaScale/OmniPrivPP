@@ -68,7 +68,7 @@ export function PartnerSignupWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-[#00B8DB]/30">
       {/* 1. Compact Branded Header */}
       <header className="border-b border-white/[0.08] bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -78,7 +78,7 @@ export function PartnerSignupWizard() {
             <span className="text-slate-400 hidden sm:inline">Already registered?</span>
             <Link
               href="/sign-in"
-              className="text-[#00B8FF] hover:text-[#00D4FF] font-semibold transition-colors flex items-center gap-1"
+              className="text-[#00B8DB] hover:text-[#33C6E2] font-semibold transition-colors flex items-center gap-1"
             >
               <span>Sign in</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -116,7 +116,7 @@ export function PartnerSignupWizard() {
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0 ${
                     step === 1
-                      ? 'bg-[#00B8FF] text-[#020617] ring-4 ring-[#00B8FF]/20'
+                      ? 'bg-[#00B8DB] text-[#020617] ring-4 ring-[#00B8DB]/20'
                       : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                   }`}
                 >
@@ -138,7 +138,7 @@ export function PartnerSignupWizard() {
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0 ${
                     step === 2
-                      ? 'bg-[#00B8FF] text-[#020617] ring-4 ring-[#00B8FF]/20'
+                      ? 'bg-[#00B8DB] text-[#020617] ring-4 ring-[#00B8DB]/20'
                       : 'bg-slate-800 text-slate-400 border border-white/[0.08]'
                   }`}
                 >
@@ -180,7 +180,7 @@ export function PartnerSignupWizard() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label htmlFor="companyLegalName" className="block text-sm font-medium text-slate-200 mb-1.5">
-                        Legal Company Name <span className="text-[#00B8FF]">*</span>
+                        Legal Company Name <span className="text-[#00B8DB]">*</span>
                       </label>
                       <input
                         id="companyLegalName"
@@ -190,7 +190,7 @@ export function PartnerSignupWizard() {
                         value={formData.companyLegalName}
                         onChange={handleInputChange}
                         placeholder="Apex Cyber Defense Ltd"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                       {(step1Errors.companyLegalName || state?.fieldErrors?.companyLegalName?.[0]) && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">
@@ -201,7 +201,7 @@ export function PartnerSignupWizard() {
 
                     <div>
                       <label htmlFor="website" className="block text-sm font-medium text-slate-200 mb-1.5">
-                        Company Website <span className="text-[#00B8FF]">*</span>
+                        Company Website <span className="text-[#00B8DB]">*</span>
                       </label>
                       <input
                         id="website"
@@ -211,7 +211,7 @@ export function PartnerSignupWizard() {
                         value={formData.website}
                         onChange={handleInputChange}
                         placeholder="apexcyber.com"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                       {(step1Errors.website || state?.fieldErrors?.website?.[0]) && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">
@@ -224,7 +224,7 @@ export function PartnerSignupWizard() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label htmlFor="country" className="block text-sm font-medium text-slate-200 mb-1.5">
-                        Country / Headquarters <span className="text-[#00B8FF]">*</span>
+                        Country / Headquarters <span className="text-[#00B8DB]">*</span>
                       </label>
                       <input
                         id="country"
@@ -234,7 +234,7 @@ export function PartnerSignupWizard() {
                         value={formData.country}
                         onChange={handleInputChange}
                         placeholder="United States, Germany, Singapore"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                       {(step1Errors.country || state?.fieldErrors?.country?.[0]) && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">
@@ -245,14 +245,14 @@ export function PartnerSignupWizard() {
 
                     <div>
                       <label htmlFor="partnerType" className="block text-sm font-medium text-slate-200 mb-1.5">
-                        Partner Organization Type <span className="text-[#00B8FF]">*</span>
+                        Partner Organization Type <span className="text-[#00B8DB]">*</span>
                       </label>
                       <select
                         id="partnerType"
                         name="partnerType"
                         value={formData.partnerType}
                         onChange={handleInputChange}
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       >
                         <option value="Reseller">Reseller (VAR / Distributor)</option>
                         <option value="System Integrator">System Integrator (SI / Consulting)</option>
@@ -273,7 +273,7 @@ export function PartnerSignupWizard() {
                       value={formData.primaryFocus}
                       onChange={handleInputChange}
                       placeholder="Privileged Access Management (PAM), Cloud Security, Identity Governance"
-                      className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                      className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                     />
                   </div>
 
@@ -288,7 +288,7 @@ export function PartnerSignupWizard() {
                       value={formData.companyDescription}
                       onChange={handleInputChange}
                       placeholder="Brief summary of your cybersecurity practice, target verticals, or commercial regions..."
-                      className="w-full p-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all resize-none"
+                      className="w-full p-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all resize-none"
                     />
                   </div>
 
@@ -299,7 +299,7 @@ export function PartnerSignupWizard() {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="h-12 px-6 rounded-xl bg-[#00B8FF] hover:bg-[#0099CC] text-[#020617] font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8FF]/10"
+                      className="h-12 px-6 rounded-xl bg-[#00B8DB] hover:bg-[#00869F] text-[#020617] font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8DB]/10"
                     >
                       <span>Continue to Administrator Account</span>
                       <ArrowRight className="w-4 h-4" />
@@ -323,7 +323,7 @@ export function PartnerSignupWizard() {
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="text-xs font-semibold text-[#00B8FF] hover:text-[#00D4FF] transition-colors"
+                      className="text-xs font-semibold text-[#00B8DB] hover:text-[#33C6E2] transition-colors"
                     >
                       Change
                     </button>
@@ -332,7 +332,7 @@ export function PartnerSignupWizard() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label htmlFor="fullName" className="block text-sm font-medium text-slate-200 mb-1.5">
-                        Administrator Full Name <span className="text-[#00B8FF]">*</span>
+                        Administrator Full Name <span className="text-[#00B8DB]">*</span>
                       </label>
                       <input
                         id="fullName"
@@ -342,7 +342,7 @@ export function PartnerSignupWizard() {
                         value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="Alex Morgan"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                       {state?.fieldErrors?.fullName?.[0] && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">{state.fieldErrors.fullName[0]}</p>
@@ -351,7 +351,7 @@ export function PartnerSignupWizard() {
 
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-slate-200 mb-1.5">
-                        Business Work Email <span className="text-[#00B8FF]">*</span>
+                        Business Work Email <span className="text-[#00B8DB]">*</span>
                       </label>
                       <input
                         id="email"
@@ -361,7 +361,7 @@ export function PartnerSignupWizard() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="alex@apexcyber.com"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                       {state?.fieldErrors?.email?.[0] && (
                         <p className="mt-1 text-xs text-rose-400 font-medium">{state.fieldErrors.email[0]}</p>
@@ -381,7 +381,7 @@ export function PartnerSignupWizard() {
                         value={formData.jobTitle}
                         onChange={handleInputChange}
                         placeholder="VP of Alliances / Practice Lead"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                     </div>
 
@@ -396,14 +396,14 @@ export function PartnerSignupWizard() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         placeholder="+1 (555) 019-2834"
-                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                       />
                     </div>
                   </div>
 
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-slate-200 mb-1.5">
-                      Account Password <span className="text-[#00B8FF]">*</span>
+                      Account Password <span className="text-[#00B8DB]">*</span>
                     </label>
                     <input
                       id="password"
@@ -413,7 +413,7 @@ export function PartnerSignupWizard() {
                       value={formData.password}
                       onChange={handleInputChange}
                       placeholder="Minimum 8 characters with numbers & symbols"
-                      className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all"
+                      className="w-full h-12 px-4 rounded-xl bg-slate-950 border border-white/[0.12] text-white text-sm placeholder-slate-500 focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all"
                     />
                     {state?.fieldErrors?.password?.[0] && (
                       <p className="mt-1 text-xs text-rose-400 font-medium">{state.fieldErrors.password[0]}</p>
@@ -427,10 +427,10 @@ export function PartnerSignupWizard() {
                         name="termsAccepted"
                         checked={formData.termsAccepted}
                         onChange={handleInputChange}
-                        className="mt-0.5 rounded border-white/[0.2] text-[#00B8FF] focus:ring-[#00B8FF] h-4 w-4 bg-slate-900"
+                        className="mt-0.5 rounded border-white/[0.2] text-[#00B8DB] focus:ring-[#00B8DB] h-4 w-4 bg-slate-900"
                       />
                       <span className="text-xs text-slate-300 leading-relaxed">
-                        I agree to the <span className="text-[#00B8FF] font-medium">OmniPriv Partner Program Agreement</span>,
+                        I agree to the <span className="text-[#00B8DB] font-medium">OmniPriv Partner Program Agreement</span>,
                         acknowledge the Deal Protection policy rules, and confirm I am authorized to register this organization.
                       </span>
                     </label>
@@ -455,7 +455,7 @@ export function PartnerSignupWizard() {
                     <button
                       type="submit"
                       disabled={isPending || !formData.termsAccepted}
-                      className="h-12 px-7 rounded-xl bg-[#00B8FF] hover:bg-[#0099CC] text-[#020617] font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8FF]/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="h-12 px-7 rounded-xl bg-[#00B8DB] hover:bg-[#00869F] text-[#020617] font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#00B8DB]/10 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isPending ? (
                         <>
@@ -482,9 +482,9 @@ export function PartnerSignupWizard() {
         <div>&copy; {new Date().getFullYear()} OmniPriv Inc. All rights reserved. AI-Powered Privileged Access Management.</div>
         <div className="flex items-center gap-4 text-slate-500">
           <Link href="/become-a-partner" className="hover:text-slate-400 transition-colors">Program Overview</Link>
-          <span>•</span>
+          <span>â€¢</span>
           <Link href="/find-a-partner" className="hover:text-slate-400 transition-colors">Partner Directory</Link>
-          <span>•</span>
+          <span>â€¢</span>
           <Link href="/channel-admin/login" className="hover:text-slate-400 transition-colors">Channel Admin</Link>
         </div>
       </footer>

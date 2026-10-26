@@ -1,12 +1,18 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Onest, Sora, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
-const inter = Inter({
+const onest = Onest({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-onest',
+});
+
+const sora = Sora({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sora',
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -43,7 +49,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`h-full antialiased ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`h-full antialiased ${onest.variable} ${sora.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         {/* Apply the persisted theme (dark by default) before first paint. */}

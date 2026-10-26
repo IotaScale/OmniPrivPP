@@ -46,7 +46,6 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
           href: '/partner-portal/deals/new',
           icon: PlusCircle,
           exact: true,
-          highlight: true,
         },
         {
           label: 'Deal Registrations',
@@ -178,13 +177,11 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
                   className={`btn-press flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-160 group ${
                     active
                       ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-                      : item.highlight
-                      ? 'text-cyan-400 bg-cyan-950/40 border border-cyan-800/60 hover:bg-cyan-900/40 hover:text-cyan-300'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <Icon className={`h-3.5 w-3.5 shrink-0 ${item.highlight ? 'text-cyan-400' : ''}`} />
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge !== undefined && (

@@ -53,7 +53,7 @@ export function CompanyProfileForm({
     <Card className="max-w-4xl">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[#00B8FF]/10 border border-[#00B8FF]/20 text-[#00B8FF] flex items-center justify-center shrink-0 shadow-inner">
+          <div className="h-10 w-10 rounded-xl bg-[#00B8DB]/10 border border-[#00B8DB]/20 text-[#00B8DB] flex items-center justify-center shrink-0 shadow-inner">
             <Building className="h-5 w-5" />
           </div>
           <div>
@@ -84,7 +84,7 @@ export function CompanyProfileForm({
           {/* Locked Fields Section */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 dark:bg-[#050B16]/90 border border-white/[0.08] space-y-4">
             <div className="flex items-center gap-2 text-slate-300 text-xs font-semibold uppercase tracking-wider pb-2 border-b border-white/[0.06]">
-              <Lock className="h-3.5 w-3.5 text-[#00B8FF]" />
+              <Lock className="h-3.5 w-3.5 text-[#00B8DB]" />
               <span>Channel Governance Locked Attributes</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
@@ -94,7 +94,7 @@ export function CompanyProfileForm({
               </div>
               <div className="space-y-1">
                 <span className="text-slate-500 font-medium block">Program Tier</span>
-                <span className="font-semibold text-[#00B8FF] text-sm block">{org.tier} Partner</span>
+                <span className="font-semibold text-[#00B8DB] text-sm block">{org.tier} Partner</span>
               </div>
               <div className="space-y-1">
                 <span className="text-slate-500 font-medium block">Incorporation Country</span>
@@ -109,7 +109,7 @@ export function CompanyProfileForm({
           {/* Editable Fields Section */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
-              <Globe className="h-4 w-4 text-[#00B8FF]" />
+              <Globe className="h-4 w-4 text-[#00B8DB]" />
               <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
                 Commercial Display & Operating Details
               </span>
@@ -163,7 +163,7 @@ export function CompanyProfileForm({
                   defaultValue={org.companySummary || ''}
                   disabled={!isOwner}
                   placeholder="Enterprise security competencies, customer base focus, technical PAM certifications..."
-                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8FF] focus:ring-2 focus:ring-[#00B8FF]/20 transition-all duration-150 resize-y disabled:opacity-60"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y disabled:opacity-60"
                 />
               </div>
             </div>
@@ -177,7 +177,7 @@ export function CompanyProfileForm({
               variant="primary"
               size="md"
               isLoading={isSubmitting}
-              className="shadow-lg shadow-[#00B8FF]/20"
+              className="shadow-lg shadow-[#00B8DB]/20"
             >
               <span>Save Profile Changes</span>
             </Button>

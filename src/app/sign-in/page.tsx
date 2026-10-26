@@ -13,12 +13,12 @@ export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, undefined);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-[#00B8DB]/30">
       {/* Top ambient highlight */}
       <div
         className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[360px] pointer-events-none rounded-full"
         style={{
-          background: 'radial-gradient(ellipse at top, rgba(0, 184, 255, 0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at top, rgba(0, 184, 219, 0.08) 0%, transparent 70%)',
         }}
       />
 
@@ -35,9 +35,9 @@ export default function SignInPage() {
             <div>
               <OmniPrivLogo variant="full" showBadge={false} size="lg" href="/" priority />
               <div className="mt-6 sm:mt-8 space-y-3 sm:space-y-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium text-[#00B8FF] bg-[#00B8FF]/10 border border-[#00B8FF]/20">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium text-[#00B8DB] bg-[#00B8DB]/10 border border-[#00B8DB]/20">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  Privileged Access Management • Channel Network
+                  Privileged Access Management â€¢ Channel Network
                 </span>
                 <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
                   Commercial Workspace for OmniPriv Partners
@@ -52,7 +52,7 @@ export default function SignInPage() {
             <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1.5">
                 <div className="flex items-center gap-2 text-white font-semibold text-sm">
-                  <span className="w-2 h-2 rounded-full bg-[#00B8FF]" />
+                  <span className="w-2 h-2 rounded-full bg-[#00B8DB]" />
                   90-Day Deal Protection
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
@@ -62,7 +62,7 @@ export default function SignInPage() {
 
               <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1.5">
                 <div className="flex items-center gap-2 text-white font-semibold text-sm">
-                  <span className="w-2 h-2 rounded-full bg-[#00B8FF]" />
+                  <span className="w-2 h-2 rounded-full bg-[#00B8DB]" />
                   Vendor Lead Distribution
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
@@ -73,15 +73,15 @@ export default function SignInPage() {
 
             <div className="hidden lg:flex items-center gap-6 pt-4 text-xs text-slate-500 border-t border-slate-800/60">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8DB]" />
                 AI-Powered PAM
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8DB]" />
                 39 Behavioral Features
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8FF]" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#00B8DB]" />
                 53 MCP Tool Controls
               </span>
             </div>
@@ -121,7 +121,7 @@ export default function SignInPage() {
                     <label className="text-xs font-semibold text-slate-300">Password</label>
                     <Link
                       href="/forgot-password"
-                      className="text-xs text-[#00B8FF] hover:text-[#00D4FF] transition-colors"
+                      className="text-xs text-[#00B8DB] hover:text-[#33C6E2] transition-colors"
                     >
                       Forgot password?
                     </Link>
@@ -129,7 +129,7 @@ export default function SignInPage() {
                   <Input
                     name="password"
                     type="password"
-                    placeholder="••••••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     required
                     error={state?.fieldErrors?.password?.[0]}
                   />
@@ -138,7 +138,7 @@ export default function SignInPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full mt-2 font-semibold bg-[#00B8FF] hover:bg-[#0099CC] text-[#020617] transition-colors shadow-lg shadow-[#00B8FF]/10"
+                  className="w-full mt-2 font-semibold bg-[#00B8DB] hover:bg-[#00869F] text-[#020617] transition-colors shadow-lg shadow-[#00B8DB]/10"
                   isLoading={isPending}
                 >
                   <span>Sign In to Partner Portal</span>
@@ -152,7 +152,7 @@ export default function SignInPage() {
                   New partner company?{' '}
                   <Link
                     href="/sign-up"
-                    className="text-[#00B8FF] hover:text-[#00D4FF] font-semibold transition-colors"
+                    className="text-[#00B8DB] hover:text-[#33C6E2] font-semibold transition-colors"
                   >
                     Register your organization &rarr;
                   </Link>
@@ -178,7 +178,7 @@ export default function SignInPage() {
           <Link href="/become-a-partner" className="hover:text-slate-400 transition-colors">
             Program Overview
           </Link>
-          <span>•</span>
+          <span>â€¢</span>
           <Link href="/find-a-partner" className="hover:text-slate-400 transition-colors">
             Partner Directory
           </Link>

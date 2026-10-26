@@ -117,7 +117,7 @@ export function LocatorForm({ initialData }: { initialData?: LocatorFormData }) 
               rows={3}
               defaultValue={initialData?.publicDescription || ''}
               placeholder="Short description of your PAM deployment services, cloud security practices, and regional presence..."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 resize-none transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 resize-none transition-all"
             />
           </div>
         </CardContent>

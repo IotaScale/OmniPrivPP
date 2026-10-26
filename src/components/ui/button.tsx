@@ -26,11 +26,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary:
-        'bg-[#00B8FF] hover:bg-[#0090cc] text-[#090d16] font-semibold shadow-sm shadow-[#00B8FF]/20 border-0 focus:ring-[#00B8FF]',
+        'bg-primary hover:bg-primary-dark text-[#03121c] font-semibold shadow-sm shadow-primary/20 border-0 focus:ring-primary',
       secondary:
         'bg-slate-800 hover:bg-slate-750 text-slate-100 border border-slate-700/80 focus:ring-slate-400',
       outline:
-        'bg-transparent hover:bg-slate-800/60 text-slate-200 border border-slate-700/80 hover:border-slate-600 focus:ring-[#00B8FF]',
+        'bg-transparent hover:bg-slate-800/60 text-slate-200 border border-slate-700/80 hover:border-slate-600 focus:ring-primary',
       danger:
         'bg-rose-600 hover:bg-rose-500 text-white shadow-sm shadow-rose-950/40 border border-rose-500/30 focus:ring-rose-500',
       ghost:

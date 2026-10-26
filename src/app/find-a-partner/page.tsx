@@ -98,7 +98,7 @@ export default async function FindAPartnerPage({
               name="q"
               defaultValue={q || ''}
               placeholder="Search partner name..."
-              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 transition-all"
+              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 transition-all"
             />
           </div>
 
@@ -107,13 +107,13 @@ export default async function FindAPartnerPage({
             name="country"
             defaultValue={country || ''}
             placeholder="Filter by country..."
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 transition-all"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 transition-all"
           />
 
           <select
             name="track"
             defaultValue={track || ''}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B8FF]/40 focus:border-[#00B8FF]/60 transition-all"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 transition-all"
           >
             <option value="" className="bg-slate-900 text-slate-200">All Program Tracks</option>
             <option value="Sell" className="bg-slate-900 text-slate-200">Sell (VAR / Reseller)</option>

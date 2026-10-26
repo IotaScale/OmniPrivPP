@@ -60,7 +60,7 @@ export default async function PartnerPortalLayout({
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 dark:bg-[#090d16] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-slate-950 dark:bg-[#090d16] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8DB]/30">
       {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
       <aside className="w-full md:w-64 bg-slate-900 dark:bg-[#0a0f1a] border-r border-slate-800 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
         {/* Brand / Company Header */}

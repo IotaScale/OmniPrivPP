@@ -58,7 +58,7 @@ export function OmniPrivLogo({
           </div>
 
           {showBadge && variant === 'partner' && (
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#00B8FF]/10 text-[#00B8FF] border border-[#00B8FF]/30 whitespace-nowrap">
+            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#00B8DB]/10 text-[#00B8DB] border border-[#00B8DB]/30 whitespace-nowrap">
               Partner
             </span>
           )}
