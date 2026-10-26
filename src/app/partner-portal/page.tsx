@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { requirePartnerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge, StatusBadge } from '@/components/ui/badge';
 import {
@@ -17,11 +16,6 @@ import {
   Award,
   BookOpen,
   Cpu,
-  Layers,
-  Building2,
-  AlertCircle,
-  CheckCircle2,
-  TrendingUp,
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -54,7 +48,6 @@ export default async function PartnerDashboardPage() {
     protectedDealsCount,
     assignedLeadsActionCount,
     upcomingRenewalsCount,
-    openCommercialRequestsCount,
     recentDeals,
     recentLeads,
     recentRenewals,
@@ -102,13 +95,6 @@ export default async function PartnerDashboardPage() {
         renewal_date: { gte: now },
       },
     }),
-    // Open Commercial Requests
-    prisma.commercialRequest.count({
-      where: {
-        partner_organization_id: orgId,
-        status: { in: ['submitted', 'in_review'] },
-      },
-    }),
     // Recent Deals
     prisma.dealRegistration.findMany({
       where: { partner_organization_id: orgId },
@@ -124,7 +110,7 @@ export default async function PartnerDashboardPage() {
     }),
     // Recent Renewals
     prisma.renewal.findMany({
-      where: { partner_organization_id: orgId },
+      where: { partner_organization_id: orgId, renewal_date: { gte: now } },
       orderBy: { renewal_date: 'asc' },
       take: 4,
     }),
@@ -132,7 +118,7 @@ export default async function PartnerDashboardPage() {
     prisma.announcement.findMany({
       where: { is_published: true },
       orderBy: { published_at: 'desc' },
-      take: 2,
+      take: 1,
     }),
   ]);
 
@@ -194,14 +180,12 @@ export default async function PartnerDashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      {/* 1. TOP METRICS & QUICK ACTIONS */}
-      <div className="rounded-3xl bg-gradient-to-r from-slate-900 dark:from-[#0b172b] via-slate-900 dark:via-[#091426] to-slate-950 dark:to-[#050b16] border border-white/[0.1] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden shadow-[0_16px_50px_rgba(0,0,0,0.4)]">
-        <div className="absolute right-0 top-0 w-96 h-96 bg-[#00B8FF]/10 blur-[100px] rounded-full pointer-events-none" />
-
-        <div className="relative z-10 space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+    <div className="space-y-6">
+      {/* 1. TOP METRICS & QUICK ACTIONS (Clean solid banner, no blurry blobs) */}
+      <div className="rounded-xl bg-[#0d1424] border border-slate-800 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
               Welcome back, {firstName}
             </h1>
             <Badge variant={tierVariantMap[partnerTier]} size="sm" className="font-semibold gap-1">
@@ -209,35 +193,35 @@ export default async function PartnerDashboardPage() {
               <span>{partnerTier} Partner</span>
             </Badge>
           </div>
-          <p className="text-sm text-slate-400">
+          <p className="text-xs text-slate-400">
             {companyName} &bull; AI-Powered PAM & Deal Protection Workspace
           </p>
           {org?.partner_manager_name && (
-            <div className="pt-1 text-xs text-slate-400">
+            <div className="pt-0.5 text-xs text-slate-400">
               Assigned Partner Manager: <strong className="text-slate-200">{org.partner_manager_name}</strong>{' '}
               ({org.partner_manager_email})
             </div>
           )}
         </div>
 
-        <div className="relative z-10 flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <Link href="/partner-portal/deals/new">
             <Button
               variant="primary"
               size="sm"
-              className="gap-1.5 text-xs font-semibold shadow-md shadow-[#00B8FF]/20"
+              className="gap-1.5 text-xs font-semibold shadow-sm"
             >
               <FilePlus2 className="h-3.5 w-3.5" />
               <span>Register a Deal</span>
             </Button>
           </Link>
           <Link href="/partner-portal/leads">
-            <Button variant="outline" size="sm" className="text-xs border-white/[0.12] text-slate-300">
+            <Button variant="outline" size="sm" className="text-xs border-slate-700/80 text-slate-300">
               <span>View Leads</span>
             </Button>
           </Link>
           <Link href="/partner-portal/commercial-requests/new">
-            <Button variant="outline" size="sm" className="text-xs border-white/[0.12] text-slate-300">
+            <Button variant="outline" size="sm" className="text-xs border-slate-700/80 text-slate-300">
               <span>Request Trial / POC</span>
             </Button>
           </Link>
@@ -251,76 +235,76 @@ export default async function PartnerDashboardPage() {
 
       {/* Announcements Notice */}
       {announcements.length > 0 && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#00B8FF]/10 via-slate-900/60 dark:via-[#0a182e]/60 to-transparent border border-[#00B8FF]/30 text-xs text-slate-300 flex items-start gap-3 shadow-md">
-          <span className="h-2 w-2 rounded-full bg-[#00B8FF] mt-1.5 shrink-0 shadow-[0_0_8px_#00B8FF]" />
+        <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 flex items-start gap-2.5">
+          <span className="h-2 w-2 rounded-full bg-cyan-400 mt-1 shrink-0" />
           <div className="space-y-0.5">
-            <strong className="text-[#00B8FF] font-semibold">{announcements[0].title}</strong>
+            <strong className="text-cyan-400 font-semibold">{announcements[0].title}</strong>
             <p className="text-slate-400">{announcements[0].content}</p>
           </div>
         </div>
       )}
 
-      {/* 2. REAL LIVE METRIC CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* 2. REAL LIVE METRIC CARDS (Clean solid dark cards) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         {/* Open Deal Registrations */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span className="font-medium">Open Deal Registrations</span>
-            <FileSpreadsheet className="h-4 w-4 text-[#00B8FF]" />
+            <span className="font-medium">Open Deals</span>
+            <FileSpreadsheet className="h-4 w-4 text-cyan-400" />
           </div>
-          <div className="text-2xl font-bold text-white font-mono">{openDealsCount}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Active registered pipeline</div>
+          <div className="text-2xl font-semibold text-white tracking-tight font-mono">{openDealsCount}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Active pipeline</div>
         </div>
 
         {/* Awaiting OmniPriv Review */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-amber-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Awaiting Review</span>
             <Clock className="h-4 w-4 text-amber-400" />
           </div>
-          <div className="text-2xl font-bold text-amber-300 font-mono">{awaitingReviewCount}</div>
+          <div className="text-2xl font-semibold text-amber-300 tracking-tight font-mono">{awaitingReviewCount}</div>
           <div className="text-[11px] text-slate-500 mt-1">&lt; 48h review SLA</div>
         </div>
 
         {/* Protected Opportunities */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-emerald-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span className="font-medium">Protected Opportunities</span>
+            <span className="font-medium">Protected Deals</span>
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
           </div>
-          <div className="text-2xl font-bold text-emerald-400 font-mono">{protectedDealsCount}</div>
+          <div className="text-2xl font-semibold text-emerald-400 tracking-tight font-mono">{protectedDealsCount}</div>
           <div className="text-[11px] text-slate-500 mt-1">90-day margin locked</div>
         </div>
 
         {/* Assigned Leads Requiring Action */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-blue-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Assigned Leads</span>
             <Inbox className="h-4 w-4 text-blue-400" />
           </div>
-          <div className="text-2xl font-bold text-blue-400 font-mono">{assignedLeadsActionCount}</div>
+          <div className="text-2xl font-semibold text-blue-400 tracking-tight font-mono">{assignedLeadsActionCount}</div>
           <div className="text-[11px] text-slate-500 mt-1">Pending acceptance</div>
         </div>
 
         {/* Upcoming Renewals */}
-        <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-purple-500/30 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-            <span className="font-medium">Upcoming Renewals</span>
+            <span className="font-medium">Renewals</span>
             <RefreshCw className="h-4 w-4 text-purple-400" />
           </div>
-          <div className="text-2xl font-bold text-purple-400 font-mono">{upcomingRenewalsCount}</div>
+          <div className="text-2xl font-semibold text-purple-400 tracking-tight font-mono">{upcomingRenewalsCount}</div>
           <div className="text-[11px] text-slate-500 mt-1">Next 90 days</div>
         </div>
       </div>
 
       {/* 3. PIPELINE STATUS OR PURPOSEFUL EMPTY STATES */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Deal Registrations Section */}
-        <div className="lg:col-span-7 space-y-4">
+        <div className="lg:col-span-7 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
               <FileSpreadsheet className="h-4 w-4 text-cyan-400" />
-              <span>Deal Registrations</span>
+              <span>Recent Deal Registrations</span>
             </h2>
             <Link
               href="/partner-portal/deals"
@@ -331,11 +315,11 @@ export default async function PartnerDashboardPage() {
           </div>
 
           {recentDeals.length > 0 ? (
-            <div className="rounded-xl bg-slate-900/60 border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+            <div className="rounded-xl bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
               {recentDeals.map((deal) => (
                 <div
                   key={deal.id}
-                  className="p-4 flex items-center justify-between gap-4 hover:bg-slate-900/90 transition-colors"
+                  className="p-3.5 flex items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors"
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -344,7 +328,7 @@ export default async function PartnerDashboardPage() {
                       </span>
                       <StatusBadge status={deal.status} />
                     </div>
-                    <div className="font-semibold text-sm text-white mt-1 truncate">
+                    <div className="font-medium text-sm text-white mt-1 truncate">
                       {deal.customer_legal_name}
                     </div>
                     <div className="text-xs text-slate-400 mt-0.5">
@@ -365,12 +349,12 @@ export default async function PartnerDashboardPage() {
             </div>
           ) : (
             /* Purposeful Empty State for Deals */
-            <div className="rounded-xl bg-slate-900/30 border border-dashed border-slate-800 p-8 text-center space-y-4">
-              <div className="h-12 w-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 mx-auto">
-                <FilePlus2 className="h-6 w-6" />
+            <div className="rounded-xl bg-[#0d1424] border border-dashed border-slate-800 p-8 text-center space-y-3">
+              <div className="h-10 w-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 mx-auto">
+                <FilePlus2 className="h-5 w-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-semibold text-white">
                   Bring your first OmniPriv opportunity to us.
                 </h3>
                 <p className="text-xs text-slate-400 max-w-md mx-auto">
@@ -388,11 +372,11 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Assigned Leads & Renewals Side Panel */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="lg:col-span-5 space-y-5">
           {/* Assigned Leads */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
                 <Inbox className="h-4 w-4 text-blue-400" />
                 <span>Assigned Leads</span>
               </h2>
@@ -405,11 +389,11 @@ export default async function PartnerDashboardPage() {
             </div>
 
             {recentLeads.length > 0 ? (
-              <div className="rounded-xl bg-slate-900/60 border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+              <div className="rounded-xl bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
                 {recentLeads.map((assignment) => (
-                  <div key={assignment.id} className="p-3.5 flex items-center justify-between gap-3 text-xs">
+                  <div key={assignment.id} className="p-3 flex items-center justify-between gap-3 text-xs">
                     <div className="min-w-0">
-                      <div className="font-semibold text-white truncate">
+                      <div className="font-medium text-white truncate">
                         {assignment.lead.company}
                       </div>
                       <div className="text-slate-400 text-[11px] mt-0.5 truncate">
@@ -433,10 +417,10 @@ export default async function PartnerDashboardPage() {
               </div>
             ) : (
               /* Purposeful Empty State for Leads */
-              <div className="rounded-xl bg-slate-900/30 border border-slate-800/80 p-5 text-center text-xs text-slate-400">
-                <Inbox className="h-6 w-6 text-slate-600 mx-auto mb-2" />
-                <div className="font-semibold text-slate-300">No leads have been assigned to your company yet.</div>
-                <p className="text-[11px] text-slate-500 mt-1">
+              <div className="rounded-xl bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400">
+                <Inbox className="h-5 w-5 text-slate-500 mx-auto mb-1.5" />
+                <div className="font-medium text-slate-300">No leads have been assigned to your company yet.</div>
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Inbound enterprise inquiries routed by OmniPriv marketing will appear here for acceptance.
                 </p>
               </div>
@@ -444,9 +428,9 @@ export default async function PartnerDashboardPage() {
           </div>
 
           {/* Renewals */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
                 <RefreshCw className="h-4 w-4 text-purple-400" />
                 <span>Upcoming Renewals</span>
               </h2>
@@ -459,11 +443,11 @@ export default async function PartnerDashboardPage() {
             </div>
 
             {recentRenewals.length > 0 ? (
-              <div className="rounded-xl bg-slate-900/60 border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+              <div className="rounded-xl bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
                 {recentRenewals.map((renewal) => (
-                  <div key={renewal.id} className="p-3.5 flex items-center justify-between gap-3 text-xs">
+                  <div key={renewal.id} className="p-3 flex items-center justify-between gap-3 text-xs">
                     <div>
-                      <div className="font-semibold text-white">{renewal.customer_name}</div>
+                      <div className="font-medium text-white">{renewal.customer_name}</div>
                       <div className="text-slate-400 text-[11px]">
                         Due: {new Date(renewal.renewal_date).toLocaleDateString()}
                       </div>
@@ -476,10 +460,10 @@ export default async function PartnerDashboardPage() {
               </div>
             ) : (
               /* Purposeful Empty State for Renewals */
-              <div className="rounded-xl bg-slate-900/30 border border-slate-800/80 p-5 text-center text-xs text-slate-400">
-                <RefreshCw className="h-6 w-6 text-slate-600 mx-auto mb-2" />
-                <div className="font-semibold text-slate-300">No renewals are currently due.</div>
-                <p className="text-[11px] text-slate-500 mt-1">
+              <div className="rounded-xl bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400">
+                <RefreshCw className="h-5 w-5 text-slate-500 mx-auto mb-1.5" />
+                <div className="font-medium text-slate-300">No renewals are currently due.</div>
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Customer contracts eligible for 90-day renewal notices will be populated automatically.
                 </p>
               </div>
@@ -489,45 +473,43 @@ export default async function PartnerDashboardPage() {
       </div>
 
       {/* 4. PARTNER TOOLS SECTION */}
-      <div className="space-y-4 pt-4 border-t border-slate-800/80">
+      <div className="space-y-3.5 pt-4 border-t border-slate-800">
         <div>
-          <h2 className="text-lg font-bold text-white tracking-tight">Partner Tools</h2>
+          <h2 className="text-sm font-semibold text-white tracking-tight">Partner Tools</h2>
           <p className="text-xs text-slate-400 mt-0.5">
             Core commercial and technical modules available to {companyName}.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {partnerTools.map((tool) => {
             const Icon = tool.icon;
             return (
               <div
                 key={tool.title}
-                className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/90 dark:from-[#0c182c]/90 via-slate-900/90 dark:via-[#081222]/90 to-slate-950/90 dark:to-[#060c18]/90 border border-white/[0.08] hover:border-[#00B8FF]/40 shadow-lg shadow-black/30 transition-all duration-200 flex flex-col justify-between group relative overflow-hidden"
+                className="p-5 rounded-xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between group"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-10 w-10 rounded-xl bg-[#00B8FF]/10 border border-[#00B8FF]/20 flex items-center justify-center text-[#00B8FF] group-hover:scale-105 group-hover:bg-[#00B8FF]/15 transition-all">
-                      <Icon className="h-5 w-5" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-9 w-9 rounded-lg bg-cyan-950/60 border border-cyan-800/70 flex items-center justify-center text-cyan-400 group-hover:border-cyan-700 transition-colors">
+                      <Icon className="h-4.5 w-4.5" />
                     </div>
                     {tool.badge && (
-                      <span className="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shadow-sm">
+                      <span className="px-2 py-0.5 text-[11px] font-medium rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
                         {tool.badge}
                       </span>
                     )}
                   </div>
-                  <h3 className="text-base font-bold text-white tracking-tight">{tool.title}</h3>
-                  <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">{tool.description}</p>
+                  <h3 className="text-sm font-semibold text-white tracking-tight">{tool.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1 leading-normal">{tool.description}</p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-white/[0.06]">
+                <div className="mt-4 pt-3 border-t border-slate-800">
                   <Link href={tool.href}>
                     <Button
                       variant={tool.primary ? 'primary' : 'outline'}
                       size="sm"
-                      className={`w-full text-xs font-semibold justify-between ${
-                        tool.primary ? 'shadow-md shadow-[#00B8FF]/20' : 'border-white/[0.1] text-slate-300 hover:text-white'
-                      }`}
+                      className="w-full text-xs font-semibold justify-between"
                     >
                       <span>{tool.ctaText}</span>
                       <ArrowRight className="h-3.5 w-3.5" />

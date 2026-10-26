@@ -121,12 +121,12 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                     if (s.num === 2 && isStep1Valid) setCurrentStep(2);
                     if (s.num === 3 && isStep1Valid && isStep2Valid) setCurrentStep(3);
                   }}
-                  className={`flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                  className={`btn-press flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer select-none transition-colors duration-160 ${
                     isActive
-                      ? 'bg-[#00B8FF] text-[#030711] shadow-[0_0_16px_rgba(0,184,255,0.4)]'
+                      ? 'bg-slate-100 text-slate-950 font-bold shadow-sm'
                       : isCompleted
-                      ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                      ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/60'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                   }`}
                 >
                   <span
@@ -541,8 +541,8 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
               </div>
 
               {/* OmniPriv 90-Day Protection Notice Banner */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-[#00B8FF]/10 via-[#0A1D35]/50 to-transparent border border-[#00B8FF]/30 text-xs text-slate-300 space-y-2 shadow-lg shadow-[#00B8FF]/5">
-                <div className="font-semibold flex items-center gap-2.5 text-[#00B8FF] text-sm">
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 space-y-1.5">
+                <div className="font-semibold flex items-center gap-2 text-cyan-400 text-sm">
                   <Shield className="h-4 w-4" />
                   <span>OmniPriv 90-Day Exclusive Price & Margin Protection Guarantee</span>
                 </div>

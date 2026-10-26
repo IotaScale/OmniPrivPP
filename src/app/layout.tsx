@@ -1,6 +1,19 @@
 import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="h-full antialiased">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`h-full antialiased ${inter.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         {/* Apply the persisted theme (dark by default) before first paint. */}
         <script
@@ -34,7 +51,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col font-sans">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

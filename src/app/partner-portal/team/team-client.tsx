@@ -215,8 +215,8 @@ export function TeamManagementClient({
       {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="max-w-md w-full rounded-2xl bg-gradient-to-b from-slate-900 dark:from-[#0c182c] via-slate-900 dark:via-[#081222] to-slate-950 dark:to-[#060c18] border border-white/[0.1] p-6 shadow-2xl shadow-black/80 space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <div className="max-w-md w-full rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <h3 className="text-base font-bold text-white flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-lg bg-[#00B8FF]/10 text-[#00B8FF] flex items-center justify-center">
                   <UserPlus className="h-4 w-4" />

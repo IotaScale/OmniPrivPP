@@ -5,10 +5,15 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ─────────────────────────────────────────────────────────────
-   OmniPriv Brand Design System Tokens (Source: Webomnipriv)
+   OmniPriv Brand Design System Tokens & Emil Kowalski Curves
 ───────────────────────────────────────────────────────────── */
 :root {
   color-scheme: light;
+
+  /* Emil Kowalski Animation Tokens from SKILL.md */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* Official OmniPriv Brand Colors */
   --omnipriv-primary: #00b8ff;
@@ -23,13 +28,6 @@
   --omnipriv-primary-700: #006899;
   --omnipriv-primary-800: #004066;
   --omnipriv-primary-900: #001833;
-
-  /* Deep Space Dark Palette (Webomnipriv Source) */
-  --omnipriv-dark: #030711;
-  --omnipriv-dark-surface: #0a1628;
-  --omnipriv-dark-elevated: #0d1e36;
-  --omnipriv-dark-hover: #102644;
-  --omnipriv-dark-border: #133052;
 
   /* Light theme — Surfaces & Borders */
   --background: #ffffff;
@@ -57,12 +55,6 @@
   --input-border: rgba(15, 23, 42, 0.15);
   --ring: #00b8ff;
 
-  /* Light theme — Atmospheric Glows & Gradients */
-  --glow-primary: 0 0 20px rgba(0, 184, 255, 0.18);
-  --glow-sm: 0 0 12px rgba(0, 184, 255, 0.1);
-  --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
-
-  --page-gradient: linear-gradient(180deg, #ffffff 0%, #f4f7fb 35%, #ffffff 100%);
   --scrollbar-track: #f1f5f9;
   --scrollbar-thumb: #cbd5e1;
   --scrollbar-thumb-hover: #94a3b8;
@@ -71,53 +63,39 @@
 .dark {
   color-scheme: dark;
 
-  /* Dark theme — Surfaces & Borders */
-  --background: #030711;
+  /* Dark theme — Clean Solid Matte Surfaces (No muddy gradients) */
+  --background: #090d16;
   --foreground: #f1f5f9;
-  --card: #0a1628;
+  --card: #0d1424;
   --card-foreground: #f1f5f9;
   --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-cyan: rgba(0, 184, 255, 0.25);
-  --popover: #0a1628;
+  --card-border-cyan: rgba(0, 184, 255, 0.3);
+  --popover: #0d1424;
   --popover-foreground: #f1f5f9;
 
   /* Dark theme — Functional Tokens */
   --primary: #00b8ff;
-  --primary-foreground: #030711;
-  --secondary: #0d1e36;
+  --primary-foreground: #090d16;
+  --secondary: #131d31;
   --secondary-foreground: #e2e8f0;
-  --muted: #0d1e36;
+  --muted: #131d31;
   --muted-foreground: #94a3b8;
   --accent: #00b8ff;
-  --accent-foreground: #030711;
+  --accent-foreground: #090d16;
   --destructive: #f43f5e;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
-  --input: #060e1d;
+  --input: #0b1120;
   --input-border: rgba(255, 255, 255, 0.12);
   --ring: #00b8ff;
 
-  /* Dark theme — Atmospheric Glows & Gradients */
-  --glow-primary: 0 0 20px rgba(0, 184, 255, 0.22);
-  --glow-sm: 0 0 12px rgba(0, 184, 255, 0.12);
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
-
-  --page-gradient: linear-gradient(180deg, #030711 0%, #0a1628 35%, #030711 100%);
-  --scrollbar-track: #030711;
-  --scrollbar-thumb: #0d1e36;
-  --scrollbar-thumb-hover: #133052;
+  --scrollbar-track: #090d16;
+  --scrollbar-thumb: #1e293b;
+  --scrollbar-thumb-hover: #334155;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Light-theme palette remap.
-
-   The app is written dark-first (e.g. `bg-slate-950`, `text-slate-100`,
-   `text-white`, `border-white/[…]`). Tailwind v4 utilities resolve color
-   utilities to `var(--color-*)`, so re-pointing those variables in the
-   light theme flips the whole interface without touching every class.
-───────────────────────────────────────────────────────────── */
+/* Light-theme palette remap for dark-first classes */
 :root:not(.dark) {
-  /* Invert the neutral slate scale so dark-first classes render light-first. */
   --color-slate-50: #020617;
   --color-slate-100: #0f172a;
   --color-slate-200: #1e293b;
@@ -130,10 +108,7 @@
   --color-slate-900: #f1f5f9;
   --color-slate-950: #f8fafc;
 
-  /* `text-white` and white/[opacity] borders/tints become dark-based. */
   --color-white: #0f172a;
-
-  /* Accent text shades darken for readable contrast on light surfaces. */
   --color-cyan-200: #164e63;
   --color-cyan-300: #155e75;
   --color-cyan-400: #0e7490;
@@ -157,47 +132,57 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.011em;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   OmniPriv Atmospheric Backgrounds & Utilities
-───────────────────────────────────────────────────────────── */
-.bg-omnipriv-grid {
-  background-image: 
-    linear-gradient(rgba(0, 184, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 184, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+/* Emil Kowalski Button Press Recipe from RECIPES.md */
+.btn-press {
+  transition: transform 160ms var(--ease-out), background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
+  will-change: transform;
+}
+.btn-press:active {
+  transform: scale(0.97);
 }
 
-.bg-omnipriv-card-glow {
-  background-image: radial-gradient(ellipse at top left, rgba(0, 184, 255, 0.08) 0%, transparent 60%);
+/* Emil Kowalski Smooth Accordion / Collapse using CSS Grid */
+.accordion-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms var(--ease-out), opacity 200ms var(--ease-out);
+  opacity: 0;
+  will-change: grid-template-rows, opacity;
 }
 
-.bg-omnipriv-radial {
-  background-image: radial-gradient(ellipse at center, rgba(0, 184, 255, 0.12) 0%, transparent 70%);
+.accordion-wrapper[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
 }
 
-.bg-omnipriv-page-gradient {
-  background-image: var(--page-gradient);
+.accordion-inner {
+  overflow: hidden;
 }
 
-.glow-omnipriv {
-  box-shadow: var(--glow-primary);
+/* Stagger entrance animations */
+@keyframes fadeInUpStagger {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.border-omnipriv-cyan {
-  border-color: var(--card-border-cyan);
+.portal-stagger-item {
+  animation: fadeInUpStagger 220ms var(--ease-out) both;
 }
 
-.border-omnipriv-subtle {
-  border-color: var(--card-border);
-}
-
-/* Smooth, high-contrast scrollbar */
+/* High-contrast, clean scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

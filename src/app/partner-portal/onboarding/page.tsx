@@ -122,7 +122,7 @@ export default async function PartnerOnboardingPage() {
         </div>
         <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
           <div
-            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500"
+            className="h-full bg-cyan-500 transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
           />
         </div>

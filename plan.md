@@ -43,6 +43,7 @@ This document tracks all completed phases, schema models, route implementations,
 | **Phase 19** | Local PostgreSQL connection: Windows PostgreSQL 18 service (`D:\Program Files\PostgreSQL\18`), `omnipriv_partner` database, `omnipriv` role, `.env` DATABASE_URL, initial migration + seed applied | Completed | 12 tables in public schema; `psql` connection verified; seed created Channel Admin + enablement resources |
 | **Phase 20** | Supabase Cloud PostgreSQL Migration & Project Link (`nyciurohneqvijropvwf`): Configured IPv4 transaction pooler (port 6543) and session pooler (port 5432), synchronized 27 Prisma models/enums, seeded Channel Admin and playbooks, linked Supabase CLI project, verified 23/23 tests | Completed | Live cloud database synchronized via Prisma (`directUrl` + pooled `DATABASE_URL`); 23/23 test suite passing; 48 Next.js routes built |
 | **Phase 21** | Light/dark theme system (dark default) with a global client toggle | Completed | `ThemeProvider` + `ThemeToggle`; `.dark` class strategy with flash-free head script; Tailwind v4 palette remap flips the dark-first UI; toggle placed in Partner Portal header and Channel Admin header (before Sign Out) |
+| **Phase 22** | Partner Portal UI/UX Elevation (Typography, Solid Surfaces, Emil Kowalski Motion) | Completed | Inter font integration via `next/font/google`, complete removal of muddy gradients, solid matte dark surfaces, Emil Kowalski button press physics (`scale(0.97)`), 3-step wizard & dashboard visual refinement; 23/23 tests passing & 49 routes built |
 
 ---
 

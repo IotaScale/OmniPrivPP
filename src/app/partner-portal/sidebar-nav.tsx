@@ -145,15 +145,15 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
   ];
 
   return (
-    <nav className="space-y-5 px-3 py-3">
+    <nav className="space-y-4 px-3 py-3">
       {/* Dashboard Overview */}
       <div>
         <Link
           href="/partner-portal"
-          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+          className={`btn-press flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors duration-160 ${
             pathname === '/partner-portal'
-              ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+              ? 'bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
           }`}
         >
           <LayoutDashboard className="h-4 w-4 shrink-0" />
@@ -163,8 +163,8 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
 
       {/* Sections */}
       {navSections.map((section) => (
-        <div key={section.title}>
-          <div className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+        <div key={section.title} className="space-y-1">
+          <div className="px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500 font-mono">
             {section.title}
           </div>
           <div className="space-y-0.5">
@@ -175,12 +175,12 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-all group ${
+                  className={`btn-press flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-160 group ${
                     active
-                      ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
+                      ? 'bg-slate-800 text-cyan-400 border border-slate-700'
                       : item.highlight
-                      ? 'text-cyan-400 bg-cyan-950/20 border border-cyan-900/30 hover:bg-cyan-950/50 hover:text-cyan-300'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+                      ? 'text-cyan-400 bg-cyan-950/40 border border-cyan-800/60 hover:bg-cyan-900/40 hover:text-cyan-300'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
@@ -188,7 +188,7 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge !== undefined && (
-                    <span className="ml-2 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-cyan-500 text-[#020617] shrink-0">
+                    <span className="ml-2 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-cyan-500 text-slate-950 shrink-0">
                       {item.badge}
                     </span>
                   )}

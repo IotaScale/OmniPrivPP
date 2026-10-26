@@ -5,13 +5,10 @@ import { prisma } from '@/lib/db';
 import { signOutAction } from '@/lib/actions/auth';
 import { PartnerSidebarNav } from './sidebar-nav';
 import {
-  Shield,
   Award,
   Bell,
   LogOut,
-  Building,
   PlusCircle,
-  ExternalLink,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -63,18 +60,18 @@ export default async function PartnerPortalLayout({
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
+    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8FF]/30">
       {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
-      <aside className="w-full md:w-64 bg-slate-900/95 border-r border-white/[0.08] flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
+      <aside className="w-full md:w-64 bg-[#0a0f1a] border-r border-slate-800 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
         {/* Brand / Company Header */}
-        <div className="p-4 border-b border-white/[0.08] bg-slate-950/60">
+        <div className="p-4 border-b border-slate-800 bg-[#080c16]">
           <OmniPrivLogo variant="partner" href="/partner-portal" priority />
-          <div className="mt-2 text-[11px] text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
+          <div className="mt-2 text-xs text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
             {org?.display_name || session.partnerOrgName}
           </div>
 
           {/* Partner Tier Badge */}
-          <div className="mt-3 flex items-center justify-between p-2 rounded-xl bg-slate-950 border border-white/[0.08] text-xs">
+          <div className="mt-3 flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs">
             <span className="text-slate-400 text-[11px]">Partner Tier:</span>
             <Badge variant={tierVariantMap[org?.tier || 'Registered'] || 'default'} size="sm" className="gap-1 font-semibold">
               <Award className="h-3 w-3" />
@@ -89,9 +86,9 @@ export default async function PartnerPortalLayout({
         </div>
 
         {/* Quick Deal Registration CTA in Sidebar */}
-        <div className="p-3 border-t border-white/[0.08]">
+        <div className="p-3 border-t border-slate-800">
           <Link href="/partner-portal/deals/new">
-            <Button variant="primary" size="sm" className="w-full gap-2 text-xs font-semibold shadow-md shadow-[#00B8FF]/10">
+            <Button variant="primary" size="sm" className="w-full gap-2 text-xs font-semibold shadow-sm">
               <PlusCircle className="h-3.5 w-3.5" />
               <span>Register a Deal</span>
             </Button>
@@ -99,7 +96,7 @@ export default async function PartnerPortalLayout({
         </div>
 
         {/* Authenticated User Profile & Sign Out Footer */}
-        <div className="p-3 border-t border-white/[0.08] bg-slate-950/70 flex items-center justify-between text-xs">
+        <div className="p-3 border-t border-slate-800 bg-[#080c16] flex items-center justify-between text-xs">
           <div className="flex flex-col min-w-0 pr-2">
             <span className="text-slate-200 font-medium truncate" title={session.fullName}>
               {session.fullName}
@@ -112,7 +109,7 @@ export default async function PartnerPortalLayout({
           <form action={signOutAction}>
             <button
               type="submit"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+              className="btn-press p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 cursor-pointer"
               title="Sign Out"
             >
               <LogOut className="h-4 w-4" />
@@ -124,7 +121,7 @@ export default async function PartnerPortalLayout({
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-20 bg-slate-950/90 backdrop-blur-md border-b border-white/[0.08] h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-[#090d16]/95 backdrop-blur-md border-b border-slate-800 h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3 text-xs text-slate-400">
             <span className="font-semibold text-slate-200">{org?.display_name || session.partnerOrgName}</span>
             <span>&bull;</span>
@@ -136,17 +133,17 @@ export default async function PartnerPortalLayout({
 
             <Link
               href="/partner-portal"
-              className="relative p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
+              className="btn-press relative p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800"
               title="Notifications"
             >
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-slate-950" />
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-[#090d16]" />
               )}
             </Link>
 
             <Link href="/partner-portal/deals/new" className="hidden sm:inline-flex">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/10">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs text-cyan-400 border-cyan-800/80 hover:bg-cyan-950/40">
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span>New Registration</span>
               </Button>
