@@ -13,6 +13,7 @@ import {
   ScrollText,
   LogOut,
   Headphones,
+  Key,
 } from 'lucide-react';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
@@ -52,6 +53,7 @@ export default async function ChannelAdminDashboardLayout({
   const navLinks = [
     { label: 'Overview', href: '/channel-admin', icon: LayoutDashboard },
     { label: 'Partners', href: '/channel-admin/partners', icon: Building2 },
+    { label: 'Licenses', href: '/channel-admin/licenses', icon: Key },
     {
       label: 'Deals',
       href: '/channel-admin/deals',

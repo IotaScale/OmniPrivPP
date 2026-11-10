@@ -682,3 +682,36 @@ model SupportFaq {
   @@map("support_faqs")
 }
 
+enum ProductLicenseStatus {
+  active
+  expired
+  revoked
+}
+
+model ProductLicense {
+  id               String               @id @default(cuid())
+  org_id           String
+  customer_name    String?
+  license_key      String               @unique
+  status           ProductLicenseStatus @default(active)
+  duration_value   Int
+  duration_unit    String               // days, months, years
+  starts_at        DateTime             @default(now())
+  expires_at       DateTime
+  max_assets       Int?
+  max_users        Int?
+  modules          String               @default("ssh,rdp,db,web")
+  revoked_at       DateTime?
+  revoked_by_id    String?
+  issued_by_id     String?
+  last_verified_at DateTime?
+  created_at       DateTime             @default(now())
+  updated_at       DateTime             @updatedAt
+
+  @@index([org_id])
+  @@index([status])
+  @@index([expires_at])
+  @@map("product_licenses")
+}
+
+
