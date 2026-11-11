@@ -13,7 +13,7 @@ export interface SessionUser {
   membershipRole?: 'partner_owner' | 'partner_member';
 }
 
-const SESSION_COOKIE_NAME = 'omnipriv_session';
+const SESSION_COOKIE_NAME = 'omnipriv_pp_session';
 const SESSION_EXPIRY_DAYS = 7;
 
 function getSecretKey(): Uint8Array {

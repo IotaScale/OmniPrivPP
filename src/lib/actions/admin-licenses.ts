@@ -145,7 +145,12 @@ export async function renewProductLicenseAction(input: {
   }
 
   const now = new Date();
-  const expiresAt = computeLicenseExpiry(now, input.durationValue, input.durationUnit);
+  const existingRows = await prisma.$queryRaw<{ expires_at: Date }[]>`
+    SELECT expires_at FROM product_licenses WHERE id = ${input.id} LIMIT 1
+  `;
+  const currentExpiry = existingRows[0]?.expires_at ? new Date(existingRows[0].expires_at) : now;
+  const baseDate = currentExpiry.getTime() > now.getTime() ? currentExpiry : now;
+  const expiresAt = computeLicenseExpiry(baseDate, input.durationValue, input.durationUnit);
 
   await prisma.$executeRaw`
     UPDATE product_licenses

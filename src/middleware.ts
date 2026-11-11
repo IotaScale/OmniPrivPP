@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const SESSION_COOKIE_NAME = 'omnipriv_session';
+const SESSION_COOKIE_NAME = 'omnipriv_pp_session';
 
 function getSecretKey(): Uint8Array {
   const secret = process.env.SESSION_SECRET || 'omnipriv-fallback-development-secret-minimum-32-chars';
