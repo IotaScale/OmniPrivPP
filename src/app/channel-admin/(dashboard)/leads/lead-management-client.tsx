@@ -2,7 +2,10 @@
 
 import React, { useState } from 'react';
 import { createLeadAction, assignLeadAction } from '@/lib/actions/leads';
+import { deleteLeadAction } from '@/lib/actions/admin-delete';
+import { pluralize } from '@/lib/utils/admin-delete-guards';
 import { Button } from '@/components/ui/button';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
 import { Input } from '@/components/ui/input';
 import { StatusBadge } from '@/components/ui/badge';
 import {
@@ -270,14 +273,28 @@ export function LeadManagementClient({
                         )}
                       </td>
                       <td className="py-3.5 px-6 text-right">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="h-7 text-xs"
-                          onClick={() => setAssigningLead(lead)}
-                        >
-                          {assignment ? 'Reassign' : 'Assign Partner'}
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="h-7 text-xs"
+                            onClick={() => setAssigningLead(lead)}
+                          >
+                            {assignment ? 'Reassign' : 'Assign Partner'}
+                          </Button>
+                          <ConfirmDelete
+                            iconOnly
+                            title="Delete lead"
+                            entityName={`${lead.public_reference} · ${lead.company}`}
+                            impacts={[
+                              pluralize(lead.assignments.length, 'partner assignment'),
+                              ...(lead.assignments.some((a) => a.converted_deal)
+                                ? ['Converted deal registrations are kept; only their link to this lead is removed']
+                                : []),
+                            ]}
+                            action={() => deleteLeadAction(lead.id)}
+                          />
+                        </div>
                       </td>
                     </tr>
                   );

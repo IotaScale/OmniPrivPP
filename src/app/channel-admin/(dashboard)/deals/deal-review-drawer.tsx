@@ -9,7 +9,10 @@ import {
   extendProtectionAction,
   setDealOutcomeAction,
 } from '@/lib/actions/admin-deals';
+import { deleteDealRegistrationAction } from '@/lib/actions/admin-delete';
+import { pluralize } from '@/lib/utils/admin-delete-guards';
 import { Button } from '@/components/ui/button';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
 import { StatusBadge } from '@/components/ui/badge';
 import type { DealMatchView } from '@/lib/utils/deal-matching';
 import { MatchKindBadge, MatchReasonChips, MatchSeverityBadge } from './match-badges';
@@ -66,6 +69,32 @@ interface DealWithRelations {
     note?: string | null;
     created_at: Date | string;
   }>;
+}
+
+/** Shared delete control for a deal (table row and review drawer). */
+export function DeleteDealButton({
+  deal,
+  onDeleted,
+  iconOnly = false,
+}: {
+  deal: Pick<DealWithRelations, 'id' | 'public_reference' | 'customer_legal_name' | 'status_history' | 'organization'>;
+  onDeleted?: () => void;
+  iconOnly?: boolean;
+}) {
+  return (
+    <ConfirmDelete
+      iconOnly={iconOnly}
+      title="Delete deal registration"
+      entityName={`${deal.public_reference} · ${deal.customer_legal_name}`}
+      description={`Submitted by ${deal.organization.display_name}. The partner will no longer see this deal.`}
+      impacts={[
+        pluralize(deal.status_history.length, 'status history entry', 'status history entries'),
+        'Deal protection and any duplicate/conflict flags for this registration',
+      ]}
+      action={() => deleteDealRegistrationAction(deal.id)}
+      onDeleted={onDeleted}
+    />
+  );
 }
 
 export function DealReviewDrawer({
@@ -259,6 +288,10 @@ export function DealReviewDrawer({
               </Button>
             </>
           )}
+
+          <div className="ml-auto pl-2 shrink-0">
+            <DeleteDealButton deal={deal} onDeleted={onClose} />
+          </div>
         </div>
 
         {error && (

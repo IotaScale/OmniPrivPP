@@ -12,7 +12,14 @@ export default async function ChannelAdminPartnersPage() {
     include: {
       memberships: {
         include: {
-          user: { select: { full_name: true, email: true } },
+          user: {
+            select: {
+              full_name: true,
+              email: true,
+              role: true,
+              _count: { select: { memberships: true } },
+            },
+          },
         },
       },
       deals: {
@@ -23,6 +30,10 @@ export default async function ChannelAdminPartnersPage() {
           memberships: true,
           deals: true,
           lead_assignments: true,
+          renewals: true,
+          commercial_requests: true,
+          support_tickets: true,
+          product_licenses: true,
         },
       },
     },

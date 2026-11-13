@@ -4,6 +4,8 @@ import { prisma } from '@/lib/db';
 import { BookOpen, ExternalLink, ShieldCheck, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
+import { deleteResourceAction } from '@/lib/actions/admin-delete';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +36,7 @@ export default async function AdminResourcesPage() {
               <th className="py-3 px-5 font-semibold">Category</th>
               <th className="py-3 px-5 font-semibold">Visible Tiers</th>
               <th className="py-3 px-5 font-semibold">Status</th>
-              <th className="py-3 px-5 font-semibold text-right">Link</th>
+              <th className="py-3 px-5 font-semibold text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
@@ -52,10 +54,19 @@ export default async function AdminResourcesPage() {
                   </Badge>
                 </td>
                 <td className="py-3.5 px-5 text-right">
-                  <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1">
-                    <span>View Asset</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
+                  <div className="flex items-center justify-end gap-3">
+                    <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1 whitespace-nowrap">
+                      <span>View Asset</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                    <ConfirmDelete
+                      iconOnly
+                      title="Delete resource"
+                      entityName={res.title}
+                      description="Partners will no longer see it in the resource library."
+                      action={deleteResourceAction.bind(null, res.id)}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

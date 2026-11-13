@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/badge';
-import { DealReviewDrawer } from './deal-review-drawer';
+import { DealReviewDrawer, DeleteDealButton } from './deal-review-drawer';
 import { MatchSeverityBadge } from './match-badges';
 import type { DealMatchView } from '@/lib/utils/deal-matching';
 import { Search, ArrowRight } from 'lucide-react';
@@ -195,18 +195,21 @@ export function ChannelAdminDealsTable({
                       )}
                     </td>
                     <td className="py-3.5 px-6 text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 px-2.5 text-xs text-cyan-400 hover:text-white hover:bg-cyan-500/15"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveDeal(deal);
-                        }}
-                      >
-                        <span>Review</span>
-                        <ArrowRight className="h-3 w-3 ml-1" />
-                      </Button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2.5 text-xs text-cyan-400 hover:text-white hover:bg-cyan-500/15"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveDeal(deal);
+                          }}
+                        >
+                          <span>Review</span>
+                          <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
+                        <DeleteDealButton deal={deal} iconOnly />
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -2,6 +2,8 @@ import React from 'react';
 import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { updateCommercialRequestStatusAction } from '@/lib/actions/admin-ops';
+import { deleteCommercialRequestAction } from '@/lib/actions/admin-delete';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
 import { FileQuestion, CheckCircle2, XCircle, Clock, ShieldCheck, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -102,7 +104,7 @@ export default async function AdminCommercialRequestsPage() {
                   Submitted {new Date(r.created_at).toLocaleString()}
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {r.status !== 'fulfilled' && (
                     <form action={updateCommercialRequestStatusAction} className="inline-flex items-center gap-2">
                       <input type="hidden" name="requestId" value={r.id} />
@@ -129,6 +131,13 @@ export default async function AdminCommercialRequestsPage() {
                       </Button>
                     </form>
                   )}
+
+                  <ConfirmDelete
+                    title="Delete commercial request"
+                    entityName={`${r.public_reference} · ${r.title}`}
+                    description={`Requested by ${r.organization.legal_name}. The partner will no longer see this request.`}
+                    action={deleteCommercialRequestAction.bind(null, r.id)}
+                  />
                 </div>
               </div>
             </div>

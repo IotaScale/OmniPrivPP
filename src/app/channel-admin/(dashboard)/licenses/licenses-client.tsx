@@ -9,6 +9,8 @@ import {
   type LicensePartnerOption,
   type ProductLicenseView,
 } from '@/lib/actions/admin-licenses';
+import { deleteProductLicenseAction } from '@/lib/actions/admin-delete';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
 import {
   Key,
   Copy,
@@ -501,7 +503,8 @@ export function LicensesClient({
                           ? new Date(lic.last_verified_at).toLocaleString()
                           : 'Pending first sync'}
                       </td>
-                      <td className="px-4 py-3 text-right space-x-2">
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
                         <button
                           type="button"
                           onClick={() =>
@@ -526,6 +529,23 @@ export function LicensesClient({
                             <XCircle className="h-3 w-3" /> Revoke
                           </button>
                         )}
+                        <ConfirmDelete
+                          iconOnly
+                          title="Delete product license"
+                          entityName={`${lic.license_key} (${lic.customer_name || lic.org_id})`}
+                          description={
+                            lic.partner_name ? `Linked partner: ${lic.partner_name}.` : undefined
+                          }
+                          warning={
+                            <>
+                              The OmniPriv product will <strong>fail license verification</strong> for org{' '}
+                              <span className="font-mono">{lic.org_id}</span> with this key. Revoke instead if you
+                              want to keep a record of it.
+                            </>
+                          }
+                          action={() => deleteProductLicenseAction(lic.id)}
+                        />
+                        </div>
                       </td>
                     </tr>
                   );

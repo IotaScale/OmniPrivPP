@@ -1,9 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { updatePartnerTierAction } from '@/lib/actions/admin-ops';
+import { deletePartnerOrganizationAction, deletePartnerUserAction } from '@/lib/actions/admin-delete';
+import {
+  describeOrgDeletionImpact,
+  evaluatePartnerUserDeletion,
+  pluralize,
+} from '@/lib/utils/admin-delete-guards';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
 import { Building2, ArrowLeft, Award, Users, ShieldCheck, Mail, Globe, MapPin, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge, OrgStatusBadge } from '@/components/ui/badge';
@@ -16,14 +22,31 @@ export default async function AdminPartnerDetailPage({
 }: {
   params: Promise<{ partnerId: string }>;
 }) {
-  await requireAdminSession();
+  const session = await requireAdminSession();
   const { partnerId } = await params;
 
   const partner = await prisma.partnerOrganization.findUnique({
     where: { id: partnerId },
     include: {
       memberships: {
-        include: { user: true },
+        include: {
+          user: {
+            select: {
+              id: true,
+              full_name: true,
+              email: true,
+              role: true,
+              memberships: {
+                select: {
+                  role: true,
+                  partner_organization_id: true,
+                  organization: { select: { display_name: true } },
+                },
+              },
+              _count: { select: { deals_submitted: true } },
+            },
+          },
+        },
       },
       deals: {
         orderBy: { created_at: 'desc' },
@@ -34,10 +57,50 @@ export default async function AdminPartnerDetailPage({
         orderBy: { created_at: 'desc' },
         take: 5,
       },
+      _count: {
+        select: {
+          memberships: true,
+          deals: true,
+          lead_assignments: true,
+          renewals: true,
+          commercial_requests: true,
+          support_tickets: true,
+          product_licenses: true,
+        },
+      },
     },
   });
 
-  if (!partner) notFound();
+  if (!partner) {
+    // Shown briefly after this organization is deleted from this page, before
+    // the client navigates back to the directory.
+    return (
+      <div className="max-w-6xl mx-auto py-16 text-center space-y-4">
+        <p className="text-sm text-slate-400">This partner organization no longer exists.</p>
+        <Link href="/channel-admin/partners">
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to All Partners</span>
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  // Owner counts for every organization a listed member belongs to (sole-owner guard).
+  const memberOrgIds = [
+    ...new Set(partner.memberships.flatMap((m) => m.user.memberships.map((um) => um.partner_organization_id))),
+  ];
+  const ownerGroups = await prisma.partnerMembership.groupBy({
+    by: ['partner_organization_id'],
+    where: { partner_organization_id: { in: memberOrgIds }, role: 'partner_owner' },
+    _count: { _all: true },
+  });
+  const ownerCountByOrg = new Map(ownerGroups.map((g) => [g.partner_organization_id, g._count._all]));
+
+  const usersDeletedWithOrg = partner.memberships.filter(
+    (m) => m.user.role !== 'channel_admin' && m.user.memberships.length <= 1
+  ).length;
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -68,16 +131,40 @@ export default async function AdminPartnerDetailPage({
           </div>
         </div>
 
-        {partner.website && (
-          <a
-            href={partner.website.startsWith('http') ? partner.website : `https://${partner.website}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-cyan-400 hover:text-cyan-300 font-mono"
-          >
-            {partner.website} &rarr;
-          </a>
-        )}
+        <div className="flex flex-wrap items-center gap-3 md:justify-end">
+          {partner.website && (
+            <a
+              href={partner.website.startsWith('http') ? partner.website : `https://${partner.website}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-cyan-400 hover:text-cyan-300 font-mono break-all"
+            >
+              {partner.website} &rarr;
+            </a>
+          )}
+          <ConfirmDelete
+            title="Delete partner organization"
+            entityName={partner.display_name}
+            triggerLabel="Delete organization"
+            impacts={describeOrgDeletionImpact({
+              members: partner._count.memberships,
+              usersDeleted: usersDeletedWithOrg,
+              deals: partner._count.deals,
+              leadAssignments: partner._count.lead_assignments,
+              renewals: partner._count.renewals,
+              commercialRequests: partner._count.commercial_requests,
+              supportTickets: partner._count.support_tickets,
+            })}
+            warning={
+              partner._count.product_licenses > 0
+                ? `${pluralize(partner._count.product_licenses, 'product license')} stay active but will no longer be linked to this partner.`
+                : undefined
+            }
+            confirmPhrase={partner.display_name}
+            action={deletePartnerOrganizationAction.bind(null, partner.id)}
+            redirectTo="/channel-admin/partners"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -150,17 +237,55 @@ export default async function AdminPartnerDetailPage({
             </CardHeader>
             <CardContent>
               <div className="divide-y divide-slate-800">
-                {partner.memberships.map((m) => (
-                  <div key={m.id} className="py-2.5 flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-semibold text-white">{m.user.full_name}</div>
-                      <div className="text-slate-400 text-[11px]">{m.user.email}</div>
+                {partner.memberships.map((m) => {
+                  const guard = evaluatePartnerUserDeletion({
+                    actorUserId: session.userId,
+                    target: { id: m.user.id, role: m.user.role },
+                    memberships: m.user.memberships.map((um) => ({
+                      orgId: um.partner_organization_id,
+                      orgName: um.organization.display_name,
+                      role: um.role,
+                      ownerCount: ownerCountByOrg.get(um.partner_organization_id) ?? 0,
+                    })),
+                  });
+                  const otherOrgs = m.user.memberships.length - 1;
+                  const userImpacts = [
+                    pluralize(m.user.memberships.length, 'organization membership'),
+                    'Course enrollments, certifications, event registrations, terms acceptances and notifications',
+                    'Linked support-portal account, if any (their cases move to a teammate)',
+                  ];
+                  return (
+                    <div key={m.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-white truncate">{m.user.full_name}</div>
+                        <div className="text-slate-400 text-[11px] truncate">{m.user.email}</div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Badge variant={m.role === 'partner_owner' ? 'warning' : 'default'} size="sm">
+                          {m.role.replace('_', ' ')}
+                        </Badge>
+                        <ConfirmDelete
+                          iconOnly
+                          title="Delete user"
+                          entityName={`${m.user.full_name} (${m.user.email})`}
+                          description={
+                            otherOrgs > 0
+                              ? `They also lose access to ${pluralize(otherOrgs, 'other organization')}.`
+                              : undefined
+                          }
+                          impacts={userImpacts}
+                          warning={
+                            m.user._count.deals_submitted > 0
+                              ? `${pluralize(m.user._count.deals_submitted, 'deal registration')} submitted by this user stay with the organization and are reassigned to another member (as are their commercial requests and support tickets).`
+                              : 'Their commercial requests and support tickets, if any, stay with the organization and are reassigned to another member.'
+                          }
+                          disabledReason={guard.allowed ? undefined : guard.reason}
+                          action={deletePartnerUserAction.bind(null, m.user.id)}
+                        />
+                      </div>
                     </div>
-                    <Badge variant={m.role === 'partner_owner' ? 'warning' : 'default'} size="sm">
-                      {m.role.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

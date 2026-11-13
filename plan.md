@@ -251,6 +251,15 @@ This document tracks all completed phases, schema models, route implementations,
   - Root Partner Portal: All 48 routes build with Turbopack with 0 errors.
   - Database preserved without any destructive reset (`db:clean` avoided).
 
+## 11. Channel Admin Delete Controls
+
+- **Server actions** (`src/lib/actions/admin-delete.ts`): `requireAdminSession()` → zod id → one `$transaction` → `AuditEvent` (actor = admin, `partner_organization_id` NULL so org cascades never erase it; org/name/reference in metadata) → `revalidatePath`.
+  - Partner organization (typed-name confirmation re-checked on the server): removes all org-owned rows, deletes members with no other membership (never `channel_admin`, never users with records in other orgs), unlinks `product_licenses`, resets leads left without assignments to `new`, and purges the `customer_support` tenant `pp_<orgId>` (case messages, cases, audit events, entitlements, users, tenant) via guarded raw SQL that no-ops if the schema/columns are absent.
+  - Partner user: blocked for self, Channel Admins and the sole `partner_owner` of any org; their deals/commercial requests are reassigned to another member (owner first); linked support-portal user removed (cases/messages handed to a tenant teammate, else deleted).
+  - Deal registration (+ status history), lead (+ assignments; converted deals kept and unlinked), product license, commercial request, course (+ enrollments), event (+ registrations), campaign, resource. Announcements have no admin page, so no delete.
+- **Pure guards** (`src/lib/utils/admin-delete-guards.ts`) with unit tests in `src/tests/unit/admin-delete-guards.test.ts`.
+- **UI** (`src/components/ui/confirm-delete.tsx`): one reusable "Delete" danger trigger + portal confirm dialog (impact counts, warnings, typed-name gate for orgs, toast feedback, Esc/focus trap, stacked buttons at 375px). Rendered only inside `/channel-admin/*`.
+
 
 
 

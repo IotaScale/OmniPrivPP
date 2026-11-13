@@ -3,7 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { updatePartnerTierAction, togglePartnerStatusAction } from '@/lib/actions/admin-partners';
+import { deletePartnerOrganizationAction } from '@/lib/actions/admin-delete';
+import { describeOrgDeletionImpact, pluralize } from '@/lib/utils/admin-delete-guards';
 import { Button } from '@/components/ui/button';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
 import { Badge, OrgStatusBadge } from '@/components/ui/badge';
 import { Building2, Award } from 'lucide-react';
 
@@ -20,12 +23,21 @@ interface PartnerRow {
   created_at: Date | string;
   memberships: Array<{
     role: string;
-    user: { full_name: string; email: string };
+    user: {
+      full_name: string;
+      email: string;
+      role: string;
+      _count: { memberships: number };
+    };
   }>;
   _count: {
     memberships: number;
     deals: number;
     lead_assignments: number;
+    renewals: number;
+    commercial_requests: number;
+    support_tickets: number;
+    product_licenses: number;
   };
   deals: Array<{
     estimated_deal_value?: number | null;
@@ -204,6 +216,28 @@ export function ChannelAdminPartnersClient({
                           >
                             {p.status === 'active' ? 'Suspend' : 'Reactivate'}
                           </Button>
+                          <ConfirmDelete
+                            title="Delete partner organization"
+                            entityName={p.display_name}
+                            impacts={describeOrgDeletionImpact({
+                              members: p._count.memberships,
+                              usersDeleted: p.memberships.filter(
+                                (m) => m.user.role !== 'channel_admin' && m.user._count.memberships <= 1
+                              ).length,
+                              deals: p._count.deals,
+                              leadAssignments: p._count.lead_assignments,
+                              renewals: p._count.renewals,
+                              commercialRequests: p._count.commercial_requests,
+                              supportTickets: p._count.support_tickets,
+                            })}
+                            warning={
+                              p._count.product_licenses > 0
+                                ? `${pluralize(p._count.product_licenses, 'product license')} stay active but will no longer be linked to this partner.`
+                                : undefined
+                            }
+                            confirmPhrase={p.display_name}
+                            action={(confirmation) => deletePartnerOrganizationAction(p.id, confirmation)}
+                          />
                         </div>
                       </td>
                     </tr>

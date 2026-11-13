@@ -3,6 +3,9 @@ import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { Calendar, Users, Clock, Video } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
+import { deleteEventAction } from '@/lib/actions/admin-delete';
+import { pluralize } from '@/lib/utils/admin-delete-guards';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,13 +52,22 @@ export default async function AdminEventsPage() {
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">{ev.description}</p>
             </div>
 
-            <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between text-xs text-slate-400">
+            <div className="border-t border-slate-800/80 pt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <Clock className="h-3.5 w-3.5 text-slate-500" />
                 <span>{ev.duration_minutes} Mins &bull; {ev.product_area}</span>
               </div>
-              <div className="font-mono font-semibold text-cyan-400">
-                {ev._count.registrations} Partner Registrations
+              <div className="flex items-center gap-3">
+                <div className="font-mono font-semibold text-cyan-400">
+                  {ev._count.registrations} Partner Registrations
+                </div>
+                <ConfirmDelete
+                  iconOnly
+                  title="Delete event"
+                  entityName={ev.title}
+                  impacts={[pluralize(ev._count.registrations, 'partner registration')]}
+                  action={deleteEventAction.bind(null, ev.id)}
+                />
               </div>
             </div>
           </div>

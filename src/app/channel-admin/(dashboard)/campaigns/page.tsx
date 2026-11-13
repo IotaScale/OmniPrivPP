@@ -3,6 +3,8 @@ import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { Megaphone, Calendar, Target, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
+import { deleteCampaignAction } from '@/lib/actions/admin-delete';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,12 +47,20 @@ export default async function AdminCampaignsPage() {
 
             <p className="text-xs text-slate-300 leading-relaxed">{camp.summary}</p>
 
-            <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between text-xs text-slate-400">
+            <div className="border-t border-slate-800/80 pt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <Target className="h-3.5 w-3.5 text-slate-500" />
                 <span>Target: {camp.target_audience}</span>
               </div>
-              <span className="text-slate-300 font-medium">{camp.related_product}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-slate-300 font-medium">{camp.related_product}</span>
+                <ConfirmDelete
+                  title="Delete campaign"
+                  entityName={camp.title}
+                  description="Partners will no longer see this campaign or its assets."
+                  action={deleteCampaignAction.bind(null, camp.id)}
+                />
+              </div>
             </div>
           </div>
         ))}

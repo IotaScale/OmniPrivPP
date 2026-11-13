@@ -3,6 +3,9 @@ import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { GraduationCap, Users, Clock, CheckCircle2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDelete } from '@/components/ui/confirm-delete';
+import { deleteCourseAction } from '@/lib/actions/admin-delete';
+import { pluralize } from '@/lib/utils/admin-delete-guards';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,13 +50,22 @@ export default async function AdminLearningPage() {
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">{course.description}</p>
             </div>
 
-            <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between text-xs text-slate-400">
+            <div className="border-t border-slate-800/80 pt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <Clock className="h-3.5 w-3.5 text-slate-500" />
                 <span>{course.duration_minutes} Mins &bull; {course.modules_count} Modules</span>
               </div>
-              <div className="font-mono font-semibold text-cyan-400">
-                {course._count.enrollments} Partner Enrollments
+              <div className="flex items-center gap-3">
+                <div className="font-mono font-semibold text-cyan-400">
+                  {course._count.enrollments} Partner Enrollments
+                </div>
+                <ConfirmDelete
+                  iconOnly
+                  title="Delete course"
+                  entityName={course.title}
+                  impacts={[pluralize(course._count.enrollments, 'enrollment') + ' and their progress']}
+                  action={deleteCourseAction.bind(null, course.id)}
+                />
               </div>
             </div>
           </div>
