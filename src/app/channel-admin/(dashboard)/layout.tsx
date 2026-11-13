@@ -88,11 +88,12 @@ export default async function ChannelAdminDashboardLayout({
       badge: requestsPendingCount > 0 ? requestsPendingCount : undefined,
     },
     { label: 'Renewals', href: '/channel-admin/renewals', icon: RefreshCw },
-    { label: 'Programs', href: '/channel-admin/programs', icon: Building2 },
-    { label: 'Resources', href: '/channel-admin/resources', icon: ScrollText },
-    { label: 'Learning', href: '/channel-admin/learning', icon: ScrollText },
-    { label: 'Campaigns', href: '/channel-admin/campaigns', icon: ScrollText },
-    { label: 'Events', href: '/channel-admin/events', icon: ScrollText },
+    // Hidden from the admin nav for now (pages still exist at their URLs):
+    // { label: 'Programs', href: '/channel-admin/programs', icon: Building2 },
+    // { label: 'Resources', href: '/channel-admin/resources', icon: ScrollText },
+    // { label: 'Learning', href: '/channel-admin/learning', icon: ScrollText },
+    // { label: 'Campaigns', href: '/channel-admin/campaigns', icon: ScrollText },
+    // { label: 'Events', href: '/channel-admin/events', icon: ScrollText },
     {
       label: 'JBP',
       href: '/channel-admin/jbp',
