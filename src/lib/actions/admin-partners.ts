@@ -114,6 +114,7 @@ export async function togglePartnerStatusAction(formData: FormData) {
     });
 
     revalidatePath('/channel-admin/partners');
+    revalidatePath(`/channel-admin/partners/${partnerOrgId}`);
     return { success: true };
   } catch (err: unknown) {
     console.error('[STATUS_ERROR]', err);

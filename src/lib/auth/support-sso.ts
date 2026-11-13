@@ -26,8 +26,18 @@ function getSsoKey(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
+/** Default support-portal landing page for Channel Admins. */
+export const SUPPORT_ADMIN_DEFAULT_NEXT = '/support-console';
+
+/**
+ * Mint the one-time handoff token. Partner tokens carry the `org` claim; a
+ * Channel Admin token carries none (the support app resolves the admin by
+ * `sub` and checks the `channel_admin` role in the shared database).
+ */
 export async function createSupportHandoffToken(session: SessionUser): Promise<string> {
-  return new SignJWT({ org: session.partnerOrgId })
+  const claims =
+    session.role === 'channel_admin' ? {} : { org: session.partnerOrgId };
+  return new SignJWT(claims)
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(session.userId)
     .setIssuer(SSO_ISSUER)

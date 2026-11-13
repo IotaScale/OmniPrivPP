@@ -198,6 +198,9 @@ export async function assignLeadAction(formData: FormData) {
   }
 }
 
+/** Operational statuses a partner may set on an accepted lead. */
+const PARTNER_LEAD_PROGRESS_STATUSES = ['working', 'qualified', 'disqualified', 'converted'] as const;
+
 /**
  * Partner accepts an assigned lead.
  */
@@ -214,6 +217,9 @@ export async function acceptLeadAction(formData: FormData) {
 
       if (!assignment || assignment.partner_organization_id !== session.partnerOrgId) {
         throw new Error('Unauthorized lead access.');
+      }
+      if (assignment.partner_acceptance_status !== LeadAcceptanceStatus.pending) {
+        throw new Error('Lead already actioned.');
       }
 
       const res = await tx.leadAssignment.update({
@@ -291,6 +297,9 @@ export async function declineLeadAction(formData: FormData) {
       if (!assignment || assignment.partner_organization_id !== session.partnerOrgId) {
         throw new Error('Unauthorized lead access.');
       }
+      if (assignment.partner_acceptance_status !== LeadAcceptanceStatus.pending) {
+        throw new Error('Lead already actioned.');
+      }
 
       await tx.leadAssignment.update({
         where: { id: assignmentId },
@@ -352,6 +361,10 @@ export async function updateLeadStatusAction(formData: FormData) {
   const status = formData.get('status') as string;
   const updateNote = (formData.get('updateNote') as string)?.trim();
 
+  if (!PARTNER_LEAD_PROGRESS_STATUSES.includes(status as (typeof PARTNER_LEAD_PROGRESS_STATUSES)[number])) {
+    return { error: 'Invalid lead status.' };
+  }
+
   try {
     await prisma.$transaction(async (tx) => {
       const assignment = await tx.leadAssignment.findUnique({
@@ -361,6 +374,18 @@ export async function updateLeadStatusAction(formData: FormData) {
 
       if (!assignment || assignment.partner_organization_id !== session.partnerOrgId) {
         throw new Error('Unauthorized lead access.');
+      }
+      // Progress updates only apply to leads this partner accepted; `converted`
+      // is only valid once a deal registration exists for the lead.
+      if (assignment.partner_acceptance_status !== LeadAcceptanceStatus.accepted) {
+        throw new Error('Lead not accepted.');
+      }
+      if (status === 'converted') {
+        const deal = await tx.dealRegistration.findFirst({
+          where: { converted_from_lead_assignment_id: assignment.id, partner_organization_id: session.partnerOrgId },
+          select: { id: true },
+        });
+        if (!deal) throw new Error('Lead not converted.');
       }
 
       await tx.leadAssignment.update({

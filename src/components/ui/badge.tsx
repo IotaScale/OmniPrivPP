@@ -73,3 +73,17 @@ export function StatusBadge({ status }: { status: string }) {
   const conf = map[status] || { label: status, variant: 'neutral' };
   return <Badge variant={conf.variant}>{conf.label}</Badge>;
 }
+
+/** Partner organization account status. */
+export function OrgStatusBadge({ status, size = 'md' }: { status: string; size?: BadgeProps['size'] }) {
+  const map: Record<string, { label: string; variant: BadgeProps['variant'] }> = {
+    active: { label: 'Active', variant: 'success' },
+    suspended: { label: 'Suspended', variant: 'danger' },
+  };
+  const conf = map[status] || { label: status, variant: 'neutral' };
+  return (
+    <Badge variant={conf.variant} size={size}>
+      {conf.label}
+    </Badge>
+  );
+}

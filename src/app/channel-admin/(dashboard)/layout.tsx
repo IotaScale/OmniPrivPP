@@ -13,8 +13,10 @@ import {
   LogOut,
   Headphones,
   Key,
+  LifeBuoy,
 } from 'lucide-react';
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
+import { SUPPORT_SSO_PATH } from '@/lib/auth/support-sso-path';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { AdminNav } from './admin-nav';
@@ -29,7 +31,14 @@ export default async function ChannelAdminDashboardLayout({
   const session = await requireAdminSession();
 
   // Query live counts for badges
-  const [dealsReviewCount, conflictsCount, leadsPendingCount, requestsPendingCount, jbpPendingCount, supportTicketsCount] = await Promise.all([
+  const [
+    dealsReviewCount,
+    conflictsCount,
+    leadsPendingCount,
+    requestsPendingCount,
+    jbpPendingCount,
+    supportTicketsCount,
+  ] = await Promise.all([
     prisma.dealRegistration.count({
       where: { status: DealStatus.awaiting_approval },
     }),
@@ -97,6 +106,9 @@ export default async function ChannelAdminDashboardLayout({
       badge: supportTicketsCount > 0 ? supportTicketsCount : undefined,
     },
     { label: 'Audit Log', href: '/channel-admin/audit-log', icon: ScrollText },
+    // Route handler that signs the admin in to the support console (SSO);
+    // rendered as a plain <a> so the browser follows the redirect.
+    { label: 'Support console', href: SUPPORT_SSO_PATH, icon: LifeBuoy, external: true },
   ];
 
   const navItems = navLinks.map(({ icon: Icon, ...link }) => ({

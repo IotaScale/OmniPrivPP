@@ -3,7 +3,8 @@
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { requirePartnerSession } from '@/lib/auth/session';
-import { normalizeDomain, detectDomainConflict } from '@/lib/utils/domain';
+import { normalizeDomain, findDealMatches } from '@/lib/utils/domain';
+import { formatMatchReasons, summarizeMatches } from '@/lib/utils/deal-matching';
 import { generateDealReference } from '@/lib/utils/reference';
 import { logAuditEvent } from '@/lib/audit';
 import { DealStatus, UserRole } from '@prisma/client';
@@ -45,7 +46,9 @@ export type DealActionState = {
 
 /**
  * Submits a new deal registration into awaiting_approval.
- * Detects domain conflicts against active protected deals across PostgreSQL.
+ * Flags possible duplicates (same partner) and conflicts (other partners) via
+ * the live deal matcher. Submission is still allowed; the flag routes the deal
+ * (and any matching pending deals) into Channel review.
  */
 export async function submitDealRegistrationAction(
   prevState: DealActionState | undefined,
@@ -88,8 +91,32 @@ export async function submitDealRegistrationAction(
   const data = validated.data;
   const normalizedDomain = normalizeDomain(data.customerDomain);
 
-  // Check for domain conflict
-  const conflict = await detectDomainConflict(normalizedDomain, partnerOrgId);
+  // A lead conversion may only reference a lead assigned to this organization
+  // that has not already been converted. Without this check another org's
+  // assignment id could be linked to (and block conversion of) their lead.
+  if (data.leadAssignmentId) {
+    const ownedAssignment = await prisma.leadAssignment.findFirst({
+      where: { id: data.leadAssignmentId, partner_organization_id: partnerOrgId },
+      select: { id: true, converted_deal: { select: { id: true } } },
+    });
+    if (!ownedAssignment) {
+      return { error: 'The lead you are converting is not assigned to your organization.' };
+    }
+    if (ownedAssignment.converted_deal) {
+      return { error: 'This lead has already been converted to a deal registration.' };
+    }
+  }
+
+  // Live duplicate / conflict matching against pending, protected and recently won deals
+  const contactEmail = data.customerContactEmail.trim().toLowerCase();
+  const matches = await findDealMatches({
+    customer_legal_name: data.customerLegalName.trim(),
+    customer_domain: normalizedDomain,
+    customer_contact_email: contactEmail,
+    partner_organization_id: partnerOrgId,
+  });
+  const conflict = { hasConflict: matches.length > 0, reason: summarizeMatches(matches) };
+  const pendingMatches = matches.filter((m) => m.candidate.status === DealStatus.awaiting_approval);
   const publicReference = await generateDealReference();
 
   let redirectUrl: string | null = null;
@@ -106,7 +133,7 @@ export async function submitDealRegistrationAction(
           customer_country: data.customerCountry.trim(),
           customer_industry: data.customerIndustry?.trim() || null,
           customer_contact_name: data.customerContactName.trim(),
-          customer_contact_email: data.customerContactEmail.trim().toLowerCase(),
+          customer_contact_email: contactEmail,
           customer_contact_phone: data.customerContactPhone?.trim() || null,
           product_interest: data.productInterest,
           deployment_type: data.deploymentType,
@@ -133,7 +160,7 @@ export async function submitDealRegistrationAction(
           new_status: DealStatus.awaiting_approval,
           changed_by_user_id: userId,
           note: conflict.hasConflict
-            ? `Deal submitted by partner. Domain conflict detected with active registration.`
+            ? `Deal submitted by partner. Possible overlap with existing registrations flagged for Channel review.`
             : `Deal submitted by partner for OmniPriv Channel review.`,
         },
       });
@@ -151,17 +178,60 @@ export async function submitDealRegistrationAction(
             customer_legal_name: deal.customer_legal_name,
             customer_domain: normalizedDomain,
             conflict_detected: conflict.hasConflict,
+            matched_references: matches.map((m) => m.candidate.public_reference),
             estimated_deal_value: deal.estimated_deal_value,
           },
         },
       });
+
+      // 3b. Flag matching deals that are still pending so both sides show up in review
+      for (const match of pendingMatches) {
+        const other = await tx.dealRegistration.findUnique({
+          where: { id: match.candidate.id },
+          select: { id: true, status: true, conflict_reason: true, partner_organization_id: true },
+        });
+        if (!other || other.status !== DealStatus.awaiting_approval) continue;
+
+        const why = formatMatchReasons(match.reasons);
+        const note =
+          match.kind === 'duplicate'
+            ? `Possible duplicate of ${deal.public_reference} (same partner, ${why})`
+            : `Conflicts with ${deal.public_reference} submitted by ${session.partnerOrgName || 'another partner'} (${why})`;
+        const existing = other.conflict_reason?.trim();
+        const nextReason = existing
+          ? existing.includes(deal.public_reference)
+            ? existing
+            : `${existing.replace(/\.$/, '')}; ${note}.`
+          : `${note}.`;
+
+        await tx.dealRegistration.update({
+          where: { id: other.id },
+          data: { conflict_detected: true, conflict_reason: nextReason.slice(0, 2000) },
+        });
+
+        await tx.auditEvent.create({
+          data: {
+            actor_user_id: userId,
+            partner_organization_id: other.partner_organization_id,
+            entity_type: 'deal_registration',
+            entity_id: other.id,
+            event_type: 'deal.conflict_flagged',
+            metadata: {
+              matched_deal_id: deal.id,
+              matched_reference: deal.public_reference,
+              kind: match.kind,
+              reasons: match.reasons,
+            },
+          },
+        });
+      }
 
       // 4. In-App Notification for Channel Admins
       await tx.notification.create({
         data: {
           title: 'New Deal Registration Submitted',
           message: `${session.partnerOrgName} submitted deal ${deal.public_reference} (${deal.customer_legal_name})${
-            conflict.hasConflict ? ' [DOMAIN CONFLICT DETECTED]' : ''
+            conflict.hasConflict ? ' [POSSIBLE DUPLICATE / CONFLICT]' : ''
           }.`,
           link: `/channel-admin/deals?id=${deal.id}`,
           type: conflict.hasConflict ? 'warning' : 'info',

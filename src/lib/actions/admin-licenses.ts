@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { requireAdminSession } from '@/lib/auth/session';
 import { logAuditEvent } from '@/lib/audit';
+import { OrgStatus } from '@prisma/client';
 import {
   computeLicenseExpiry,
   generatePpLicenseKeyFormat,
@@ -26,6 +27,44 @@ export interface ProductLicenseView {
   modules: string;
   last_verified_at: Date | null;
   created_at: Date;
+  /** Reseller partner organization this license is visible to (optional). */
+  partner_organization_id: string | null;
+  partner_name: string | null;
+}
+
+export interface LicensePartnerOption {
+  id: string;
+  display_name: string;
+  legal_name: string;
+}
+
+/** Active partner organizations that a license can be linked to. */
+export async function listLicensePartnerOptionsAction(): Promise<LicensePartnerOption[]> {
+  await requireAdminSession();
+  return prisma.partnerOrganization.findMany({
+    where: { status: OrgStatus.active },
+    select: { id: true, display_name: true, legal_name: true },
+    orderBy: { display_name: 'asc' },
+  });
+}
+
+/**
+ * Normalise an optional partner id from the admin form and make sure it
+ * refers to an active partner organization. `null` means "no partner".
+ */
+async function resolveLicensePartnerId(
+  raw: string | null | undefined
+): Promise<{ ok: true; id: string | null } | { ok: false; error: string }> {
+  const id = typeof raw === 'string' ? raw.trim() : '';
+  if (!id) return { ok: true, id: null };
+  const org = await prisma.partnerOrganization.findFirst({
+    where: { id, status: OrgStatus.active },
+    select: { id: true },
+  });
+  if (!org) {
+    return { ok: false, error: 'Selected partner was not found or is not active.' };
+  }
+  return { ok: true, id: org.id };
 }
 
 export async function listProductLicensesAction(): Promise<ProductLicenseView[]> {
@@ -33,25 +72,29 @@ export async function listProductLicensesAction(): Promise<ProductLicenseView[]>
   try {
     const rows = await prisma.$queryRaw<ProductLicenseView[]>`
       SELECT
-        id,
-        org_id,
-        customer_name,
-        license_key,
-        status::text AS status,
-        duration_value,
-        duration_unit,
-        starts_at,
-        expires_at,
-        max_assets,
-        max_users,
-        modules,
-        last_verified_at,
-        created_at
-      FROM product_licenses
-      ORDER BY created_at DESC
+        pl.id,
+        pl.org_id,
+        pl.customer_name,
+        pl.license_key,
+        pl.status::text AS status,
+        pl.duration_value,
+        pl.duration_unit,
+        pl.starts_at,
+        pl.expires_at,
+        pl.max_assets,
+        pl.max_users,
+        pl.modules,
+        pl.last_verified_at,
+        pl.created_at,
+        pl.partner_organization_id,
+        po.display_name AS partner_name
+      FROM product_licenses pl
+      LEFT JOIN partner_organizations po ON po.id = pl.partner_organization_id
+      ORDER BY pl.created_at DESC
     `;
     return rows;
-  } catch {
+  } catch (err) {
+    console.error('[LIST_LICENSES_ERROR]', err instanceof Error ? err.message : err);
     return [];
   }
 }
@@ -63,6 +106,8 @@ export async function generateProductLicenseAction(input: {
   durationUnit: 'days' | 'months' | 'years';
   maxAssets?: number | null;
   maxUsers?: number | null;
+  /** Optional reseller partner org id (must be an active partner). */
+  partnerOrganizationId?: string | null;
 }): Promise<{
   success: boolean;
   licenseKey?: string;
@@ -75,6 +120,12 @@ export async function generateProductLicenseAction(input: {
   if (!check.valid) {
     return { success: false, error: check.error };
   }
+
+  const partner = await resolveLicensePartnerId(input.partnerOrganizationId);
+  if (!partner.ok) {
+    return { success: false, error: partner.error };
+  }
+  const partnerOrganizationId = partner.id;
 
   const orgId = input.orgId.trim();
   const id = randomUUID();
@@ -100,22 +151,24 @@ export async function generateProductLicenseAction(input: {
     INSERT INTO product_licenses (
       id, org_id, customer_name, license_key, status,
       duration_value, duration_unit, starts_at, expires_at,
-      max_assets, max_users, modules, issued_by_id, created_at, updated_at
+      max_assets, max_users, modules, issued_by_id, partner_organization_id, created_at, updated_at
     ) VALUES (
       ${id}, ${orgId}, ${customerName}, ${licenseKey}, 'active'::"ProductLicenseStatus",
       ${input.durationValue}, ${input.durationUnit}, ${now}, ${expiresAt},
-      ${maxAssets}, ${maxUsers}, 'ssh,rdp,db,web', ${session.userId}, ${now}, ${now}
+      ${maxAssets}, ${maxUsers}, 'ssh,rdp,db,web', ${session.userId}, ${partnerOrganizationId}, ${now}, ${now}
     )
   `;
 
   await logAuditEvent({
     actorUserId: session.userId,
+    partnerOrgId: partnerOrganizationId,
     entityType: 'product_license',
     entityId: id,
     eventType: 'PRODUCT_LICENSE_GENERATED',
     afterData: {
       orgId,
       customerName,
+      partnerOrganizationId,
       durationValue: input.durationValue,
       durationUnit: input.durationUnit,
       maxAssets,
@@ -126,6 +179,7 @@ export async function generateProductLicenseAction(input: {
   });
 
   revalidatePath('/channel-admin/licenses');
+  revalidatePath('/partner-portal/licenses');
   return {
     success: true,
     licenseKey,
@@ -176,6 +230,7 @@ export async function renewProductLicenseAction(input: {
   });
 
   revalidatePath('/channel-admin/licenses');
+  revalidatePath('/partner-portal/licenses');
   return { success: true };
 }
 
@@ -204,5 +259,56 @@ export async function revokeProductLicenseAction(
   });
 
   revalidatePath('/channel-admin/licenses');
+  revalidatePath('/partner-portal/licenses');
+  return { success: true };
+}
+
+/**
+ * Link an existing license to a reseller partner (or unlink with an empty id).
+ * The partner then sees it read-only under /partner-portal/licenses.
+ */
+export async function setLicensePartnerAction(input: {
+  id: string;
+  partnerOrganizationId: string | null;
+}): Promise<{ success: boolean; error?: string }> {
+  const session = await requireAdminSession();
+  if (!input.id) {
+    return { success: false, error: 'License id is required.' };
+  }
+
+  const partner = await resolveLicensePartnerId(input.partnerOrganizationId);
+  if (!partner.ok) {
+    return { success: false, error: partner.error };
+  }
+
+  const existing = await prisma.$queryRaw<{ partner_organization_id: string | null }[]>`
+    SELECT partner_organization_id FROM product_licenses WHERE id = ${input.id} LIMIT 1
+  `;
+  if (existing.length === 0) {
+    return { success: false, error: 'License not found.' };
+  }
+  const previous = existing[0].partner_organization_id;
+  if (previous === partner.id) {
+    return { success: true };
+  }
+
+  await prisma.$executeRaw`
+    UPDATE product_licenses
+    SET partner_organization_id = ${partner.id}, updated_at = ${new Date()}
+    WHERE id = ${input.id}
+  `;
+
+  await logAuditEvent({
+    actorUserId: session.userId,
+    partnerOrgId: partner.id ?? previous,
+    entityType: 'product_license',
+    entityId: input.id,
+    eventType: 'PRODUCT_LICENSE_PARTNER_UPDATED',
+    beforeData: { partnerOrganizationId: previous },
+    afterData: { partnerOrganizationId: partner.id },
+  });
+
+  revalidatePath('/channel-admin/licenses');
+  revalidatePath('/partner-portal/licenses');
   return { success: true };
 }

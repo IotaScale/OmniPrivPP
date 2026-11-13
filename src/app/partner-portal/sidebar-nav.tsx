@@ -22,6 +22,7 @@ import {
   MapPin,
   CheckSquare,
   LifeBuoy,
+  KeyRound,
 } from 'lucide-react';
 import { SUPPORT_SSO_PATH } from '@/lib/auth/support-sso-path';
 
@@ -75,6 +76,11 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
           label: 'Renewals',
           href: '/partner-portal/renewals',
           icon: RefreshCw,
+        },
+        {
+          label: 'Customer Licenses',
+          href: '/partner-portal/licenses',
+          icon: KeyRound,
         },
         {
           label: 'Commercial Requests',

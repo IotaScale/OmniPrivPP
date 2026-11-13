@@ -1,19 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { updatePartnerTierAction, togglePartnerStatusAction } from '@/lib/actions/admin-partners';
 import { Button } from '@/components/ui/button';
-import { Badge, StatusBadge } from '@/components/ui/badge';
-import {
-  Building2,
-  Award,
-  Users,
-  FileSpreadsheet,
-  Inbox,
-  ShieldAlert,
-  ArrowRight,
-  TrendingUp,
-} from 'lucide-react';
+import { Badge, OrgStatusBadge } from '@/components/ui/badge';
+import { Building2, Award } from 'lucide-react';
 
 interface PartnerRow {
   id: string;
@@ -39,6 +31,10 @@ interface PartnerRow {
     estimated_deal_value?: number | null;
     status: string;
   }>;
+}
+
+function formatDate(value: Date | string) {
+  return new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 export function ChannelAdminPartnersClient({
@@ -74,11 +70,13 @@ export function ChannelAdminPartnersClient({
       return;
     }
     setIsSubmitting(true);
+    setError(null);
     const fd = new FormData();
     fd.append('partnerOrgId', partner.id);
     fd.append('status', nextStatus);
-    await togglePartnerStatusAction(fd);
+    const res = await togglePartnerStatusAction(fd);
     setIsSubmitting(false);
+    if (res?.error) setError(res.error);
   };
 
   return (
@@ -90,13 +88,13 @@ export function ChannelAdminPartnersClient({
             <span>Channel Partner Directory</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Registered organizations, tier advancements, team size, and commercial pipeline.
+            Registered organizations, tier advancements, account status, and commercial pipeline.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+        <div role="alert" className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
           {error}
         </div>
       )}
@@ -125,11 +123,19 @@ export function ChannelAdminPartnersClient({
                   const owner = p.memberships.find((m) => m.role === 'partner_owner');
 
                   return (
-                    <tr key={p.id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3.5 px-6 font-semibold text-slate-100">
-                        <div>{p.display_name}</div>
-                        <span className="text-[11px] text-slate-400 font-normal">
+                    <tr key={p.id} className="hover:bg-slate-800/40 transition-colors align-top">
+                      <td className="py-3.5 px-6 font-semibold text-slate-100 min-w-[14rem]">
+                        <Link
+                          href={`/channel-admin/partners/${p.id}`}
+                          className="hover:text-cyan-400 focus-visible:outline-none focus-visible:underline"
+                        >
+                          {p.display_name}
+                        </Link>
+                        <span className="block text-[11px] text-slate-400 font-normal">
                           {p.legal_name} • {p.website}
+                        </span>
+                        <span className="block text-[11px] text-slate-500 font-normal mt-0.5">
+                          Registered {formatDate(p.created_at)}
                         </span>
                       </td>
                       <td className="py-3.5 px-6">
@@ -162,7 +168,7 @@ export function ChannelAdminPartnersClient({
                           {p.region} ({p.country})
                         </span>
                       </td>
-                      <td className="py-3.5 px-6 font-mono">
+                      <td className="py-3.5 px-6 font-mono whitespace-nowrap">
                         <span className="text-slate-200 font-semibold">{p._count.deals}</span> deals /{' '}
                         <span className="text-cyan-400 font-semibold">
                           {p._count.lead_assignments}
@@ -170,7 +176,7 @@ export function ChannelAdminPartnersClient({
                         leads
                       </td>
                       <td className="py-3.5 px-6">
-                        <StatusBadge status={p.status} />
+                        <OrgStatusBadge status={p.status} size="sm" />
                       </td>
                       <td className="py-3.5 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
@@ -263,7 +269,6 @@ export function ChannelAdminPartnersClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                 
                 >
                   Apply Tier Change
                 </Button>

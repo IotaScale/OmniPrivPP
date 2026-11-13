@@ -11,6 +11,12 @@ export async function registerForEventAction(formData: FormData) {
   if (!eventId) return;
 
   try {
+    const event = await prisma.event.findFirst({
+      where: { id: eventId, is_published: true },
+      select: { id: true },
+    });
+    if (!event) return;
+
     await prisma.eventRegistration.upsert({
       where: {
         event_id_user_id: {

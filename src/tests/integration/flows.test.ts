@@ -7,7 +7,14 @@ import { generateDealReference, generateLeadReference } from '@/lib/utils/refere
 import { canViewDeal, canAccessChannelAdmin, canManageTeam } from '@/lib/utils/deal-state';
 import { DealStatus, LeadAcceptanceStatus, LeadStatus, MembershipRole, OrgStatus, PartnerTier, UserRole } from '@prisma/client';
 
-describe('OmniPriv Channel Partner Integration Flows', () => {
+// DESTRUCTIVE: beforeAll deletes every partner organization, deal, lead,
+// notification and audit event in the connected database. It only runs when
+// explicitly enabled against a disposable database:
+//   RUN_DB_INTEGRATION_TESTS=1 npm test
+// Never enable it while DATABASE_URL points at a shared or production database.
+const runDbIntegration = process.env.RUN_DB_INTEGRATION_TESTS === '1';
+
+describe.skipIf(!runDbIntegration)('OmniPriv Channel Partner Integration Flows', () => {
   let partnerOrgAId: string;
   let partnerOrgBId: string;
   let partnerUserAId: string;

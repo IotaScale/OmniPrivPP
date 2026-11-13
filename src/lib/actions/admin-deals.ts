@@ -5,19 +5,34 @@ import { prisma } from '@/lib/db';
 import { requireAdminSession } from '@/lib/auth/session';
 import { calculateProtectionDates, extendProtection } from '@/lib/utils/sla';
 import { logAuditEvent } from '@/lib/audit';
+import { findDealMatches } from '@/lib/utils/domain';
+import { describeMatch, formatMatchReasons } from '@/lib/utils/deal-matching';
 import { DealStatus } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 const ApproveSchema = z.object({
   dealId: z.string().min(1),
-  decisionReason: z.string().optional(),
+  decisionReason: z.string().trim().optional(),
+  override: z.boolean().default(false),
 });
 
-export async function approveDealAction(formData: FormData) {
+export type ApproveDealResult =
+  | { success: true; error?: undefined; blockingReferences?: undefined }
+  | { success?: false; error: string; blockingReferences?: string[] };
+
+/**
+ * Approve a deal and start 90-day protection. Duplicate / conflict matching is
+ * re-run server-side: if another deal holds active protection (or was won in
+ * the last 90 days) on the same or a related domain, approval is refused
+ * unless the form carries `override=true` and a non-empty decision reason.
+ * Overrides are recorded in the audit trail with the blocking references.
+ */
+export async function approveDealAction(formData: FormData): Promise<ApproveDealResult> {
   const session = await requireAdminSession();
   const raw = {
     dealId: formData.get('dealId'),
     decisionReason: formData.get('decisionReason') || undefined,
+    override: formData.get('override') === 'true',
   };
 
   const validated = ApproveSchema.safeParse(raw);
@@ -25,12 +40,40 @@ export async function approveDealAction(formData: FormData) {
     return { error: 'Invalid parameters for deal approval.' };
   }
 
-  const { dealId, decisionReason } = validated.data;
+  const { dealId, decisionReason, override } = validated.data;
   const now = new Date();
   const { protectionStartsAt, protectionExpiresAt } = calculateProtectionDates(now);
 
+  const subject = await prisma.dealRegistration.findUnique({
+    where: { id: dealId },
+    select: {
+      id: true,
+      customer_legal_name: true,
+      customer_domain: true,
+      customer_contact_email: true,
+      partner_organization_id: true,
+    },
+  });
+  if (!subject) {
+    return { error: 'Deal registration not found.' };
+  }
+
+  const matches = await findDealMatches(subject, { excludeDealId: subject.id, now });
+  const blocking = matches.filter((m) => m.blocking);
+  const blockingReferences = blocking.map((m) => m.candidate.public_reference);
+  const overrideUsed = blocking.length > 0;
+
+  if (blocking.length > 0 && (!override || !decisionReason)) {
+    return {
+      error: `Approval blocked: ${blocking
+        .map(describeMatch)
+        .join('; ')}. To approve anyway, tick the override and record a decision reason.`,
+      blockingReferences,
+    };
+  }
+
   try {
-    const updated = await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       const deal = await tx.dealRegistration.findUnique({
         where: { id: dealId },
       });
@@ -80,9 +123,35 @@ export async function approveDealAction(formData: FormData) {
           metadata: {
             decision_reason: decisionReason,
             public_reference: deal.public_reference,
+            matched_references: matches.map((m) => m.candidate.public_reference),
+            ...(overrideUsed ? { protection_override: true, blocking_references: blockingReferences } : {}),
           },
         },
       });
+
+      if (overrideUsed) {
+        await tx.auditEvent.create({
+          data: {
+            actor_user_id: session.userId,
+            partner_organization_id: deal.partner_organization_id,
+            entity_type: 'deal_registration',
+            entity_id: deal.id,
+            event_type: 'deal.approval_override',
+            metadata: {
+              public_reference: deal.public_reference,
+              decision_reason: decisionReason,
+              blocking_references: blockingReferences,
+              blocking_matches: blocking.map((m) => ({
+                deal_id: m.candidate.id,
+                reference: m.candidate.public_reference,
+                partner_organization_id: m.candidate.partner_organization_id,
+                kind: m.kind,
+                reasons: m.reasons,
+              })),
+            },
+          },
+        });
+      }
 
       // Partner In-App Notification
       await tx.notification.create({
@@ -104,7 +173,8 @@ export async function approveDealAction(formData: FormData) {
     revalidatePath('/partner-portal/deals');
     revalidatePath(`/partner-portal/deals/${dealId}`);
     revalidatePath('/partner-portal');
-    return { success: true, deal: updated };
+    revalidatePath('/channel-admin/deal-conflicts');
+    return { success: true };
   } catch (err: unknown) {
     console.error('[ADMIN_APPROVE_ERROR]', err);
     return { error: 'Failed to approve deal registration.' };
@@ -128,11 +198,24 @@ export async function declineDealAction(formData: FormData) {
     return { error: validated.error.errors[0]?.message || 'Invalid parameters.' };
   }
 
-  const { dealId, reason } = validated.data;
+  return declineDeal(session.userId, validated.data.dealId, validated.data.reason.trim());
+}
+
+/**
+ * Shared decline flow: status change, history, immutable audit event and the
+ * partner notification. `auditMetadata` adds admin-only context (e.g. the
+ * deal this one duplicates) that is never shown to the partner.
+ */
+async function declineDeal(
+  actorUserId: string,
+  dealId: string,
+  reason: string,
+  auditMetadata: Record<string, unknown> = {}
+): Promise<{ success: true; error?: undefined } | { success?: false; error: string }> {
   const now = new Date();
 
   try {
-    const updated = await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       const deal = await tx.dealRegistration.findUnique({
         where: { id: dealId },
       });
@@ -140,13 +223,13 @@ export async function declineDealAction(formData: FormData) {
       if (!deal) throw new Error('Deal not found');
       const previousStatus = deal.status;
 
-      const result = await tx.dealRegistration.update({
+      await tx.dealRegistration.update({
         where: { id: dealId },
         data: {
           status: DealStatus.declined,
-          reviewed_by_user_id: session.userId,
+          reviewed_by_user_id: actorUserId,
           reviewed_at: now,
-          admin_decision_reason: reason.trim(),
+          admin_decision_reason: reason,
         },
       });
 
@@ -155,22 +238,23 @@ export async function declineDealAction(formData: FormData) {
           deal_registration_id: deal.id,
           previous_status: previousStatus,
           new_status: DealStatus.declined,
-          changed_by_user_id: session.userId,
-          note: `Declined: ${reason.trim()}`,
+          changed_by_user_id: actorUserId,
+          note: `Declined: ${reason}`,
         },
       });
 
       await tx.auditEvent.create({
         data: {
-          actor_user_id: session.userId,
+          actor_user_id: actorUserId,
           partner_organization_id: deal.partner_organization_id,
           entity_type: 'deal_registration',
           entity_id: deal.id,
           event_type: 'deal.declined',
           before_data: { status: previousStatus },
-          after_data: { status: DealStatus.declined, reason: reason.trim() },
+          after_data: { status: DealStatus.declined, reason },
           metadata: {
             public_reference: deal.public_reference,
+            ...auditMetadata,
           },
         },
       });
@@ -179,26 +263,89 @@ export async function declineDealAction(formData: FormData) {
         data: {
           partner_organization_id: deal.partner_organization_id,
           title: `Deal Declined: ${deal.public_reference}`,
-          message: `Your registration for ${deal.customer_legal_name} was not approved. Reason: ${reason.trim()}`,
+          message: `Your registration for ${deal.customer_legal_name} was not approved. Reason: ${reason}`,
           link: `/partner-portal/deals/${deal.id}`,
           type: 'danger',
         },
       });
-
-      return result;
     });
 
     revalidatePath('/channel-admin/deals');
     revalidatePath(`/channel-admin/deals/${dealId}`);
+    revalidatePath('/channel-admin/deal-conflicts');
     revalidatePath('/channel-admin');
     revalidatePath('/partner-portal/deals');
     revalidatePath(`/partner-portal/deals/${dealId}`);
     revalidatePath('/partner-portal');
-    return { success: true, deal: updated };
+    return { success: true };
   } catch (err: unknown) {
     console.error('[ADMIN_DECLINE_ERROR]', err);
     return { error: 'Failed to decline deal registration.' };
   }
+}
+
+const DeclineDuplicateSchema = z.object({
+  dealId: z.string().min(1),
+  duplicateOfId: z.string().min(1),
+});
+
+/**
+ * Decline a pending deal as a duplicate of another registration. The partner
+ * sees the other reference only when it is their own deal; for another
+ * partner's deal the reason stays neutral. The audit event keeps both.
+ */
+export async function declineDealAsDuplicateAction(formData: FormData) {
+  const session = await requireAdminSession();
+  const validated = DeclineDuplicateSchema.safeParse({
+    dealId: formData.get('dealId'),
+    duplicateOfId: formData.get('duplicateOfId'),
+  });
+  if (!validated.success || validated.data.dealId === validated.data.duplicateOfId) {
+    return { error: 'Invalid duplicate decline request.' };
+  }
+
+  const { dealId, duplicateOfId } = validated.data;
+  const [deal, original] = await Promise.all([
+    prisma.dealRegistration.findUnique({
+      where: { id: dealId },
+      select: {
+        id: true,
+        status: true,
+        partner_organization_id: true,
+        customer_legal_name: true,
+        customer_domain: true,
+        customer_contact_email: true,
+      },
+    }),
+    prisma.dealRegistration.findUnique({
+      where: { id: duplicateOfId },
+      select: { id: true, public_reference: true, partner_organization_id: true },
+    }),
+  ]);
+
+  if (!deal || !original) {
+    return { error: 'Deal registration not found.' };
+  }
+  if (deal.status !== DealStatus.awaiting_approval) {
+    return { error: 'Only deals awaiting approval can be declined as duplicates.' };
+  }
+
+  const samePartner = deal.partner_organization_id === original.partner_organization_id;
+  const reason = samePartner
+    ? `Duplicate of ${original.public_reference}.`
+    : 'Duplicate of an existing registration for this customer held by another partner.';
+
+  const match = (await findDealMatches(deal, { excludeDealId: deal.id })).find(
+    (m) => m.candidate.id === original.id
+  );
+
+  return declineDeal(session.userId, deal.id, reason, {
+    declined_as_duplicate: true,
+    duplicate_of_deal_id: original.id,
+    duplicate_of_reference: original.public_reference,
+    duplicate_kind: samePartner ? 'duplicate' : 'conflict',
+    match_reasons: match ? formatMatchReasons(match.reasons) : null,
+  });
 }
 
 const ExtendSchema = z.object({

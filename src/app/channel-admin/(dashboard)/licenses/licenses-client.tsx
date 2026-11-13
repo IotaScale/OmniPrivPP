@@ -5,6 +5,8 @@ import {
   generateProductLicenseAction,
   renewProductLicenseAction,
   revokeProductLicenseAction,
+  setLicensePartnerAction,
+  type LicensePartnerOption,
   type ProductLicenseView,
 } from '@/lib/actions/admin-licenses';
 import {
@@ -40,13 +42,66 @@ function computePreviewExpiry(
   return d;
 }
 
+/** Inline partner assignment for an issued license (admin only). */
+function LicensePartnerSelect({
+  license,
+  partnerOptions,
+  onError,
+}: {
+  license: ProductLicenseView;
+  partnerOptions: LicensePartnerOption[];
+  onError: (message: string | null) => void;
+}) {
+  const [saving, setSaving] = useState(false);
+  const current = license.partner_organization_id ?? '';
+  const currentMissing = current !== '' && !partnerOptions.some((p) => p.id === current);
+
+  async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const next = e.target.value;
+    setSaving(true);
+    onError(null);
+    try {
+      const res = await setLicensePartnerAction({
+        id: license.id,
+        partnerOrganizationId: next || null,
+      });
+      if (!res.success) onError(res.error || 'Failed to update license partner.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <select
+      aria-label={`Partner for license ${license.license_key}`}
+      value={current}
+      onChange={handleChange}
+      disabled={saving}
+      className="w-full min-w-[9rem] max-w-[14rem] rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-white disabled:opacity-60"
+    >
+      <option value="">No partner (direct)</option>
+      {currentMissing && (
+        <option value={current}>{license.partner_name || 'Unknown partner'} (inactive)</option>
+      )}
+      {partnerOptions.map((p) => (
+        <option key={p.id} value={p.id}>
+          {p.display_name}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 export function LicensesClient({
   initialLicenses,
+  partnerOptions,
 }: {
   initialLicenses: ProductLicenseView[];
+  partnerOptions: LicensePartnerOption[];
 }) {
   const [orgId, setOrgId] = useState('');
   const [customerName, setCustomerName] = useState('');
+  const [partnerOrganizationId, setPartnerOrganizationId] = useState('');
   const [durationValue, setDurationValue] = useState(1);
   const [durationUnit, setDurationUnit] = useState<'days' | 'months' | 'years'>('years');
   const [maxAssets, setMaxAssets] = useState('');
@@ -111,6 +166,7 @@ export function LicensesClient({
         durationUnit,
         maxAssets: maxAssets.trim() !== '' ? Number(maxAssets) : null,
         maxUsers: maxUsers.trim() !== '' ? Number(maxUsers) : null,
+        partnerOrganizationId: partnerOrganizationId || null,
       });
       if (!res.success) {
         setError(res.error || 'Failed to generate license');
@@ -119,6 +175,7 @@ export function LicensesClient({
         setGeneratedExpiry(res.expiresAt || null);
         setOrgId('');
         setCustomerName('');
+        setPartnerOrganizationId('');
         setMaxAssets('');
         setMaxUsers('');
       }
@@ -268,6 +325,30 @@ export function LicensesClient({
                 className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2.5 py-2 text-xs text-white"
               />
             </div>
+
+            {/* Optional reseller partner */}
+            <div className="md:col-span-5">
+              <label htmlFor="license-partner" className="block text-xs font-medium text-slate-300 mb-1">
+                Partner (optional)
+              </label>
+              <select
+                id="license-partner"
+                value={partnerOrganizationId}
+                onChange={(e) => setPartnerOrganizationId(e.target.value)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white"
+              >
+                <option value="">No partner (direct sale)</option>
+                {partnerOptions.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.display_name}
+                    {p.legal_name !== p.display_name ? ` (${p.legal_name})` : ''}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-[11px] text-slate-400">
+                The selected partner can view this license (read-only) in their portal.
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-800/80">
@@ -345,6 +426,7 @@ export function LicensesClient({
                 <tr>
                   <th className="px-4 py-3">Org ID</th>
                   <th className="px-4 py-3">Customer</th>
+                  <th className="px-4 py-3">Partner</th>
                   <th className="px-4 py-3">License Key</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Limits (Assets / Users)</th>
@@ -367,6 +449,13 @@ export function LicensesClient({
                     <tr key={lic.id} className="hover:bg-slate-800/30">
                       <td className="px-4 py-3 font-mono text-slate-200">{lic.org_id}</td>
                       <td className="px-4 py-3 text-slate-300">{lic.customer_name || '—'}</td>
+                      <td className="px-4 py-3 text-slate-300">
+                        <LicensePartnerSelect
+                          license={lic}
+                          partnerOptions={partnerOptions}
+                          onError={setError}
+                        />
+                      </td>
                       <td className="px-4 py-3 font-mono text-cyan-300">
                         <div className="flex items-center gap-2">
                           <span>{lic.license_key}</span>

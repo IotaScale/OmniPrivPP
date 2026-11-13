@@ -1,6 +1,13 @@
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify } from 'jose';
 import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/db';
+import {
+  ACCOUNT_STATUS_PATH,
+  evaluatePartnerAccess,
+  type PartnerAccessDecision,
+} from '@/lib/auth/partner-access';
 
 export interface SessionUser {
   userId: string;
@@ -85,10 +92,10 @@ export async function destroySession(): Promise<void> {
 }
 
 /**
- * Enforce partner session guard for server components and actions.
+ * Authenticated partner identity from the JWT only (no org-status check).
  * Redirects to /sign-in if unauthenticated, or /channel-admin if user is an admin.
  */
-export async function requirePartnerSession(): Promise<SessionUser> {
+async function requirePartnerIdentity(): Promise<SessionUser & { partnerOrgId: string }> {
   const session = await getSession();
   if (!session) {
     redirect('/sign-in');
@@ -102,6 +109,72 @@ export async function requirePartnerSession(): Promise<SessionUser> {
     redirect('/sign-in');
   }
 
+  return session as SessionUser & { partnerOrgId: string };
+}
+
+/**
+ * Live membership + organization state from PostgreSQL, de-duplicated per
+ * request (layout and page both call the guard).
+ */
+const loadPartnerAccess = cache(async (userId: string, partnerOrgId: string) =>
+  prisma.partnerMembership.findUnique({
+    where: {
+      user_id_partner_organization_id: {
+        user_id: userId,
+        partner_organization_id: partnerOrgId,
+      },
+    },
+    select: {
+      role: true,
+      user: { select: { is_active: true } },
+      organization: { select: { status: true, display_name: true, tier: true } },
+    },
+  })
+);
+
+export interface PartnerAccessContext {
+  session: SessionUser & { partnerOrgId: string };
+  decision: PartnerAccessDecision;
+}
+
+/**
+ * Partner guard that does NOT require an active organization. Use it only for
+ * the account-status page (and the partner layout, which renders no
+ * workspace chrome for suspended orgs / revoked access). Every other page and server action
+ * must use `requirePartnerSession`.
+ */
+export async function requirePartnerSessionAnyStatus(): Promise<PartnerAccessContext> {
+  const session = await requirePartnerIdentity();
+  const access = await loadPartnerAccess(session.userId, session.partnerOrgId);
+  const decision = evaluatePartnerAccess(
+    access ? { orgStatus: access.organization.status, userActive: access.user.is_active } : null
+  );
+
+  return {
+    session: access
+      ? {
+          ...session,
+          membershipRole: access.role,
+          partnerOrgName: access.organization.display_name,
+          partnerTier: access.organization.tier,
+        }
+      : session,
+    decision,
+  };
+}
+
+/**
+ * Enforce partner session guard for server components and actions.
+ * Redirects to /sign-in if unauthenticated, /channel-admin for admins, and to
+ * the account-status page unless the user still holds a membership in an
+ * `active` organization (checked against the database, not the JWT).
+ * The returned membership role, org name and tier are the live DB values.
+ */
+export async function requirePartnerSession(): Promise<SessionUser & { partnerOrgId: string }> {
+  const { session, decision } = await requirePartnerSessionAnyStatus();
+  if (!decision.allowed) {
+    redirect(ACCOUNT_STATUS_PATH);
+  }
   return session;
 }
 

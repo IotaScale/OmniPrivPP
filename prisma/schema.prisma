@@ -115,6 +115,7 @@ model PartnerOrganization {
   updated_at              DateTime    @updatedAt
 
   memberships             PartnerMembership[]
+  product_licenses        ProductLicense[]
   deals                   DealRegistration[]
   lead_assignments        LeadAssignment[]
   renewals                Renewal[]
@@ -705,10 +706,15 @@ model ProductLicense {
   revoked_by_id    String?
   issued_by_id     String?
   last_verified_at DateTime?
+  // Reseller partner that sold this license (optional); scopes partner-portal visibility.
+  partner_organization_id String?
   created_at       DateTime             @default(now())
   updated_at       DateTime             @updatedAt
 
+  partner_organization PartnerOrganization? @relation(fields: [partner_organization_id], references: [id], onDelete: SetNull)
+
   @@index([org_id])
+  @@index([partner_organization_id])
   @@index([status])
   @@index([expires_at])
   @@map("product_licenses")

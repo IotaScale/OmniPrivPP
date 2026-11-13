@@ -6,7 +6,7 @@ import { prisma } from '@/lib/db';
 import { updatePartnerTierAction } from '@/lib/actions/admin-ops';
 import { Building2, ArrowLeft, Award, Users, ShieldCheck, Mail, Globe, MapPin, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge, OrgStatusBadge } from '@/components/ui/badge';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 export const dynamic = 'force-dynamic';
@@ -54,9 +54,10 @@ export default async function AdminPartnerDetailPage({
       {/* Partner Overview Header */}
       <div className="p-6 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-2xl font-bold text-white tracking-tight">{partner.legal_name}</h1>
             <Badge variant="info" size="md">{partner.tier} Tier</Badge>
+            <OrgStatusBadge status={partner.status} />
           </div>
           <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 mt-2">
             <span>Trading Name: <strong className="text-slate-200">{partner.display_name}</strong></span>

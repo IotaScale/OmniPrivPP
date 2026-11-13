@@ -2,10 +2,21 @@ import React from 'react';
 import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { DealStatus, Prisma } from '@prisma/client';
-import { ChannelAdminDealsTable, ConflictingDealSummary } from './deals-table';
+import { findMatchesForDeals } from '@/lib/utils/domain';
+import { toMatchView, type DealMatchView } from '@/lib/utils/deal-matching';
+import { ChannelAdminDealsTable } from './deals-table';
 import { FileCheck2 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
+
+/** Statuses where duplicates / conflicts still matter for a review decision. */
+const MATCHABLE_STATUSES: DealStatus[] = [DealStatus.awaiting_approval, DealStatus.approved];
+
+const dealInclude = {
+  organization: { select: { id: true, display_name: true, tier: true } },
+  submitted_by: { select: { full_name: true, email: true } },
+  status_history: { orderBy: { created_at: 'desc' } },
+} satisfies Prisma.DealRegistrationInclude;
 
 export default async function ChannelAdminDealsPage({
   searchParams,
@@ -13,12 +24,15 @@ export default async function ChannelAdminDealsPage({
   searchParams: Promise<{ id?: string; status?: string; q?: string }>;
 }) {
   await requireAdminSession();
-  const { id: selectedId, status: filterStatus, q: query } = await searchParams;
+  const { id: selectedId, status: rawStatus, q: query } = await searchParams;
+  // `conflict` is the legacy name of the attention filter (stored flag only).
+  const filterStatus = rawStatus === 'conflict' ? 'attention' : rawStatus;
+  const needsAttention = filterStatus === 'attention';
 
   const where: Prisma.DealRegistrationWhereInput = {};
 
-  if (filterStatus === 'conflict') {
-    where.conflict_detected = true;
+  if (needsAttention) {
+    where.status = { in: MATCHABLE_STATUSES };
   } else if (filterStatus && Object.values(DealStatus).includes(filterStatus as DealStatus)) {
     where.status = filterStatus as DealStatus;
   }
@@ -33,45 +47,33 @@ export default async function ChannelAdminDealsPage({
     ];
   }
 
-  const deals = await prisma.dealRegistration.findMany({
-    where,
-    include: {
-      organization: { select: { id: true, display_name: true, tier: true } },
-      submitted_by: { select: { full_name: true, email: true } },
-      status_history: { orderBy: { created_at: 'desc' } },
-    },
-    orderBy: [
-      { status: 'asc' }, // awaiting_approval comes first
-      { conflict_detected: 'desc' },
-      { created_at: 'desc' },
-    ],
-  });
+  const [listedDeals, selectedDeal] = await Promise.all([
+    prisma.dealRegistration.findMany({
+      where,
+      include: dealInclude,
+      orderBy: [
+        { status: 'asc' }, // awaiting_approval comes first
+        { conflict_detected: 'desc' },
+        { created_at: 'desc' },
+      ],
+    }),
+    selectedId
+      ? prisma.dealRegistration.findUnique({ where: { id: selectedId }, include: dealInclude })
+      : Promise.resolve(null),
+  ]);
 
-  let selectedDeal = null;
-  let conflictingDeals: ConflictingDealSummary[] = [];
-
-  if (selectedId) {
-    selectedDeal = await prisma.dealRegistration.findUnique({
-      where: { id: selectedId },
-      include: {
-        organization: { select: { id: true, display_name: true, tier: true } },
-        submitted_by: { select: { full_name: true, email: true } },
-        status_history: { orderBy: { created_at: 'desc' } },
-      },
-    });
-
-    if (selectedDeal) {
-      conflictingDeals = await prisma.dealRegistration.findMany({
-        where: {
-          customer_domain: selectedDeal.customer_domain,
-          id: { not: selectedDeal.id },
-        },
-        include: {
-          organization: { select: { display_name: true } },
-        },
-      });
-    }
+  // Live duplicate / conflict matching (one candidate query for the whole page).
+  const toMatch = listedDeals.filter((d) => MATCHABLE_STATUSES.includes(d.status));
+  if (selectedDeal && !toMatch.some((d) => d.id === selectedDeal.id)) {
+    toMatch.push(selectedDeal);
   }
+  const rawMatches = await findMatchesForDeals(toMatch);
+  const matchesByDeal: Record<string, DealMatchView[]> = {};
+  for (const [dealId, matches] of Object.entries(rawMatches)) {
+    if (matches.length > 0) matchesByDeal[dealId] = matches.map(toMatchView);
+  }
+
+  const deals = needsAttention ? listedDeals.filter((d) => matchesByDeal[d.id]) : listedDeals;
 
   return (
     <div className="space-y-6">
@@ -81,14 +83,15 @@ export default async function ChannelAdminDealsPage({
           <span>Channel Deal Approvals & Protection Queue</span>
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Review partner opportunity submissions, verify domain exclusivity, resolve conflicts, and grant 90-day protections.
+          Review partner opportunity submissions, check live duplicate and conflict matches, and grant 90-day protections.
         </p>
       </div>
 
       <ChannelAdminDealsTable
+        key={selectedDeal?.id ?? 'none'}
         deals={deals}
         selectedDeal={selectedDeal}
-        conflictingDeals={conflictingDeals}
+        matchesByDeal={matchesByDeal}
         currentStatus={filterStatus}
         currentQuery={query}
       />

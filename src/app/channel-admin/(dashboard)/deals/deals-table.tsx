@@ -6,14 +6,9 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/badge';
 import { DealReviewDrawer } from './deal-review-drawer';
-import {
-  FileCheck2,
-  Search,
-  AlertTriangle,
-  ShieldCheck,
-  ArrowRight,
-  Filter,
-} from 'lucide-react';
+import { MatchSeverityBadge } from './match-badges';
+import type { DealMatchView } from '@/lib/utils/deal-matching';
+import { Search, ArrowRight } from 'lucide-react';
 
 interface DealRow {
   id: string;
@@ -55,35 +50,31 @@ interface DealRow {
   }>;
 }
 
-export interface ConflictingDealSummary {
-  id: string;
-  public_reference: string;
-  customer_legal_name: string;
-  status: string;
-  protection_expires_at?: Date | string | null;
-  organization: { display_name: string };
-}
-
 export function ChannelAdminDealsTable({
   deals,
   selectedDeal,
-  conflictingDeals,
+  matchesByDeal,
   currentStatus,
   currentQuery,
 }: {
   deals: DealRow[];
   selectedDeal?: DealRow | null;
-  conflictingDeals?: ConflictingDealSummary[];
+  matchesByDeal: Record<string, DealMatchView[]>;
   currentStatus?: string;
   currentQuery?: string;
 }) {
   const router = useRouter();
   const [activeDeal, setActiveDeal] = useState<DealRow | null>(selectedDeal || null);
 
+  const listParams = new URLSearchParams();
+  if (currentStatus) listParams.set('status', currentStatus);
+  if (currentQuery) listParams.set('q', currentQuery);
+  const listHref = `/channel-admin/deals${listParams.size ? `?${listParams.toString()}` : ''}`;
+
   const filterTabs = [
     { label: 'All Deals', value: undefined },
     { label: 'Awaiting Approval', value: 'awaiting_approval' },
-    { label: 'Conflicts Only', value: 'conflict' },
+    { label: 'Needs attention', value: 'attention' },
     { label: 'Approved & Protected', value: 'approved' },
     { label: 'Declined', value: 'declined' },
     { label: 'Closed Won', value: 'closed_won' },
@@ -103,8 +94,8 @@ export function ChannelAdminDealsTable({
                 key={tab.label}
                 href={
                   tab.value
-                    ? `/channel-admin/deals?status=${tab.value}${currentQuery ? `&q=${currentQuery}` : ''}`
-                    : `/channel-admin/deals${currentQuery ? `?q=${currentQuery}` : ''}`
+                    ? `/channel-admin/deals?status=${tab.value}${currentQuery ? `&q=${encodeURIComponent(currentQuery)}` : ''}`
+                    : `/channel-admin/deals${currentQuery ? `?q=${encodeURIComponent(currentQuery)}` : ''}`
                 }
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                   isActive
@@ -148,7 +139,7 @@ export function ChannelAdminDealsTable({
                   <th className="py-3 px-6 font-semibold">Customer & Domain</th>
                   <th className="py-3 px-6 font-semibold">Estimated Value</th>
                   <th className="py-3 px-6 font-semibold">Status</th>
-                  <th className="py-3 px-6 font-semibold">Conflict</th>
+                  <th className="py-3 px-6 font-semibold">Overlap</th>
                   <th className="py-3 px-6 font-semibold">Protection Window</th>
                   <th className="py-3 px-6 font-semibold text-right">Action</th>
                 </tr>
@@ -186,13 +177,12 @@ export function ChannelAdminDealsTable({
                       <StatusBadge status={deal.status} />
                     </td>
                     <td className="py-3.5 px-6">
-                      {deal.conflict_detected ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                          <AlertTriangle className="h-3 w-3" />
-                          CONFLICT
-                        </span>
-                      ) : (
+                      {matchesByDeal[deal.id]?.length ? (
+                        <MatchSeverityBadge matches={matchesByDeal[deal.id]} />
+                      ) : deal.status === 'awaiting_approval' || deal.status === 'approved' ? (
                         <span className="text-slate-500 text-[11px]">Clean</span>
+                      ) : (
+                        <span className="text-slate-500 text-[11px]">—</span>
                       )}
                     </td>
                     <td className="py-3.5 px-6 font-mono text-[11px]">
@@ -232,9 +222,9 @@ export function ChannelAdminDealsTable({
           deal={activeDeal}
           onClose={() => {
             setActiveDeal(null);
-            router.replace('/channel-admin/deals');
+            router.replace(listHref);
           }}
-          conflictingDeals={conflictingDeals || []}
+          matches={matchesByDeal[activeDeal.id] || []}
         />
       )}
     </div>

@@ -17,6 +17,10 @@ const UpdateProfileSchema = z.object({
 
 export async function updateCompanyProfileAction(formData: FormData) {
   const session = await requirePartnerSession();
+  // The profile form is only editable by owners in the UI; enforce it here too.
+  if (session.membershipRole !== 'partner_owner') {
+    return { error: 'Only Partner Owners can update the company profile.' };
+  }
   const raw = {
     displayName: formData.get('displayName'),
     website: formData.get('website'),

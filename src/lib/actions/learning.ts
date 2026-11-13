@@ -11,6 +11,12 @@ export async function enrollCourseAction(formData: FormData) {
   if (!courseId) return;
 
   try {
+    const course = await prisma.course.findFirst({
+      where: { id: courseId, is_published: true },
+      select: { id: true },
+    });
+    if (!course) return;
+
     await prisma.courseEnrollment.upsert({
       where: {
         course_id_user_id: {

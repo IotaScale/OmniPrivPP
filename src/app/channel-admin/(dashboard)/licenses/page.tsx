@@ -1,13 +1,19 @@
 import React from 'react';
 import { requireAdminSession } from '@/lib/auth/session';
-import { listProductLicensesAction } from '@/lib/actions/admin-licenses';
+import {
+  listLicensePartnerOptionsAction,
+  listProductLicensesAction,
+} from '@/lib/actions/admin-licenses';
 import { LicensesClient } from './licenses-client';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ChannelAdminLicensesPage() {
   await requireAdminSession();
-  const licenses = await listProductLicensesAction();
+  const [licenses, partnerOptions] = await Promise.all([
+    listProductLicensesAction(),
+    listLicensePartnerOptionsAction(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -20,7 +26,7 @@ export default async function ChannelAdminLicensesPage() {
         </p>
       </div>
 
-      <LicensesClient initialLicenses={licenses} />
+      <LicensesClient initialLicenses={licenses} partnerOptions={partnerOptions} />
     </div>
   );
 }

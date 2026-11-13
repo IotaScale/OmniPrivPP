@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requirePartnerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
+import { findDealMatches } from '@/lib/utils/domain';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/badge';
@@ -50,6 +51,15 @@ export default async function PartnerDealDetailPage({
   if (!deal || deal.partner_organization_id !== session.partnerOrgId) {
     notFound();
   }
+
+  // Overlap note for pending deals. Only this partner's own matching deals are
+  // ever named; other partners' registrations stay anonymous.
+  const isPending = deal.status === 'awaiting_approval';
+  const liveMatches = isPending ? await findDealMatches(deal, { excludeDealId: deal.id }) : [];
+  const ownDuplicates = liveMatches.filter(
+    (m) => m.kind === 'duplicate' && m.candidate.partner_organization_id === session.partnerOrgId
+  );
+  const showOverlapNote = isPending && (deal.conflict_detected || liveMatches.length > 0);
 
   const nextStepMap: Record<string, { message: string; color: string; icon: React.ComponentType<{ className?: string }> }> = {
     awaiting_approval: {
@@ -137,16 +147,35 @@ export default async function PartnerDealDetailPage({
         </div>
       </div>
 
-      {/* Domain Conflict Warning (Partner-safe visibility) */}
-      {deal.conflict_detected && (
-        <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3">
+      {/* Overlap note (partner-safe: never names other partners or their references) */}
+      {showOverlapNote && (
+        <div
+          role="status"
+          className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3"
+        >
           <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <strong className="font-semibold block mb-0.5">Domain Conflict Under Review</strong>
-            <span>
-              OmniPriv automated conflict detection flagged an existing active registration or protection on domain{' '}
-              <strong className="font-mono text-amber-200">{deal.customer_domain}</strong>. Channel Operations will resolve this conflict during review.
+          <div className="space-y-1.5 min-w-0">
+            <strong className="font-semibold block">Under review &mdash; possible overlap with an existing registration</strong>
+            <span className="block text-slate-300">
+              This customer may already be registered. OmniPriv Channel Operations will check the overlap before
+              deciding on protection; no action is needed from you unless we contact you.
             </span>
+            {ownDuplicates.length > 0 && (
+              <span className="block text-slate-300">
+                Your company&rsquo;s matching registration{ownDuplicates.length === 1 ? '' : 's'}:{' '}
+                {ownDuplicates.map((m, i) => (
+                  <React.Fragment key={m.candidate.id}>
+                    {i > 0 && ', '}
+                    <Link
+                      href={`/partner-portal/deals/${m.candidate.id}`}
+                      className="font-mono font-semibold text-cyan-400 hover:underline"
+                    >
+                      {m.candidate.public_reference}
+                    </Link>
+                  </React.Fragment>
+                ))}
+              </span>
+            )}
           </div>
         </div>
       )}

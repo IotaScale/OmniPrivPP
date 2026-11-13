@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { hashPassword, verifyPassword } from '@/lib/auth/password';
 import { createSession, destroySession } from '@/lib/auth/session';
 import { safePostSignInPath } from '@/lib/auth/support-sso';
+import { pickSignInMembership } from '@/lib/auth/partner-access';
 import { logAuditEvent } from '@/lib/audit';
 import { MembershipRole, PartnerTier, OrgStatus, UserRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
@@ -225,9 +226,7 @@ export async function signInAction(
   }
 
   // Handle Partner User
-  const activeMembership = user.memberships.find(
-    (m) => m.organization.status === OrgStatus.active
-  );
+  const activeMembership = pickSignInMembership(user.memberships);
 
   if (!activeMembership) {
     return {

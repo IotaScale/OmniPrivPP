@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { requirePartnerSession } from '@/lib/auth/session';
+import { requirePartnerSessionAnyStatus } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { signOutAction } from '@/lib/actions/auth';
 import { PartnerSidebarNav } from './sidebar-nav';
@@ -23,7 +23,15 @@ export default async function PartnerPortalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await requirePartnerSession();
+  const { session, decision } = await requirePartnerSessionAnyStatus();
+
+  // Suspended organizations (and users whose access was revoked) get no
+  // workspace chrome. Every page and server action re-checks the org status
+  // through `requirePartnerSession` and redirects to the account-status
+  // page, which renders its own standalone frame.
+  if (!decision.allowed) {
+    return <>{children}</>;
+  }
 
   // Query live organization, lead count, and unread notification count
   const org = await prisma.partnerOrganization.findUnique({

@@ -6,7 +6,7 @@ import { DealStatus, Prisma } from '@prisma/client';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/badge';
-import { FileSpreadsheet, FilePlus2, Search, Filter, ShieldCheck, ArrowRight } from 'lucide-react';
+import { FileSpreadsheet, FilePlus2, Search, Filter, ShieldCheck, ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -185,6 +185,15 @@ export default async function PartnerDealsListPage({
                       </td>
                       <td className="py-3.5 px-5">
                         <StatusBadge status={deal.status} />
+                        {deal.conflict_detected && deal.status === DealStatus.awaiting_approval && (
+                          <span
+                            className="mt-1.5 flex items-center gap-1 text-[11px] text-amber-400 whitespace-nowrap"
+                            title="Under review — possible overlap with an existing registration"
+                          >
+                            <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />
+                            Possible overlap
+                          </span>
+                        )}
                       </td>
                       <td className="py-3.5 px-5 font-mono text-slate-200">
                         {deal.estimated_deal_value

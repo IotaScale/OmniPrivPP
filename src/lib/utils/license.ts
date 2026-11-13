@@ -151,3 +151,13 @@ export function calculateLicenseTimeRemaining(
   };
 }
 
+
+/**
+ * Masks a license key for display, keeping only the last `visible` characters
+ * (e.g. `LIC-1A2B3C-4D5E6F-7A8B9C` -> `••••••••••••7A8B9C`).
+ */
+export function maskLicenseKey(key: string, visible = 6): string {
+  if (!key) return '';
+  if (key.length <= visible) return key;
+  return `${'•'.repeat(Math.min(12, key.length - visible))}${key.slice(-visible)}`;
+}

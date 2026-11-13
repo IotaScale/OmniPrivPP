@@ -9,6 +9,8 @@ export interface AdminNavLink {
   href: string;
   icon: React.ReactNode;
   badge?: number;
+  /** Plain anchor: leaves the app via a route handler (e.g. support SSO). */
+  external?: boolean;
 }
 
 /* Horizontally scrolling console tabs with a brand underline on the active tab. */
@@ -21,9 +23,10 @@ export function AdminNav({ links }: { links: AdminNavLink[] }) {
   return (
     <nav aria-label="Channel admin" className="-mb-px flex gap-1 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {links.map((link) => {
-        const active = isActive(link.href);
+        const active = !link.external && isActive(link.href);
+        const LinkTag = link.external ? 'a' : Link;
         return (
-          <Link
+          <LinkTag
             key={link.href}
             href={link.href}
             aria-current={active ? 'page' : undefined}
@@ -40,7 +43,7 @@ export function AdminNav({ links }: { links: AdminNavLink[] }) {
                 {link.badge}
               </span>
             )}
-          </Link>
+          </LinkTag>
         );
       })}
     </nav>
