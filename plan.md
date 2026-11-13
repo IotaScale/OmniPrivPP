@@ -263,3 +263,11 @@ This document tracks all completed phases, schema models, route implementations,
 
 
 
+
+## 12. Transactional Email, Team Invites & Real Password Reset
+
+- **Mailer** (`src/lib/email/mailer.ts`, server-only, `nodemailer`): same `SMTP_HOST/PORT/SECURE/USER/PASSWORD/FROM` vars as the support app; `isEmailConfigured()`, `sendEmail()` never throws (returns `{ sent, error? }`), branded HTML + text. Links use `APP_BASE_URL` (default `https://partner.omnipriv.com`).
+- **Set-password tokens** (`src/lib/auth/password-token.ts`, pure, unit-tested): HS256 JWT (key derived from `SESSION_SECRET`, domain-separated from the session key), `sub`/`purpose`/`pwv` (+ `org` on invites), iss `omnipriv-partner-portal`, aud `omnipriv-partner-portal-password`; invite 7 days, reset 1 hour. Single-use via `pwv` = sha256(password_hash)[0:16]. DB glue + email copy in `src/lib/auth/password-flows.ts`.
+- **Invites**: new users get a "Set your password" link (`/reset-password?token=…&invite=1`); existing users get an "added to <Org>" email. If email isn't sent, the owner sees a copyable invite link. "Invite pending" + owner-only "Resend invite" (60 s cooldown) for invited members with no `team.invite_accepted` / `user.password_reset` / `user.authenticated` audit event.
+- **Forgot / reset**: `requestPasswordResetAction` (generic response, max 3/hour/user via `user.password_reset_requested` events); `/reset-password` validates the token server-side, `resetPasswordAction` re-verifies and compare-and-sets the hash, audits `team.invite_accepted` or `user.password_reset`, redirects to `/sign-in?reset=1` (success banner).
+- **Known limits**: sessions are stateless JWTs, so a reset does not sign out other existing sessions; unknown emails are not rate-limited (nothing is sent to them).

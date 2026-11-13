@@ -102,12 +102,25 @@ export default async function AdminJbpPage() {
                   Submitted {jbp.submitted_at ? new Date(jbp.submitted_at).toLocaleDateString() : 'Draft'}
                 </span>
 
+                {jbp.status === 'approved' ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    Approved{jbp.approved_at ? ` ${new Date(jbp.approved_at).toLocaleDateString()}` : ''} &bull; reopens for review if the partner resubmits
+                  </span>
+                ) : jbp.status === 'changes_requested' ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-400">
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    Waiting for the partner to update and resubmit
+                  </span>
+                ) : jbp.status !== 'submitted' && jbp.status !== 'under_review' ? (
+                  <span className="text-xs text-slate-500">No action needed</span>
+                ) : (
                 <form action={updateJbpStatusAction} className="flex flex-wrap items-center gap-2">
                   <input type="hidden" name="jbpId" value={jbp.id} />
                   <input
                     type="text"
                     name="adminFeedback"
-                    placeholder="Feedback / adjustments..."
+                    placeholder="Feedback (required to request changes)"
                     className="px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
                   <button
@@ -128,6 +141,7 @@ export default async function AdminJbpPage() {
                     <span>Approve JBP</span>
                   </button>
                 </form>
+                )}
               </div>
             </div>
           ))}

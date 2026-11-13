@@ -47,6 +47,12 @@ export async function updatePartnerTierAction(formData: FormData) {
   }
 }
 
+/** target status -> statuses it may be reached from (admin decisions only). */
+const COMMERCIAL_REQUEST_TRANSITIONS: Record<string, string[]> = {
+  fulfilled: ['submitted', 'in_review', 'approved'],
+  rejected: ['submitted', 'in_review'],
+};
+
 export async function updateCommercialRequestStatusAction(formData: FormData) {
   const session = await requireAdminSession();
   const requestId = formData.get('requestId') as string;
@@ -54,13 +60,23 @@ export async function updateCommercialRequestStatusAction(formData: FormData) {
   const adminNotes = formData.get('adminNotes') as string;
 
   if (!requestId || !status) return;
+  // Allowed admin decisions by current status; fulfilled/rejected are final.
+  const allowed = COMMERCIAL_REQUEST_TRANSITIONS[status];
+  if (!allowed) return;
 
   try {
+    const current = await prisma.commercialRequest.findUnique({
+      where: { id: requestId },
+      select: { status: true },
+    });
+    if (!current || !allowed.includes(current.status)) return;
+
     const req = await prisma.commercialRequest.update({
       where: { id: requestId },
       data: {
         status,
-        admin_notes: adminNotes?.trim() || null,
+        // Keep earlier notes when a decision is made without a new note.
+        admin_notes: adminNotes?.trim() || undefined,
         fulfilled_at: status === 'fulfilled' ? new Date() : undefined,
       },
     });
@@ -87,6 +103,10 @@ export async function updateCommercialRequestStatusAction(formData: FormData) {
   }
 }
 
+/** JBP statuses an admin can decide on, and the decisions available. */
+const JBP_REVIEWABLE = new Set(['submitted', 'under_review']);
+const JBP_DECISIONS = new Set(['approved', 'changes_requested']);
+
 export async function updateJbpStatusAction(formData: FormData) {
   const session = await requireAdminSession();
   const jbpId = formData.get('jbpId') as string;
@@ -94,13 +114,25 @@ export async function updateJbpStatusAction(formData: FormData) {
   const adminFeedback = formData.get('adminFeedback') as string;
 
   if (!jbpId || !status) return;
+  // Admins decide only on plans awaiting review; an approved plan returns to
+  // review only when the partner edits and resubmits it.
+  if (!JBP_DECISIONS.has(status)) return;
+  const feedback = adminFeedback?.trim() || '';
+  if (status === 'changes_requested' && !feedback) return;
 
   try {
+    const current = await prisma.jointBusinessPlan.findUnique({
+      where: { id: jbpId },
+      select: { status: true },
+    });
+    if (!current || !JBP_REVIEWABLE.has(current.status)) return;
+
     const jbp = await prisma.jointBusinessPlan.update({
       where: { id: jbpId },
       data: {
         status,
-        admin_feedback: adminFeedback?.trim() || null,
+        // Keep earlier feedback when approving without a new note.
+        admin_feedback: feedback || undefined,
         approved_at: status === 'approved' ? new Date() : undefined,
       },
     });

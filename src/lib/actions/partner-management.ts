@@ -6,6 +6,16 @@ import { requirePartnerSession } from '@/lib/auth/session';
 import { hashPassword } from '@/lib/auth/password';
 import { MembershipRole, UserRole } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import { randomBytes } from 'node:crypto';
+import { logAuditEvent } from '@/lib/audit';
+import {
+  createInviteLink,
+  hasEstablishedPassword,
+  lastInviteSentAt,
+  RESEND_INVITE_COOLDOWN_MS,
+  sendExistingUserAddedEmail,
+  sendNewUserInviteEmail,
+} from '@/lib/auth/password-flows';
 
 const UpdateProfileSchema = z.object({
   displayName: z.string().min(2, 'Display name is required'),
@@ -78,7 +88,11 @@ const InviteMemberSchema = z.object({
   role: z.enum(['partner_owner', 'partner_member']),
 });
 
-export async function inviteTeamMemberAction(formData: FormData) {
+export type InviteActionResult =
+  | { error: string; success?: undefined }
+  | { success: true; error?: undefined; emailSent: boolean; email: string; inviteUrl?: string };
+
+export async function inviteTeamMemberAction(formData: FormData): Promise<InviteActionResult> {
   const session = await requirePartnerSession();
   if (session.membershipRole !== 'partner_owner') {
     return { error: 'Only Partner Owners can invite or manage team members.' };
@@ -99,17 +113,23 @@ export async function inviteTeamMemberAction(formData: FormData) {
   const cleanEmail = email.trim().toLowerCase();
   const partnerOrgId = session.partnerOrgId!;
 
+  let invited: {
+    user: { id: string; email: string; full_name: string; password_hash: string };
+    isNewUser: boolean;
+  };
   try {
-    await prisma.$transaction(async (tx) => {
+    invited = await prisma.$transaction(async (tx) => {
       // Find or create user
       let user = await tx.user.findUnique({
         where: { email: cleanEmail },
       });
+      let isNewUser = false;
 
       if (!user) {
-        // Initial random high-entropy temp password
-        const initialTempPass = `OmniPriv-${Math.random().toString(36).substring(2, 10)}!2026`;
-        const pHash = await hashPassword(initialTempPass);
+        // Unknowable random password: the invitee sets their own via the
+        // single-use invite link emailed below.
+        const pHash = await hashPassword(randomBytes(32).toString('base64url'));
+        isNewUser = true;
 
         user = await tx.user.create({
           data: {
@@ -155,17 +175,118 @@ export async function inviteTeamMemberAction(formData: FormData) {
           metadata: {
             invited_email: cleanEmail,
             assigned_role: role,
+            new_account: isNewUser,
           },
         },
       });
-    });
 
-    revalidatePath('/partner-portal/team');
-    return { success: true };
+      return { user, isNewUser };
+    });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Failed to add team member.';
     return { error: msg };
   }
+
+  revalidatePath('/partner-portal/team');
+
+  const orgName = session.partnerOrgName || 'your partner organization';
+  const inviterName = session.fullName || 'A partner owner';
+
+  if (!invited.isNewUser) {
+    const mail = await sendExistingUserAddedEmail({
+      to: invited.user.email,
+      inviteeName: invited.user.full_name,
+      inviterName,
+      orgName,
+    });
+    return { success: true, emailSent: mail.sent, email: invited.user.email };
+  }
+
+  try {
+    const inviteUrl = await createInviteLink(invited.user, partnerOrgId);
+    const mail = await sendNewUserInviteEmail({
+      to: invited.user.email,
+      inviteeName: invited.user.full_name,
+      inviterName,
+      orgName,
+      inviteUrl,
+    });
+    // The link goes back only to the inviting owner, and only when the email
+    // didn't go out, so they can share it another way.
+    return mail.sent
+      ? { success: true, emailSent: true, email: invited.user.email }
+      : { success: true, emailSent: false, email: invited.user.email, inviteUrl };
+  } catch (err) {
+    console.error('[INVITE_LINK_ERROR]', err);
+    return { success: true, emailSent: false, email: invited.user.email };
+  }
+}
+
+/**
+ * Re-send the "set your password" invite to a member who has never set one.
+ * Owner-only, scoped to the owner's organization, at most once per minute per
+ * member (checked against audit events).
+ */
+export async function resendTeamInviteAction(membershipId: string): Promise<InviteActionResult> {
+  const session = await requirePartnerSession();
+  if (session.membershipRole !== 'partner_owner') {
+    return { error: 'Only Partner Owners can resend invitations.' };
+  }
+  const partnerOrgId = session.partnerOrgId!;
+  if (typeof membershipId !== 'string' || !membershipId) {
+    return { error: 'Invalid parameters.' };
+  }
+
+  const membership = await prisma.partnerMembership.findUnique({
+    where: { id: membershipId },
+    select: {
+      partner_organization_id: true,
+      user: { select: { id: true, email: true, full_name: true, password_hash: true, is_active: true } },
+    },
+  });
+  if (!membership || membership.partner_organization_id !== partnerOrgId) {
+    return { error: 'Membership not found in your organization.' };
+  }
+  const user = membership.user;
+  if (!user.is_active) {
+    return { error: 'This account is deactivated.' };
+  }
+  if (await hasEstablishedPassword(user.id)) {
+    return { error: 'This member has already set their password.' };
+  }
+  const lastSent = await lastInviteSentAt(partnerOrgId, user.id);
+  if (lastSent && Date.now() - lastSent.getTime() < RESEND_INVITE_COOLDOWN_MS) {
+    return { error: 'An invitation was sent less than a minute ago. Please wait before resending.' };
+  }
+
+  let inviteUrl: string;
+  try {
+    inviteUrl = await createInviteLink(user, partnerOrgId);
+  } catch (err) {
+    console.error('[INVITE_LINK_ERROR]', err);
+    return { error: 'Could not create an invitation link.' };
+  }
+
+  const mail = await sendNewUserInviteEmail({
+    to: user.email,
+    inviteeName: user.full_name,
+    inviterName: session.fullName || 'A partner owner',
+    orgName: session.partnerOrgName || 'your partner organization',
+    inviteUrl,
+  });
+
+  await logAuditEvent({
+    actorUserId: session.userId,
+    partnerOrgId,
+    entityType: 'partner_membership',
+    entityId: user.id,
+    eventType: 'team.invite_resent',
+    metadata: { invited_email: user.email, email_sent: mail.sent },
+  });
+
+  return mail.sent
+    ? { success: true, emailSent: true, email: user.email }
+    : { success: true, emailSent: false, email: user.email, inviteUrl };
 }
 
 export async function updateMemberRoleAction(formData: FormData) {

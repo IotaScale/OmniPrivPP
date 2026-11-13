@@ -105,7 +105,7 @@ export default async function AdminCommercialRequestsPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  {r.status !== 'fulfilled' && (
+                  {['submitted', 'in_review', 'approved'].includes(r.status) && (
                     <form action={updateCommercialRequestStatusAction} className="inline-flex items-center gap-2">
                       <input type="hidden" name="requestId" value={r.id} />
                       <input type="hidden" name="status" value="fulfilled" />
@@ -122,7 +122,7 @@ export default async function AdminCommercialRequestsPage() {
                     </form>
                   )}
 
-                  {r.status === 'submitted' && (
+                  {(r.status === 'submitted' || r.status === 'in_review') && (
                     <form action={updateCommercialRequestStatusAction}>
                       <input type="hidden" name="requestId" value={r.id} />
                       <input type="hidden" name="status" value="rejected" />

@@ -16,6 +16,20 @@ function NextPathField() {
   return next ? <input type="hidden" name="next" value={next} /> : null;
 }
 
+/** Success banner after a password was set via an invite or reset link (?reset=1). */
+function PasswordResetBanner() {
+  if (useSearchParams().get('reset') !== '1') return null;
+  return (
+    <div
+      role="status"
+      className="mt-6 flex items-start gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-[0.8125rem] leading-relaxed text-emerald-500"
+    >
+      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      <span>Your password has been set. Sign in with your new password.</span>
+    </div>
+  );
+}
+
 export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, undefined);
 
@@ -109,6 +123,12 @@ export default function SignInPage() {
             <p className="mt-2 text-[0.9375rem] text-ink-muted">
               Enter your verified business email and account password.
             </p>
+
+            {!state?.error && (
+              <Suspense fallback={null}>
+                <PasswordResetBanner />
+              </Suspense>
+            )}
 
             {state?.error && (
               <div

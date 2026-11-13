@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import {
   inviteTeamMemberAction,
+  resendTeamInviteAction,
   updateMemberRoleAction,
   removeTeamMemberAction,
+  type InviteActionResult,
 } from '@/lib/actions/partner-management';
+import { toast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -20,7 +23,17 @@ import {
   CheckCircle2,
   Crown,
   X,
+  Copy,
+  Check,
+  Mail,
+  Send,
+  Clock,
 } from 'lucide-react';
+
+interface InviteNotice {
+  email: string;
+  inviteUrl?: string;
+}
 
 interface MemberRow {
   id: string; // membership id
@@ -38,14 +51,53 @@ export function TeamManagementClient({
   members,
   currentUserId,
   isOwner,
+  pendingInviteUserIds = [],
 }: {
   members: MemberRow[];
   currentUserId: string;
   isOwner: boolean;
+  pendingInviteUserIds?: string[];
 }) {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<InviteNotice | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+  const pendingIds = new Set(pendingInviteUserIds);
+
+  /** Toast on emailed invites; otherwise keep a copyable link on screen. */
+  const reportInvite = (res: Extract<InviteActionResult, { success: true }>, resend = false) => {
+    if (res.emailSent) {
+      setNotice(null);
+      toast.success(resend ? `Invitation re-sent to ${res.email}` : `Invitation emailed to ${res.email}`);
+      return;
+    }
+    setCopied(false);
+    setNotice({ email: res.email, inviteUrl: res.inviteUrl });
+  };
+
+  const copyInviteLink = async () => {
+    if (!notice?.inviteUrl) return;
+    try {
+      await navigator.clipboard.writeText(notice.inviteUrl);
+      setCopied(true);
+    } catch {
+      toast.error('Could not copy the link. Select it and copy it manually.');
+    }
+  };
+
+  const handleResend = async (membershipId: string) => {
+    setResendingId(membershipId);
+    setError(null);
+    const res = await resendTeamInviteAction(membershipId);
+    setResendingId(null);
+    if (res.error) {
+      setError(res.error);
+      return;
+    }
+    if (res.success) reportInvite(res, true);
+  };
 
   const handleInvite = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,10 +107,11 @@ export function TeamManagementClient({
     const res = await inviteTeamMemberAction(fd);
     setIsSubmitting(false);
 
-    if (res?.error) {
+    if (res.error) {
       setError(res.error);
-    } else {
+    } else if (res.success) {
       setShowInviteModal(false);
+      reportInvite(res);
     }
   };
 
@@ -120,6 +173,59 @@ export function TeamManagementClient({
         </div>
       )}
 
+      {notice && (
+        <div
+          role="status"
+          className="relative rounded-2xl border border-line bg-surface p-4 pl-5 text-ink shadow-[var(--op-pop-shadow)] overflow-hidden"
+        >
+          <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-amber-500" />
+          <div className="flex items-start gap-3">
+            <Mail className="h-5 w-5 shrink-0 mt-0.5 text-amber-500" aria-hidden="true" />
+            <div className="flex-1 min-w-0 space-y-3">
+              {notice.inviteUrl ? (
+                <p className="text-[0.875rem] font-semibold text-ink">
+                  Email isn&apos;t configured — copy the invite link and send it to{' '}
+                  <span className="break-all">{notice.email}</span>
+                </p>
+              ) : (
+                <p className="text-[0.875rem] font-semibold text-ink">
+                  <span className="break-all">{notice.email}</span> was added, but the notification email
+                  couldn&apos;t be sent. Let them know they can sign in with their existing password.
+                </p>
+              )}
+              {notice.inviteUrl && (
+                <>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      readOnly
+                      value={notice.inviteUrl}
+                      aria-label="Invite link"
+                      onFocus={(e) => e.currentTarget.select()}
+                      className="min-w-0 flex-1 rounded-lg border border-line bg-surface-muted px-3 py-2 font-mono text-[0.75rem] text-ink-soft"
+                    />
+                    <Button type="button" variant="primary" size="sm" onClick={copyInviteLink} className="gap-1.5 shrink-0">
+                      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                      <span>{copied ? 'Copied' : 'Copy link'}</span>
+                    </Button>
+                  </div>
+                  <p className="text-[0.75rem] text-ink-muted">
+                    The link is single-use and expires in 7 days. Only share it with {notice.email}.
+                  </p>
+                </>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setNotice(null)}
+              aria-label="Dismiss"
+              className="shrink-0 -m-1 p-1.5 rounded-lg text-ink-subtle hover:text-ink hover:bg-surface-hover transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Team Members List */}
       <Card>
         <CardContent className="pt-6">
@@ -137,6 +243,7 @@ export function TeamManagementClient({
               <tbody className="divide-y divide-white/[0.06]">
                 {members.map((m) => {
                   const isCurrent = m.user.id === currentUserId;
+                  const isPending = isOwner && pendingIds.has(m.user.id);
                   const isSoleOwner =
                     m.role === 'partner_owner' &&
                     members.filter((x) => x.role === 'partner_owner').length === 1;
@@ -149,6 +256,12 @@ export function TeamManagementClient({
                           {isCurrent && (
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00B8DB]/15 border border-[#00B8DB]/30 text-[#00B8DB] font-medium">
                               You
+                            </span>
+                          )}
+                          {isPending && (
+                            <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 font-medium">
+                              <Clock className="h-3 w-3" aria-hidden="true" />
+                              Invite pending
                             </span>
                           )}
                         </div>
@@ -171,6 +284,20 @@ export function TeamManagementClient({
                       {isOwner && (
                         <td className="py-4 px-6 text-right">
                           <div className="flex items-center justify-end gap-2">
+                            {isPending && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={isSubmitting || resendingId !== null}
+                                isLoading={resendingId === m.id}
+                                onClick={() => handleResend(m.id)}
+                                className="gap-1.5 text-xs text-[#00B8DB] hover:text-[#00B8DB]"
+                                title="Send a new set-your-password link"
+                              >
+                                <Send className="h-3.5 w-3.5" />
+                                <span>Resend invite</span>
+                              </Button>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"

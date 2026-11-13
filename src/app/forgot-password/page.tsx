@@ -6,6 +6,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AuthShell, authCardClass } from '@/components/ui/auth-shell';
 import { Mail, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { requestPasswordResetAction } from '@/lib/actions/password-reset';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -16,10 +17,13 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     if (!email) return;
     setIsPending(true);
-    // Simulate secure delivery delay and neutral response
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setIsPending(false);
-    setSubmitted(true);
+    try {
+      // Always resolves with the same neutral message (no account enumeration).
+      await requestPasswordResetAction(email);
+    } finally {
+      setIsPending(false);
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -37,9 +41,9 @@ export default function ForgotPasswordPage() {
             <div role="status" className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[0.8125rem] flex items-start gap-3">
               <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
               <div>
-                <strong className="block font-semibold">Password reset sent</strong>
+                <strong className="block font-semibold">Check your inbox</strong>
                 <span className="text-ink-muted">
-                  If an authorized partner account exists for <strong className="text-ink">{email}</strong>, a secure reset link has been dispatched.
+                  If an active account exists for <strong className="text-ink break-all">{email}</strong>, a secure reset link is on its way. It expires in 1 hour.
                 </span>
               </div>
             </div>
