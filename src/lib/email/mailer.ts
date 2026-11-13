@@ -1,6 +1,7 @@
 import 'server-only';
 import nodemailer from 'nodemailer';
 import type Mail from 'nodemailer/lib/mailer';
+import { OMNIPRIV_LOGO_CID, OMNIPRIV_LOGO_PNG_BASE64 } from './logo';
 
 // Transactional email for the Partner Portal (team invites, password resets).
 // Uses the same SMTP_* variables as the customer support app
@@ -121,6 +122,19 @@ export async function sendEmail({ to, subject, text, html }: SendEmailInput): Pr
       subject,
       text,
       html,
+      // Branded emails reference the logo by Content-ID; ship it inline so it
+      // renders even where remote images are blocked (Outlook, corporate mail).
+      attachments: html?.includes(`cid:${OMNIPRIV_LOGO_CID}`)
+        ? [
+            {
+              filename: 'omnipriv-logo.png',
+              content: Buffer.from(OMNIPRIV_LOGO_PNG_BASE64, 'base64'),
+              contentType: 'image/png',
+              cid: OMNIPRIV_LOGO_CID,
+              contentDisposition: 'inline',
+            },
+          ]
+        : undefined,
     });
     return { sent: true };
   } catch (err) {
@@ -168,8 +182,9 @@ export function renderBrandedEmail({ preheader, heading, paragraphs, details, ct
   const font = "'Onest','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif";
   const display = "'Sora','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif";
   const base = getAppBaseUrl();
-  // PNG, not SVG: Gmail and Outlook block SVG images.
-  const logoUrl = `${base}/omnipriv-light.png`;
+  // Inline CID attachment (added by sendEmail), not a remote URL: shows even
+  // when the client blocks remote images. PNG, since Gmail/Outlook block SVG.
+  const logoUrl = `cid:${OMNIPRIV_LOGO_CID}`;
 
   const paragraphHtml = paragraphs
     .map((p) => `<p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:${ink};">${escapeHtml(p)}</p>`)
@@ -209,7 +224,7 @@ ${preheaderHtml}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;background:#ffffff;border-radius:16px;border:1px solid ${line};overflow:hidden;">
 <tr><td style="height:4px;background:${cyan};font-size:0;line-height:0;">&nbsp;</td></tr>
 <tr><td style="padding:24px 32px;border-bottom:1px solid ${line};">
-<a href="https://omnipriv.com" style="text-decoration:none;"><img src="${logoUrl}" width="140" alt="OmniPriv" style="display:inline-block;width:140px;height:auto;border:0;vertical-align:middle;"></a>
+<a href="https://omnipriv.com" style="text-decoration:none;"><img src="${logoUrl}" width="140" height="29" alt="OmniPriv" style="display:inline-block;width:140px;height:29px;border:0;vertical-align:middle;color:#0A1628;font-size:20px;font-weight:700;"></a>
 <span style="display:inline-block;margin-left:10px;padding:3px 9px;border-radius:999px;background:#E6F8FC;color:${cyanText};font-size:11px;font-weight:600;letter-spacing:0.02em;vertical-align:middle;">Partner Portal</span>
 </td></tr>
 <tr><td style="padding:32px;">
