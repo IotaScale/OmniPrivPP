@@ -73,23 +73,44 @@ export async function createInviteLink(user: { id: string; password_hash: string
   return buildPasswordLink(token, 'invite');
 }
 
+function roleLabel(role?: string): string | null {
+  if (role === 'partner_owner') return 'Partner Owner';
+  if (role === 'partner_member') return 'Partner Member';
+  return null;
+}
+
+function invitedByLabel(name: string, email?: string): string {
+  return email ? `${name} (${email})` : name;
+}
+
 export function sendNewUserInviteEmail(input: {
   to: string;
   inviteeName: string;
   inviterName: string;
+  inviterEmail?: string;
   orgName: string;
+  role?: string;
   inviteUrl: string;
 }): Promise<SendEmailResult> {
-  const subject = `You've been invited to ${input.orgName} on the OmniPriv Partner Portal`;
+  const role = roleLabel(input.role);
+  const subject = `${input.inviterName} from ${input.orgName} invited you to join ${input.orgName} on OmniPriv`;
   const { html, text } = renderBrandedEmail({
-    heading: subject,
+    preheader: `Join ${input.orgName} on the OmniPriv Partner Portal. Accept within 7 days.`,
+    heading: `Join ${input.orgName} on OmniPriv`,
     paragraphs: [
       `Hi ${input.inviteeName},`,
-      `${input.inviterName} has invited you to join ${input.orgName} on the OmniPriv Partner Portal, where your team registers deals, works OmniPriv leads, manages renewals and accesses partner enablement.`,
-      'Set your password to activate your account. This link expires in 7 days and can be used once.',
+      `${input.inviterName} from ${input.orgName} invited you to join ${input.orgName} on the OmniPriv Partner Portal.`,
+      `As part of the ${input.orgName} team you can register customer deals, work leads OmniPriv routes to your organization, track renewals and requests, access sales and technical enablement, and open support cases.`,
+      'Accept the invitation to set your password and activate your account.',
     ],
-    cta: { label: 'Set your password', url: input.inviteUrl },
-    footnote: "If you weren't expecting this invitation, you can ignore this email.",
+    details: [
+      { label: 'Organization', value: input.orgName },
+      { label: 'Invited by', value: invitedByLabel(input.inviterName, input.inviterEmail) },
+      ...(role ? [{ label: 'Your role', value: role }] : []),
+      { label: 'Invitation expires', value: 'In 7 days (single use)' },
+    ],
+    cta: { label: 'Accept invitation', url: input.inviteUrl },
+    footnote: `You received this because ${input.inviterName} invited ${input.to} to ${input.orgName}. If you weren't expecting it, you can ignore this email.`,
   });
   return sendEmail({ to: input.to, subject, text, html });
 }
@@ -98,18 +119,27 @@ export function sendExistingUserAddedEmail(input: {
   to: string;
   inviteeName: string;
   inviterName: string;
+  inviterEmail?: string;
   orgName: string;
+  role?: string;
 }): Promise<SendEmailResult> {
-  const subject = `You've been added to ${input.orgName}`;
+  const role = roleLabel(input.role);
+  const subject = `${input.inviterName} from ${input.orgName} added you to ${input.orgName} on OmniPriv`;
   const signInUrl = new URL('/sign-in', getAppBaseUrl()).toString();
   const { html, text } = renderBrandedEmail({
-    heading: subject,
+    preheader: `You now have access to ${input.orgName} on the OmniPriv Partner Portal.`,
+    heading: `You've joined ${input.orgName} on OmniPriv`,
     paragraphs: [
       `Hi ${input.inviteeName},`,
-      `${input.inviterName} has added you to ${input.orgName} on the OmniPriv Partner Portal.`,
+      `${input.inviterName} from ${input.orgName} added you to ${input.orgName} on the OmniPriv Partner Portal.`,
       'Sign in with your existing OmniPriv Partner Portal password to get started.',
     ],
-    cta: { label: 'Sign in', url: signInUrl },
+    details: [
+      { label: 'Organization', value: input.orgName },
+      { label: 'Added by', value: invitedByLabel(input.inviterName, input.inviterEmail) },
+      ...(role ? [{ label: 'Your role', value: role }] : []),
+    ],
+    cta: { label: 'Sign in to the Partner Portal', url: signInUrl },
     footnote: 'Forgot your password? Use "Forgot password?" on the sign-in page.',
   });
   return sendEmail({ to: input.to, subject, text, html });
@@ -118,6 +148,7 @@ export function sendExistingUserAddedEmail(input: {
 export function sendPasswordResetEmail(input: { to: string; name: string; resetUrl: string }) {
   const subject = 'Reset your OmniPriv Partner Portal password';
   const { html, text } = renderBrandedEmail({
+    preheader: 'Reset link inside. It expires in 1 hour.',
     heading: 'Reset your password',
     paragraphs: [
       `Hi ${input.name},`,

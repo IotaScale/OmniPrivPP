@@ -197,7 +197,9 @@ export async function inviteTeamMemberAction(formData: FormData): Promise<Invite
       to: invited.user.email,
       inviteeName: invited.user.full_name,
       inviterName,
+      inviterEmail: session.email,
       orgName,
+      role,
     });
     return { success: true, emailSent: mail.sent, email: invited.user.email };
   }
@@ -208,7 +210,9 @@ export async function inviteTeamMemberAction(formData: FormData): Promise<Invite
       to: invited.user.email,
       inviteeName: invited.user.full_name,
       inviterName,
+      inviterEmail: session.email,
       orgName,
+      role,
       inviteUrl,
     });
     // The link goes back only to the inviting owner, and only when the email
@@ -271,6 +275,7 @@ export async function resendTeamInviteAction(membershipId: string): Promise<Invi
     to: user.email,
     inviteeName: user.full_name,
     inviterName: session.fullName || 'A partner owner',
+    inviterEmail: session.email,
     orgName: session.partnerOrgName || 'your partner organization',
     inviteUrl,
   });
