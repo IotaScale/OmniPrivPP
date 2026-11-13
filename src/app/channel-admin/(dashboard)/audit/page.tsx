@@ -52,7 +52,7 @@ export default async function ChannelAdminAuditPage({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <ScrollText className="h-6 w-6 text-indigo-400" />
+            <ScrollText className="h-6 w-6 text-cyan-400" />
             <span>Immutable Forensic Audit Log</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -68,7 +68,7 @@ export default async function ChannelAdminAuditPage({
             <select
               name="entityType"
               defaultValue={entityType || ''}
-              className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-indigo-500"
+              className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-cyan-500"
             >
               <option value="">All Entity Types</option>
               <option value="deal_registration">Deal Registration</option>
@@ -82,7 +82,7 @@ export default async function ChannelAdminAuditPage({
             <select
               name="orgId"
               defaultValue={orgId || ''}
-              className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-indigo-500"
+              className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-cyan-500"
             >
               <option value="">All Partner Organizations</option>
               {partners.map((p) => (
@@ -97,12 +97,12 @@ export default async function ChannelAdminAuditPage({
               name="q"
               defaultValue={query || ''}
               placeholder="Search event type, ID..."
-              className="px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-indigo-500"
+              className="px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-cyan-500"
             />
 
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[#ffffff] font-medium text-xs transition-colors"
+              className="px-4 py-2 rounded-lg bg-[#00B8DB] hover:bg-[#33C6E2] text-[#03121c] font-semibold text-xs transition-colors"
             >
               Filter Audit Log
             </button>
@@ -136,7 +136,7 @@ export default async function ChannelAdminAuditPage({
                       {new Date(a.created_at).toISOString().replace('T', ' ').slice(0, 19)}
                     </td>
                     <td className="py-3.5 px-6">
-                      <span className="font-mono font-semibold text-indigo-300">
+                      <span className="font-mono font-semibold text-cyan-300">
                         {a.event_type}
                       </span>
                     </td>

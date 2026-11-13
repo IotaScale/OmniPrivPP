@@ -1,11 +1,11 @@
 import React from 'react';
-import Link from 'next/link';
 import { prisma } from '@/lib/db';
 import { Prisma, PartnerTier } from '@prisma/client';
-import { Search, Globe, Award, ExternalLink, ArrowRight, MapPin } from 'lucide-react';
+import { Search, Globe, Award, ExternalLink, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { PublicFooter, PublicHeader } from '@/components/ui/public-chrome';
+import { fieldBaseClass, fieldStateClass } from '@/components/ui/field-styles';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,93 +50,93 @@ export default async function FindAPartnerPage({
     Platinum: 'success',
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-cyan-500/30">
-      {/* Top Header */}
-      <header className="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <OmniPrivLogo variant="partner" href="/" />
-            <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/70 px-2 py-0.5 rounded border border-cyan-800/60 uppercase tracking-wider hidden sm:inline-block">
-              Locator
-            </span>
-          </div>
+  const filterField = `${fieldBaseClass} ${fieldStateClass.normal} h-11`;
 
-          <div className="flex items-center gap-3">
-            <Link href="/sign-in">
-              <Button variant="ghost" size="sm" className="text-xs text-slate-300">
-                Partner Sign In
-              </Button>
-            </Link>
-            <Link href="/partners/register">
-              <Button variant="primary" size="sm" className="text-xs gap-1.5 font-medium">
-                <span>Become a Partner</span>
-                <ArrowRight className="h-3 w-3" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+  return (
+    <div className="min-h-dvh bg-page text-ink-soft flex flex-col">
+      <PublicHeader ctaHref="/partners/register" tag="Locator" />
 
       {/* Hero */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
-        <div className="max-w-3xl">
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
-            Find an Authorized OmniPriv Partner
-          </h1>
-          <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-            Connect with certified channel partners, system integrators, and managed service providers equipped to architect, deploy, and support OmniPriv Privileged Access Management.
-          </p>
-        </div>
-
-        {/* Filter bar */}
-        <form method="GET" action="/find-a-partner" className="mt-8 grid grid-cols-1 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
-            <input
-              type="text"
-              name="q"
-              defaultValue={q || ''}
-              placeholder="Search partner name..."
-              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 transition-all"
-            />
+      <section className="relative overflow-hidden">
+        <div className="op-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 sm:pt-16">
+          <div className="max-w-3xl">
+            <span className="op-eyebrow">
+              <Globe className="h-3.5 w-3.5" aria-hidden="true" />
+              Partner directory
+            </span>
+            <h1 className="op-h2 mt-4">Find an authorized OmniPriv partner</h1>
+            <p className="op-lede mt-3">
+              Connect with certified channel partners, system integrators, and managed service providers equipped to architect, deploy, and support OmniPriv Privileged Access Management.
+            </p>
           </div>
 
-          <input
-            type="text"
-            name="country"
-            defaultValue={country || ''}
-            placeholder="Filter by country..."
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 transition-all"
-          />
-
-          <select
-            name="track"
-            defaultValue={track || ''}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B8DB]/40 focus:border-[#00B8DB]/60 transition-all"
+          {/* Filter bar */}
+          <form
+            method="GET"
+            action="/find-a-partner"
+            className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto] gap-3 p-3 sm:p-4 rounded-2xl bg-surface border border-line shadow-[var(--op-card-shadow)]"
           >
-            <option value="" className="bg-slate-900 text-slate-200">All Program Tracks</option>
-            <option value="Sell" className="bg-slate-900 text-slate-200">Sell (VAR / Reseller)</option>
-            <option value="Deploy" className="bg-slate-900 text-slate-200">Deploy (System Integrator)</option>
-            <option value="Manage" className="bg-slate-900 text-slate-200">Manage (MSP / MSSP)</option>
-            <option value="Build" className="bg-slate-900 text-slate-200">Build (Technology Alliance)</option>
-          </select>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-subtle" />
+              <label htmlFor="locator-q" className="sr-only">Search partner name</label>
+              <input
+                id="locator-q"
+                type="text"
+                name="q"
+                defaultValue={q || ''}
+                placeholder="Search partner name..."
+                className={`${filterField} pl-10 pr-3.5`}
+              />
+            </div>
 
-          <Button type="submit" variant="primary" size="md" className="text-xs font-semibold h-full py-2.5">
-            Search Directory
-          </Button>
-        </form>
-      </div>
+            <div>
+              <label htmlFor="locator-country" className="sr-only">Country</label>
+              <input
+                id="locator-country"
+                type="text"
+                name="country"
+                defaultValue={country || ''}
+                placeholder="Filter by country..."
+                className={`${filterField} px-3.5`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="locator-track" className="sr-only">Program track</label>
+              <select
+                id="locator-track"
+                name="track"
+                defaultValue={track || ''}
+                className={`${filterField} px-3.5 cursor-pointer`}
+              >
+                <option value="">All Program Tracks</option>
+                <option value="Sell">Sell (VAR / Reseller)</option>
+                <option value="Deploy">Deploy (System Integrator)</option>
+                <option value="Manage">Manage (MSP / MSSP)</option>
+                <option value="Build">Build (Technology Alliance)</option>
+              </select>
+            </div>
+
+            <Button type="submit" variant="primary" size="md" className="h-11 sm:col-span-2 lg:col-span-1">
+              <Search className="h-4 w-4" />
+              Search Directory
+            </Button>
+          </form>
+        </div>
+      </section>
 
       {/* Results */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
         {partners.length === 0 ? (
-          <div className="py-16 text-center rounded-xl bg-slate-900/30 border border-dashed border-slate-800 p-8 space-y-3">
-            <Globe className="h-8 w-8 text-slate-600 mx-auto" />
-            <h3 className="text-sm font-semibold text-slate-300">
+          <div className="py-16 text-center rounded-2xl bg-surface border border-dashed border-line-strong p-8 space-y-3">
+            <span className="op-icon mx-auto">
+              <Globe className="h-5 w-5" />
+            </span>
+            <h2 className="font-heading text-[1.0625rem] font-bold text-ink">
               No public partner directory listings found
-            </h3>
-            <p className="text-xs text-slate-500 max-w-md mx-auto">
+            </h2>
+            <p className="text-[0.875rem] text-ink-muted max-w-md mx-auto">
               No authorized partners have published public directory profiles matching these filters yet. Check back soon or reset your search criteria.
             </p>
           </div>
@@ -145,40 +145,40 @@ export default async function FindAPartnerPage({
             {partners.map((p) => (
               <div
                 key={p.id}
-                className="p-5 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between space-y-4"
+                className="p-5 rounded-2xl bg-surface border border-line shadow-[var(--op-card-shadow)] hover:border-brand/40 transition-colors flex flex-col justify-between gap-4"
               >
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-bold text-sm text-white">{p.public_company_name}</span>
+                <div className="min-w-0">
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="font-heading font-bold text-[1rem] tracking-[-0.015em] text-ink break-words">{p.public_company_name}</span>
                     <Badge variant={tierVariantMap[p.tier] || 'default'} size="sm">
-                      <Award className="h-3 w-3 mr-1" />
+                      <Award className="h-3 w-3" />
                       {p.tier}
                     </Badge>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
-                    <MapPin className="h-3 w-3 text-slate-500" />
+                  <div className="flex items-center gap-1.5 text-[0.8125rem] text-ink-muted mt-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-ink-subtle" />
                     <span>{p.city ? `${p.city}, ` : ''}{p.country}</span>
                   </div>
 
                   {p.public_description && (
-                    <p className="text-xs text-slate-400 mt-3 line-clamp-3 leading-relaxed">
+                    <p className="text-[0.875rem] text-ink-muted mt-3 line-clamp-3 leading-relaxed">
                       {p.public_description}
                     </p>
                   )}
                 </div>
 
-                <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between text-xs">
-                  <span className="text-slate-500">{p.partner_type}</span>
+                <div className="border-t border-line pt-3 flex items-center justify-between gap-3 text-[0.8125rem]">
+                  <span className="text-ink-subtle">{p.partner_type}</span>
                   {p.website && (
                     <a
                       href={p.website.startsWith('http') ? p.website : `https://${p.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1 font-medium"
+                      className="text-brand-ink hover:underline underline-offset-2 inline-flex items-center gap-1 font-semibold"
                     >
                       <span>Website</span>
-                      <ExternalLink className="h-3 w-3" />
+                      <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   )}
                 </div>
@@ -188,10 +188,7 @@ export default async function FindAPartnerPage({
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        OmniPriv Authorized Channel Directory &bull; AI-Powered Privileged Access Management
-      </footer>
+      <PublicFooter note="Authorized Channel Directory" />
     </div>
   );
 }

@@ -17,7 +17,14 @@ const SESSION_COOKIE_NAME = 'omnipriv_pp_session';
 const SESSION_EXPIRY_DAYS = 7;
 
 function getSecretKey(): Uint8Array {
-  const secret = process.env.SESSION_SECRET || 'omnipriv-fallback-development-secret-minimum-32-chars';
+  const secret = process.env.SESSION_SECRET;
+  if (!secret || secret.length < 32) {
+    // Never sign or accept sessions with a guessable key in production.
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('SESSION_SECRET must be set to at least 32 characters.');
+    }
+    return new TextEncoder().encode('omnipriv-fallback-development-secret-minimum-32-chars');
+  }
   return new TextEncoder().encode(secret);
 }
 
@@ -52,7 +59,7 @@ export async function getSession(): Promise<SessionUser | null> {
     if (!token) return null;
 
     const secret = getSecretKey();
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret, { algorithms: ['HS256'] });
 
     return {
       userId: payload.userId as string,

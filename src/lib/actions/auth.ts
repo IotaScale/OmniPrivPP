@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { hashPassword, verifyPassword } from '@/lib/auth/password';
 import { createSession, destroySession } from '@/lib/auth/session';
+import { safePostSignInPath } from '@/lib/auth/support-sso';
 import { logAuditEvent } from '@/lib/audit';
 import { MembershipRole, PartnerTier, OrgStatus, UserRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
@@ -189,6 +190,7 @@ export async function signInAction(
 
   const { email, password } = validated.data;
   const cleanEmail = email.trim().toLowerCase();
+  const nextPath = safePostSignInPath(formData.get('next'));
 
   const user = await prisma.user.findUnique({
     where: { email: cleanEmail },
@@ -253,7 +255,7 @@ export async function signInAction(
     metadata: { method: 'password' },
   });
 
-  redirect('/partner-portal');
+  redirect(nextPath ?? '/partner-portal');
 }
 
 /**

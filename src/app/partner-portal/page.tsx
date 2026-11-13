@@ -182,7 +182,7 @@ export default async function PartnerDashboardPage() {
   return (
     <div className="space-y-6">
       {/* 1. TOP METRICS & QUICK ACTIONS (Clean solid banner, no blurry blobs) */}
-      <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5">
             <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
@@ -247,7 +247,7 @@ export default async function PartnerDashboardPage() {
       {/* 2. REAL LIVE METRIC CARDS (Clean solid dark cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         {/* Open Deal Registrations */}
-        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Open Deals</span>
             <FileSpreadsheet className="h-4 w-4 text-cyan-400" />
@@ -257,7 +257,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Awaiting OmniPriv Review */}
-        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Awaiting Review</span>
             <Clock className="h-4 w-4 text-amber-400" />
@@ -267,7 +267,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Protected Opportunities */}
-        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Protected Deals</span>
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
@@ -277,7 +277,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Assigned Leads Requiring Action */}
-        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Assigned Leads</span>
             <Inbox className="h-4 w-4 text-blue-400" />
@@ -287,7 +287,7 @@ export default async function PartnerDashboardPage() {
         </div>
 
         {/* Upcoming Renewals */}
-        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
+        <div className="p-4 rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
             <span className="font-medium">Renewals</span>
             <RefreshCw className="h-4 w-4 text-purple-400" />
@@ -315,7 +315,7 @@ export default async function PartnerDashboardPage() {
           </div>
 
           {recentDeals.length > 0 ? (
-            <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
+            <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
               {recentDeals.map((deal) => (
                 <div
                   key={deal.id}
@@ -349,7 +349,7 @@ export default async function PartnerDashboardPage() {
             </div>
           ) : (
             /* Purposeful Empty State for Deals */
-            <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-dashed border-slate-800 p-8 text-center space-y-3 flex-1">
+            <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-dashed border-slate-800 p-8 text-center space-y-3 flex-1">
               <div className="h-10 w-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 mx-auto">
                 <FilePlus2 className="h-5 w-5" />
               </div>
@@ -362,7 +362,7 @@ export default async function PartnerDashboardPage() {
                 </p>
               </div>
               <Link href="/partner-portal/deals/new">
-                <Button variant="primary" size="sm" className="gap-2 text-xs font-semibold shadow-sm">
+                <Button variant="primary" size="sm" className="gap-2 text-xs font-semibold">
                   <FilePlus2 className="h-3.5 w-3.5" />
                   <span>Register a Deal</span>
                 </Button>
@@ -387,7 +387,7 @@ export default async function PartnerDashboardPage() {
             </div>
 
             {recentLeads.length > 0 ? (
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
                 {recentLeads.map((assignment) => (
                   <div key={assignment.id} className="p-3 flex items-center justify-between gap-3 text-xs">
                     <div className="min-w-0">
@@ -415,7 +415,7 @@ export default async function PartnerDashboardPage() {
               </div>
             ) : (
               /* Purposeful Empty State for Leads */
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400 flex-1">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 p-4 text-center text-xs text-slate-400 flex-1">
                 <Inbox className="h-5 w-5 text-slate-500 mx-auto mb-1.5" />
                 <div className="font-medium text-slate-300">No leads have been assigned to your company yet.</div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
@@ -441,7 +441,7 @@ export default async function PartnerDashboardPage() {
             </div>
 
             {recentRenewals.length > 0 ? (
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 divide-y divide-slate-800/80 overflow-hidden flex-1">
                 {recentRenewals.map((renewal) => (
                   <div key={renewal.id} className="p-3 flex items-center justify-between gap-3 text-xs">
                     <div>
@@ -458,7 +458,7 @@ export default async function PartnerDashboardPage() {
               </div>
             ) : (
               /* Purposeful Empty State for Renewals */
-              <div className="rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-4 text-center text-xs text-slate-400 flex-1">
+              <div className="rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 p-4 text-center text-xs text-slate-400 flex-1">
                 <RefreshCw className="h-5 w-5 text-slate-500 mx-auto mb-1.5" />
                 <div className="font-medium text-slate-300">No renewals are currently due.</div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
@@ -484,7 +484,7 @@ export default async function PartnerDashboardPage() {
             return (
               <div
                 key={tool.title}
-                className="p-5 rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between group"
+                className="p-5 rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">

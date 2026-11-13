@@ -86,7 +86,7 @@ export function ChannelAdminPartnersClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Building2 className="h-6 w-6 text-indigo-400" />
+            <Building2 className="h-6 w-6 text-cyan-400" />
             <span>Channel Partner Directory</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -214,7 +214,7 @@ export function ChannelAdminPartnersClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Award className="h-4 w-4 text-indigo-400" />
+              <Award className="h-4 w-4 text-cyan-400" />
               <span>Update Tier: {selectedPartner.display_name}</span>
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
@@ -238,14 +238,14 @@ export function ChannelAdminPartnersClient({
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium text-slate-300">
-                  Justification / Audit Note <span className="text-indigo-400">*</span>
+                  Justification / Audit Note <span className="text-cyan-400">*</span>
                 </label>
                 <textarea
                   name="reason"
                   rows={3}
                   required
                   placeholder="e.g. Achieved 2 certified PAM implementation engineers and surpassed annual quota..."
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-cyan-500"
                 />
               </div>
 
@@ -263,7 +263,7 @@ export function ChannelAdminPartnersClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-500"
+                 
                 >
                   Apply Tier Change
                 </Button>

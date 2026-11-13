@@ -125,7 +125,7 @@ export function TeamManagementClient({
         <CardContent className="pt-6">
           <div className="overflow-x-auto -mx-6">
             <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-900 dark:bg-[#050B16] text-slate-400 uppercase tracking-wider text-[11px] border-y border-white/[0.08]">
+              <thead className="bg-slate-900 dark:bg-[#15171a] text-slate-400 uppercase tracking-wider text-[11px] border-y border-white/[0.08]">
                 <tr>
                   <th className="py-3.5 px-6 font-semibold">Team Member</th>
                   <th className="py-3.5 px-6 font-semibold">Business Email</th>
@@ -215,7 +215,7 @@ export function TeamManagementClient({
       {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="max-w-md w-full rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="max-w-md w-full rounded-xl bg-slate-900 dark:bg-[#15171a] border border-slate-800 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <h3 className="text-base font-bold text-white flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-lg bg-[#00B8DB]/10 text-[#00B8DB] flex items-center justify-center">

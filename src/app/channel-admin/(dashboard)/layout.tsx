@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { requireAdminSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { signOutAction } from '@/lib/actions/auth';
@@ -18,6 +17,7 @@ import {
 import { DealStatus, LeadAcceptanceStatus } from '@prisma/client';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { AdminNav } from './admin-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,19 +99,22 @@ export default async function ChannelAdminDashboardLayout({
     { label: 'Audit Log', href: '/channel-admin/audit-log', icon: ScrollText },
   ];
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
-      {/* Top Console Bar */}
-      <header className="sticky top-0 z-40 bg-slate-900/95 border-b border-indigo-950/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <OmniPrivLogo variant="admin" href="/channel-admin" priority />
-          </div>
+  const navItems = navLinks.map(({ icon: Icon, ...link }) => ({
+    ...link,
+    icon: <Icon className="h-4 w-4" />,
+  }));
 
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex flex-col text-right text-xs">
-              <span className="text-slate-200 font-medium">{session.fullName}</span>
-              <span className="text-indigo-400 font-mono text-[10px]">CHANNEL ADMIN</span>
+  return (
+    <div className="min-h-dvh bg-page text-ink-soft flex flex-col">
+      {/* Top Console Bar */}
+      <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+          <OmniPrivLogo variant="admin" href="/channel-admin" priority />
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden md:flex flex-col text-right leading-tight">
+              <span className="text-[0.8125rem] font-semibold text-ink">{session.fullName}</span>
+              <span className="text-[0.6875rem] font-mono uppercase tracking-[0.08em] text-brand-ink">Channel Admin</span>
             </div>
 
             <ThemeToggle />
@@ -119,10 +122,10 @@ export default async function ChannelAdminDashboardLayout({
             <form action={signOutAction}>
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
+                className="inline-flex h-9 items-center gap-1.5 px-3 rounded-[10px] border border-line-strong text-[0.8125rem] font-semibold text-ink-muted hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 transition-colors"
                 title="Sign Out"
               >
-                <LogOut className="h-3.5 w-3.5" />
+                <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline">Sign Out</span>
               </button>
             </form>
@@ -130,38 +133,19 @@ export default async function ChannelAdminDashboardLayout({
         </div>
 
         {/* Console Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60 overflow-x-auto">
-          <nav className="flex space-x-1 py-1.5">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all whitespace-nowrap"
-                >
-                  <Icon className="h-3.5 w-3.5 text-slate-400" />
-                  <span>{link.label}</span>
-                  {link.badge !== undefined && (
-                    <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                      {link.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+          <AdminNav links={navItems} />
         </div>
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 min-w-0">
         {children}
       </main>
 
       {/* Internal Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-600">
-        OmniPriv Internal Privileged Operations • Strictly Confidential & Audited
+      <footer className="border-t border-line py-5 px-4 text-center text-[0.75rem] text-ink-subtle">
+        OmniPriv Internal Privileged Operations &bull; Strictly Confidential &amp; Audited
       </footer>
     </div>
   );

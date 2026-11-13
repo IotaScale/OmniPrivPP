@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
+import { AuthShell, authCardClass } from '@/components/ui/auth-shell';
 import { Mail, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
@@ -23,78 +23,64 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative selection:bg-cyan-500/30">
-      <div className="max-w-md w-full mx-auto space-y-6">
-        <div className="flex justify-center">
-          <OmniPrivLogo variant="partner" href="/" priority />
+    <AuthShell>
+      <div className={authCardClass}>
+        <div className="mb-6">
+          <h1 className="font-heading text-[1.5rem] font-bold tracking-[-0.03em] text-ink">Reset your password</h1>
+          <p className="text-[0.875rem] text-ink-muted mt-2 leading-relaxed">
+            Enter your authorized business email address to receive password reset instructions.
+          </p>
         </div>
 
-        <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-8 shadow-xl">
-          <div className="text-center mb-6">
-            <h1 className="text-lg font-bold text-white">Reset Your Password</h1>
-            <p className="text-xs text-slate-400 mt-1">
-              Enter your authorized business email address to receive password reset instructions.
-            </p>
-          </div>
-
-          {submitted ? (
-            <div className="space-y-4">
-              <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-3">
-                <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="block font-semibold">Password Reset Sent</strong>
-                  <span>
-                    If an authorized partner account exists for <strong className="text-white">{email}</strong>, a secure reset link has been dispatched.
-                  </span>
-                </div>
+        {submitted ? (
+          <div className="space-y-4">
+            <div role="status" className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[0.8125rem] flex items-start gap-3">
+              <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block font-semibold">Password reset sent</strong>
+                <span className="text-ink-muted">
+                  If an authorized partner account exists for <strong className="text-ink">{email}</strong>, a secure reset link has been dispatched.
+                </span>
               </div>
-              <Link href="/sign-in" className="block text-center">
-                <Button variant="outline" size="sm" className="w-full text-xs">
-                  Return to Sign In
-                </Button>
+            </div>
+            <Link href="/sign-in" className={buttonVariants({ variant: 'secondary', className: 'w-full' })}>
+              Return to Sign In
+            </Link>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <Input
+              label="Authorized Business Email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@company.com"
+            />
+
+            <Button type="submit" variant="primary" size="lg" disabled={isPending} className="w-full">
+              {isPending ? (
+                <span>Sending instructions...</span>
+              ) : (
+                <>
+                  <Mail className="h-4 w-4" />
+                  <span>Send Reset Instructions</span>
+                </>
+              )}
+            </Button>
+
+            <div className="pt-1 text-center">
+              <Link
+                href="/sign-in"
+                className="inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-ink-muted hover:text-brand-ink transition-colors"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span>Back to Sign In</span>
               </Link>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                label="Authorized Business Email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
-              />
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="md"
-                disabled={isPending}
-                className="w-full text-xs font-semibold gap-2"
-              >
-                {isPending ? (
-                  <span>Sending instructions...</span>
-                ) : (
-                  <>
-                    <Mail className="h-3.5 w-3.5" />
-                    <span>Send Reset Instructions</span>
-                  </>
-                )}
-              </Button>
-
-              <div className="pt-2 text-center">
-                <Link
-                  href="/sign-in"
-                  className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  <span>Back to Sign In</span>
-                </Link>
-              </div>
-            </form>
-          )}
-        </div>
+          </form>
+        )}
       </div>
-    </div>
+    </AuthShell>
   );
 }

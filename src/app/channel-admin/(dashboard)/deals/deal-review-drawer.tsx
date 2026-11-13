@@ -149,7 +149,7 @@ export function DealReviewDrawer({
         <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm font-bold text-indigo-400">
+              <span className="font-mono text-sm font-bold text-cyan-400">
                 {deal.public_reference}
               </span>
               <StatusBadge status={deal.status} />

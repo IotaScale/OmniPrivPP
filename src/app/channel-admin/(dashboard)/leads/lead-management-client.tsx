@@ -144,7 +144,7 @@ export function LeadManagementClient({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Inbox className="h-6 w-6 text-indigo-400" />
+            <Inbox className="h-6 w-6 text-cyan-400" />
             <span>Channel Lead Operations</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -167,7 +167,7 @@ export function LeadManagementClient({
             variant="primary"
             size="md"
             onClick={() => setShowCreateModal(true)}
-            className="gap-2 bg-indigo-600 hover:bg-indigo-500 border-indigo-500/30"
+            className="gap-2"
           >
             <Plus className="h-4 w-4" />
             <span>Create Inbound Lead</span>
@@ -214,7 +214,7 @@ export function LeadManagementClient({
 
                   return (
                     <tr key={lead.id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3.5 px-6 font-mono font-medium text-indigo-300">
+                      <td className="py-3.5 px-6 font-mono font-medium text-cyan-300">
                         {lead.public_reference}
                       </td>
                       <td className="py-3.5 px-6 font-semibold text-slate-100">
@@ -293,7 +293,7 @@ export function LeadManagementClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <UserPlus className="h-4 w-4 text-indigo-400" />
+              <UserPlus className="h-4 w-4 text-cyan-400" />
               <span>Assign Lead: {assigningLead.company}</span>
             </h3>
             <p className="text-xs text-slate-400">
@@ -308,7 +308,7 @@ export function LeadManagementClient({
                 <select
                   name="partnerOrgId"
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:ring-1 focus:ring-cyan-500"
                 >
                   <option value="">Choose an eligible partner...</option>
                   {partners.map((p) => (
@@ -333,7 +333,7 @@ export function LeadManagementClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-500"
+                 
                 >
                   Confirm Assignment
                 </Button>
@@ -348,7 +348,7 @@ export function LeadManagementClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="max-w-lg w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Plus className="h-4 w-4 text-indigo-400" />
+              <Plus className="h-4 w-4 text-cyan-400" />
               <span>Create Inbound Lead</span>
             </h3>
 
@@ -403,7 +403,7 @@ export function LeadManagementClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-500"
+                 
                 >
                   Create Lead
                 </Button>
@@ -418,7 +418,7 @@ export function LeadManagementClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Upload className="h-4 w-4 text-indigo-400" />
+              <Upload className="h-4 w-4 text-cyan-400" />
               <span>Import Leads from CSV</span>
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
@@ -432,7 +432,7 @@ export function LeadManagementClient({
                 name="csvFile"
                 accept=".csv"
                 required
-                className="w-full text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-[#ffffff] hover:file:bg-indigo-500"
+                className="w-full text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#00B8DB] file:text-[#03121c] hover:file:bg-cyan-500"
               />
 
               <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
@@ -449,7 +449,7 @@ export function LeadManagementClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-500"
+                 
                 >
                   Import Leads
                 </Button>

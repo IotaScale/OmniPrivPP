@@ -11,7 +11,8 @@ type Theme = 'light' | 'dark';
 
 const THEME_STORAGE_KEY = 'omnipriv-theme';
 const THEME_CHANGE_EVENT = 'omnipriv-theme-change';
-const DEFAULT_THEME: Theme = 'dark';
+// Light by default, matching omnipriv.com and support.omnipriv.com.
+const DEFAULT_THEME: Theme = 'light';
 
 interface ThemeContextValue {
   theme: Theme;
@@ -32,7 +33,7 @@ function readStoredTheme(): Theme {
       return value;
     }
   } catch {
-    // Storage may be unavailable; fall back to the dark default.
+    // Storage may be unavailable; fall back to the light default.
   }
   return DEFAULT_THEME;
 }
@@ -48,7 +49,7 @@ function subscribe(onStoreChange: () => void) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Hydration-safe read of the persisted theme: the server snapshot always
-  // returns the dark default (matching SSR), and the client snapshot reads
+  // returns the light default (matching SSR), and the client snapshot reads
   // localStorage after hydration.
   const theme = useSyncExternalStore(subscribe, readStoredTheme, () => DEFAULT_THEME);
 

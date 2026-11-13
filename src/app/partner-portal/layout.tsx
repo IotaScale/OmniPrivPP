@@ -11,9 +11,10 @@ import {
   PlusCircle,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { OmniPrivLogo } from '@/components/ui/omnipriv-logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { PortalShell } from './portal-shell';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,103 +60,111 @@ export default async function PartnerPortalLayout({
     Platinum: 'success',
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 dark:bg-[#090d16] text-slate-100 flex flex-col md:flex-row selection:bg-[#00B8DB]/30">
-      {/* LEFT NAVIGATION SIDEBAR (OmniPriv Channel Workspace) */}
-      <aside className="w-full md:w-64 bg-slate-900 dark:bg-[#0a0f1a] border-r border-slate-800 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen z-30">
-        {/* Brand / Company Header */}
-        <div className="p-4 border-b border-slate-800 bg-slate-950 dark:bg-[#080c16]">
-          <OmniPrivLogo variant="partner" href="/partner-portal" priority />
-          <div className="mt-2 text-xs text-slate-400 truncate max-w-[210px] font-medium" title={org?.display_name || session.partnerOrgName}>
-            {org?.display_name || session.partnerOrgName}
-          </div>
+  const orgName = org?.display_name || session.partnerOrgName;
 
-          {/* Partner Tier Badge */}
-          <div className="mt-3 flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs">
-            <span className="text-slate-400 text-[11px]">Partner Tier:</span>
-            <Badge variant={tierVariantMap[org?.tier || 'Registered'] || 'default'} size="sm" className="gap-1 font-semibold">
+  const sidebar = (
+    <div className="flex h-full min-h-0 flex-col">
+      {/* Brand / Company Header */}
+      <div className="px-4 pt-4 pb-4 border-b border-line">
+        <OmniPrivLogo variant="partner" href="/partner-portal" priority />
+        <div className="mt-4 rounded-xl border border-line bg-surface-muted px-3 py-2.5">
+          <div className="text-[0.8125rem] font-semibold text-ink truncate" title={orgName}>
+            {orgName}
+          </div>
+          <div className="mt-1.5 flex items-center justify-between gap-2">
+            <span className="text-[0.75rem] text-ink-subtle">Partner tier</span>
+            <Badge variant={tierVariantMap[org?.tier || 'Registered'] || 'default'} size="sm" className="gap-1">
               <Award className="h-3 w-3" />
               <span>{org?.tier || 'Registered'}</span>
             </Badge>
           </div>
         </div>
+      </div>
 
-        {/* Sidebar Navigation Items */}
-        <div className="flex-1 overflow-y-auto">
-          <PartnerSidebarNav unreadLeadsCount={pendingLeadsCount} />
+      {/* Sidebar Navigation Items */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        <PartnerSidebarNav unreadLeadsCount={pendingLeadsCount} />
+      </div>
+
+      {/* Quick Deal Registration CTA in Sidebar */}
+      <div className="px-3 pt-3 pb-3 border-t border-line">
+        <Link
+          href="/partner-portal/deals/new"
+          className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span>Register a Deal</span>
+        </Link>
+      </div>
+
+      {/* Authenticated User Profile & Sign Out Footer */}
+      <div className="px-3 py-3 border-t border-line flex items-center gap-3">
+        <span
+          aria-hidden="true"
+          className="h-9 w-9 shrink-0 rounded-full bg-brand/15 border border-brand/30 text-brand-ink flex items-center justify-center text-[0.8125rem] font-bold"
+        >
+          {(session.fullName || 'P').charAt(0).toUpperCase()}
+        </span>
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-[0.8125rem] text-ink font-semibold truncate" title={session.fullName}>
+            {session.fullName}
+          </span>
+          <span className="text-ink-subtle text-[0.75rem] truncate capitalize">
+            {session.membershipRole?.replace('_', ' ') || 'Partner User'}
+          </span>
         </div>
 
-        {/* Quick Deal Registration CTA in Sidebar */}
-        <div className="p-3 border-t border-slate-800">
-          <Link href="/partner-portal/deals/new">
-            <Button variant="primary" size="sm" className="w-full gap-2 text-xs font-semibold shadow-sm">
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span>Register a Deal</span>
-            </Button>
-          </Link>
-        </div>
-
-        {/* Authenticated User Profile & Sign Out Footer */}
-        <div className="p-3 border-t border-slate-800 bg-slate-950 dark:bg-[#080c16] flex items-center justify-between text-xs">
-          <div className="flex flex-col min-w-0 pr-2">
-            <span className="text-slate-200 font-medium truncate" title={session.fullName}>
-              {session.fullName}
-            </span>
-            <span className="text-slate-500 text-[11px] truncate capitalize">
-              {session.membershipRole?.replace('_', ' ') || 'Partner User'}
-            </span>
-          </div>
-
-          <form action={signOutAction}>
-            <button
-              type="submit"
-              className="btn-press p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 cursor-pointer"
-              title="Sign Out"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </form>
-        </div>
-      </aside>
-
-      {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        {/* Top Header Bar */}
-        <header className="sticky top-0 z-20 bg-slate-950/95 dark:bg-[#090d16]/95 backdrop-blur-md border-b border-slate-800 h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="font-semibold text-slate-200">{org?.display_name || session.partnerOrgName}</span>
-            <span>&bull;</span>
-            <span className="text-slate-400">{org?.partner_type || 'Authorized Partner'}</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-
-            <Link
-              href="/partner-portal"
-              className="btn-press relative p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-              title="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-cyan-400 ring-2 ring-slate-950 dark:ring-[#090d16]" />
-              )}
-            </Link>
-
-            <Link href="/partner-portal/deals/new" className="hidden sm:inline-flex">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs text-cyan-400 border-cyan-800/80 hover:bg-cyan-950/40">
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span>New Registration</span>
-              </Button>
-            </Link>
-          </div>
-        </header>
-
-        {/* Child Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
-          {children}
-        </main>
+        <form action={signOutAction}>
+          <button
+            type="submit"
+            className="btn-press inline-flex h-9 w-9 items-center justify-center rounded-[10px] text-ink-muted hover:text-rose-400 hover:bg-rose-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 cursor-pointer"
+            title="Sign Out"
+            aria-label="Sign out"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
+        </form>
       </div>
     </div>
+  );
+
+  const headerContext = (
+    <div className="flex items-center gap-2.5 text-[0.8125rem] min-w-0">
+      <span className="font-semibold text-ink truncate">{orgName}</span>
+      <span aria-hidden="true" className="h-1 w-1 rounded-full bg-ink-subtle/60" />
+      <span className="text-ink-muted truncate">{org?.partner_type || 'Authorized Partner'}</span>
+    </div>
+  );
+
+  const headerActions = (
+    <>
+      <ThemeToggle />
+
+      <Link
+        href="/partner-portal"
+        className="relative inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-line-strong text-ink-muted hover:text-brand-ink hover:border-brand/40 hover:bg-brand/[0.06] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+        title="Notifications"
+        aria-label={unreadCount > 0 ? `Notifications (${unreadCount} unread)` : 'Notifications'}
+      >
+        <Bell className="h-4 w-4" />
+        {unreadCount > 0 && (
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-brand ring-2 ring-surface" />
+        )}
+      </Link>
+
+      <Link
+        href="/partner-portal/deals/new"
+        className={buttonVariants({ variant: 'primary', size: 'sm', className: 'hidden sm:inline-flex' })}
+      >
+        <PlusCircle className="h-4 w-4" />
+        <span>New Registration</span>
+      </Link>
+    </>
+  );
+
+  return (
+    <PortalShell sidebar={sidebar} headerContext={headerContext} headerActions={headerActions}>
+      {children}
+    </PortalShell>
   );
 }

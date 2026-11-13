@@ -63,7 +63,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-indigo-950/60 pb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-semibold uppercase mb-2">
             <Headphones className="h-3.5 w-3.5" />
@@ -130,7 +130,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
         <Link
           href="/channel-admin/support-tickets"
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-            !statusFilter ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
+            !statusFilter ? 'bg-cyan-500 text-[#03121c] font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
           }`}
         >
           All ({totalCount})
@@ -138,7 +138,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
         <Link
           href="/channel-admin/support-tickets?status=open"
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-            statusFilter === 'open' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
+            statusFilter === 'open' ? 'bg-cyan-500 text-[#03121c] font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
           }`}
         >
           Open ({openCount})
@@ -146,7 +146,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
         <Link
           href="/channel-admin/support-tickets?status=in_progress"
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-            statusFilter === 'in_progress' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
+            statusFilter === 'in_progress' ? 'bg-cyan-500 text-[#03121c] font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
           }`}
         >
           In Progress ({inProgressCount})
@@ -154,7 +154,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
         <Link
           href="/channel-admin/support-tickets?status=resolved"
           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-            statusFilter === 'resolved' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
+            statusFilter === 'resolved' ? 'bg-cyan-500 text-[#03121c] font-bold' : 'text-slate-400 hover:text-white bg-slate-900/60'
           }`}
         >
           Resolved ({resolvedCount})
@@ -227,7 +227,7 @@ export default async function AdminSupportTicketsPage({ searchParams }: AdminSup
                     href={`${process.env.NEXT_PUBLIC_SUPPORT_PORTAL_URL || 'http://localhost:3001'}/tickets/${t.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-colors shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-[#03121c] hover:bg-cyan-400 transition-colors shadow-sm"
                   >
                     <span>Respond</span>
                     <ArrowRight className="h-3.5 w-3.5" />

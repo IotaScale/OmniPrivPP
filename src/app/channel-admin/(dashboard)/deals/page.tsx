@@ -77,7 +77,7 @@ export default async function ChannelAdminDealsPage({
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-          <FileCheck2 className="h-6 w-6 text-indigo-400" />
+          <FileCheck2 className="h-6 w-6 text-cyan-400" />
           <span>Channel Deal Approvals & Protection Queue</span>
         </h1>
         <p className="text-sm text-slate-400 mt-1">

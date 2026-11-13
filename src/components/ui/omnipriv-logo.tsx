@@ -12,6 +12,11 @@ interface OmniPrivLogoProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+/*
+ * Wordmark as used in the omnipriv.com header: `omnipriv-light.png` on light
+ * surfaces, `omniprivdark.png` on dark ones, 32px tall. The product label sits
+ * beside it as a small cyan chip ("Partner Portal" / "Channel Admin").
+ */
 export function OmniPrivLogo({
   variant = 'full',
   href,
@@ -21,24 +26,23 @@ export function OmniPrivLogo({
   showBadge = true,
   size = 'md',
 }: OmniPrivLogoProps) {
-  const heightClass = size === 'sm' ? 'h-7' : size === 'lg' ? 'h-10' : 'h-8';
+  const heightClass = size === 'sm' ? 'h-7' : size === 'lg' ? 'h-9' : 'h-8';
+  const badgeLabel = variant === 'partner' ? 'Partner Portal' : variant === 'admin' ? 'Channel Admin' : null;
 
   const content = (
-    <div className={`flex items-center gap-2.5 select-none ${className}`}>
+    <span className={`flex items-center gap-2.5 select-none min-w-0 ${className}`}>
       {iconOnly ? (
-        <div className="relative h-8 w-8 flex-shrink-0">
-          <Image
-            src="/icon.svg"
-            alt="OmniPriv"
-            width={32}
-            height={32}
-            className="h-8 w-8 object-contain"
-            priority={priority}
-          />
-        </div>
+        <Image
+          src="/omnipriv-icon.png"
+          alt="OmniPriv"
+          width={32}
+          height={32}
+          className="h-8 w-8 object-contain shrink-0"
+          priority={priority}
+        />
       ) : (
-        <div className="flex items-center gap-2.5">
-          <div className={`relative ${heightClass} w-auto flex-shrink-0 flex items-center`}>
+        <>
+          <span className={`relative ${heightClass} w-auto shrink-0 flex items-center`}>
             <Image
               src="/omnipriv-light.png"
               alt="OmniPriv"
@@ -55,27 +59,25 @@ export function OmniPrivLogo({
               className={`${heightClass} w-auto object-contain hidden dark:block`}
               priority={priority}
             />
-          </div>
+          </span>
 
-          {showBadge && variant === 'partner' && (
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#00B8DB]/10 text-[#00B8DB] border border-[#00B8DB]/30 whitespace-nowrap">
-              Partner
+          {showBadge && badgeLabel && (
+            <span className="hidden min-[400px]:inline-flex items-center text-[0.6875rem] font-semibold leading-5 px-2 rounded-md whitespace-nowrap bg-brand/10 text-brand-ink border border-brand/20">
+              {badgeLabel}
             </span>
           )}
-
-          {showBadge && variant === 'admin' && (
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 whitespace-nowrap">
-              Channel Admin
-            </span>
-          )}
-        </div>
+        </>
       )}
-    </div>
+    </span>
   );
 
   if (href) {
     return (
-      <Link href={href} className="inline-flex items-center hover:opacity-90 transition-opacity">
+      <Link
+        href={href}
+        aria-label={badgeLabel ? `OmniPriv ${badgeLabel}` : 'OmniPriv'}
+        className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 hover:opacity-90 transition-opacity"
+      >
         {content}
       </Link>
     );

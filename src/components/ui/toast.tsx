@@ -74,39 +74,40 @@ export function Toaster() {
     <div
       role="region"
       aria-label="Notifications"
-      className="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"
+      className="fixed inset-x-4 bottom-4 sm:inset-x-auto sm:right-5 sm:bottom-5 sm:w-full sm:max-w-sm z-[9999] flex flex-col gap-2.5 pointer-events-none"
     >
       {currentToasts.map((t) => (
         <div
           key={t.id}
           role="status"
-          className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-2xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-bottom-3 ${
-            t.type === 'success'
-              ? 'bg-slate-900/95 dark:bg-[#0f172a]/95 border-emerald-500/30 text-white'
-              : t.type === 'error'
-              ? 'bg-slate-900/95 dark:bg-[#0f172a]/95 border-rose-500/30 text-white'
-              : 'bg-slate-900/95 dark:bg-[#0f172a]/95 border-cyan-500/30 text-white'
-          }`}
+          className="toast-in pointer-events-auto relative flex items-start gap-3 overflow-hidden rounded-2xl border border-line bg-surface p-4 pl-5 text-ink shadow-[var(--op-pop-shadow)]"
         >
+          <span
+            aria-hidden="true"
+            className={`absolute inset-y-0 left-0 w-1 ${
+              t.type === 'success' ? 'bg-emerald-500' : t.type === 'error' ? 'bg-rose-500' : 'bg-brand'
+            }`}
+          />
           <div className="shrink-0 mt-0.5">
             {t.type === 'success' && <CheckCircle2 className="h-5 w-5 text-emerald-400" />}
             {t.type === 'error' && <AlertCircle className="h-5 w-5 text-rose-400" />}
-            {t.type === 'info' && <Info className="h-5 w-5 text-cyan-400" />}
+            {t.type === 'info' && <Info className="h-5 w-5 text-brand-ink" />}
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-semibold tracking-wide text-white">{t.title}</div>
+            <div className="text-[0.875rem] font-semibold text-ink">{t.title}</div>
             {t.description && (
-              <div className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">{t.description}</div>
+              <div className="text-[0.8125rem] text-ink-muted mt-0.5 leading-relaxed">{t.description}</div>
             )}
           </div>
 
           <button
+            type="button"
             onClick={() => dismissToast(t.id)}
             aria-label="Dismiss notification"
-            className="shrink-0 p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="shrink-0 -m-1 p-1.5 rounded-lg text-ink-subtle hover:text-ink hover:bg-surface-hover transition-colors"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       ))}

@@ -2,6 +2,10 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+/*
+ * Cards follow omnipriv.com surfaces: white with a navy-at-8% hairline and a
+ * barely-there shadow in light; #15171A with a white-at-8% hairline in dark.
+ */
 export function Card({
   className,
   children,
@@ -11,7 +15,7 @@ export function Card({
     <div
       className={twMerge(
         clsx(
-          'relative rounded-xl bg-slate-900 dark:bg-[#0d1424] border border-slate-800 text-slate-100 shadow-sm transition-colors duration-160 overflow-hidden',
+          'relative rounded-2xl bg-surface border border-line text-ink-soft shadow-[var(--op-card-shadow)] transition-colors duration-200 overflow-hidden',
           className
         )
       )}
@@ -30,10 +34,7 @@ export function CardHeader({
   return (
     <div
       className={twMerge(
-        clsx(
-          'px-6 py-5 border-b border-slate-800 flex flex-col gap-1',
-          className
-        )
+        clsx('px-5 sm:px-6 py-4 sm:py-5 border-b border-line flex flex-col gap-1', className)
       )}
       {...props}
     >
@@ -51,7 +52,7 @@ export function CardTitle({
     <h3
       className={twMerge(
         clsx(
-          'text-base sm:text-lg font-semibold text-slate-100 tracking-tight flex items-center gap-2',
+          'font-heading text-base sm:text-[1.0625rem] font-bold text-ink tracking-[-0.015em] leading-snug flex items-center gap-2',
           className
         )
       )}
@@ -69,9 +70,7 @@ export function CardDescription({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p
-      className={twMerge(
-        clsx('text-xs sm:text-sm text-slate-400 leading-normal', className)
-      )}
+      className={twMerge(clsx('text-[0.8125rem] sm:text-sm text-ink-muted leading-relaxed', className))}
       {...props}
     >
       {children}
@@ -100,7 +99,7 @@ export function CardFooter({
     <div
       className={twMerge(
         clsx(
-          'px-6 py-4 border-t border-slate-800 bg-slate-950/60 dark:bg-[#0a0f1a] flex items-center justify-between',
+          'px-5 sm:px-6 py-4 border-t border-line bg-surface-muted flex flex-wrap items-center justify-between gap-3',
           className
         )
       )}

@@ -108,7 +108,7 @@ export function ChannelAdminDealsTable({
                 }
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-[#00B8DB] text-[#03121c] shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                 }`}
               >
@@ -127,7 +127,7 @@ export function ChannelAdminDealsTable({
             name="q"
             defaultValue={currentQuery || ''}
             placeholder="Search domain, company, partner..."
-            className="w-full pl-9 pr-3.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full pl-9 pr-3.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
           />
         </form>
       </div>
@@ -160,7 +160,7 @@ export function ChannelAdminDealsTable({
                     onClick={() => setActiveDeal(deal)}
                     className="hover:bg-slate-800/40 transition-colors cursor-pointer group"
                   >
-                    <td className="py-3.5 px-6 font-mono font-medium text-indigo-300">
+                    <td className="py-3.5 px-6 font-mono font-medium text-cyan-300">
                       {deal.public_reference}
                     </td>
                     <td className="py-3.5 px-6 font-semibold text-slate-200">
@@ -170,7 +170,7 @@ export function ChannelAdminDealsTable({
                       </span>
                     </td>
                     <td className="py-3.5 px-6">
-                      <div className="font-semibold text-slate-100 group-hover:text-indigo-300 transition-colors">
+                      <div className="font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors">
                         {deal.customer_legal_name}
                       </div>
                       <div className="font-mono text-[11px] text-cyan-400">
@@ -208,7 +208,7 @@ export function ChannelAdminDealsTable({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-7 px-2.5 text-xs text-indigo-400 hover:text-white hover:bg-indigo-600/20"
+                        className="h-7 px-2.5 text-xs text-cyan-400 hover:text-white hover:bg-cyan-500/15"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveDeal(deal);

@@ -4,14 +4,22 @@
    the presence of `.dark` on <html>. Dark is the application default. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Match the omnipriv.com marketing site:
-   - Page container width: 77.5rem (1240px) instead of Tailwind's 80rem (1280px).
-   - Body font: Onest (was Inter); headings: Sora; mono: JetBrains Mono. */
+/*
+ * Design language: mirrors the omnipriv.com marketing site
+ * (OmniPriv/app/globals.css, tailwind.config.ts, lib/styles.ts).
+ *
+ *   Brand        #00B8DB cyan, hover #33C6E2, text-on-brand #03121C,
+ *                accent text #00667A (light) / #00B8DB (dark).
+ *   Ink          #0A1628 navy headings in light, white in dark.
+ *   Surfaces     light: white cards on a #F5F7FB page, hairlines in navy at 8%.
+ *                dark:  #15171A cards on a #0B0C0E page, hairlines in white at 8%.
+ *   Type         Onest body, Sora display (700, -0.03em), JetBrains Mono.
+ *   Radii        10px buttons, 12px fields, 16px cards.
+ */
 @theme {
   --container-7xl: 77.5rem;
 
-  /* Brand palette exposed as Tailwind utilities (aligned with the OmniPriv
-     Customer Support portal and omnipriv.com marketing site). */
+  /* Brand palette exposed as Tailwind utilities. */
   --color-primary: #00b8db;
   --color-primary-dark: #00869f;
   --color-purple: #a78bfa;
@@ -25,21 +33,42 @@
 @theme inline {
   --font-sans: var(--font-onest), system-ui, sans-serif;
   --font-heading: var(--font-sora), system-ui, sans-serif;
-  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-display: var(--font-sora), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Semantic, theme-aware colours (values switch with `.dark`). Use these in
+     shared components: `bg-surface`, `border-line`, `text-ink`, `bg-brand`. */
+  --color-brand: var(--op-brand);
+  --color-brand-hover: var(--op-brand-hover);
+  --color-brand-ink: var(--op-brand-ink);
+  --color-on-brand: var(--op-on-brand);
+  --color-page: var(--op-page);
+  --color-surface: var(--op-surface);
+  --color-surface-muted: var(--op-surface-muted);
+  --color-surface-hover: var(--op-surface-hover);
+  --color-line: var(--op-line);
+  --color-line-strong: var(--op-line-strong);
+  --color-ink: var(--op-ink);
+  --color-ink-soft: var(--op-ink-soft);
+  --color-ink-muted: var(--op-ink-muted);
+  --color-ink-subtle: var(--op-ink-subtle);
+  --color-field: var(--op-field);
+  --color-field-line: var(--op-field-line);
+  --color-navy: #0a1628;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   OmniPriv Brand Design System Tokens & Emil Kowalski Curves
+   Tokens
 ───────────────────────────────────────────────────────────── */
 :root {
   color-scheme: light;
 
-  /* Emil Kowalski Animation Tokens from SKILL.md */
+  /* Motion */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  /* Official OmniPriv Brand Colors — #00b8db primary (matches Customer Support) */
+  /* Official OmniPriv brand scale */
   --omnipriv-primary: #00b8db;
   --omnipriv-primary-dark: #00869f;
   --omnipriv-primary-50: #e6fafd;
@@ -53,86 +82,181 @@
   --omnipriv-primary-800: #00434f;
   --omnipriv-primary-900: #001f26;
 
-  /* Light theme — Surfaces & Borders */
-  --background: #ffffff;
-  --foreground: #0f172a;
+  /* Semantic tokens: light (omnipriv.com light theme) */
+  --op-brand: #00b8db;
+  --op-brand-hover: #33c6e2;
+  --op-brand-ink: #00667a;
+  --op-on-brand: #03121c;
+  --op-page: #f5f7fb;
+  --op-surface: #ffffff;
+  --op-surface-muted: #f4f8fc;
+  --op-surface-hover: #f1f5f9;
+  --op-line: rgba(10, 22, 40, 0.08);
+  --op-line-strong: rgba(10, 22, 40, 0.14);
+  --op-ink: #0a1628;
+  --op-ink-soft: #334155;
+  --op-ink-muted: #475569;
+  --op-ink-subtle: #64748b;
+  --op-field: #ffffff;
+  --op-field-line: rgba(15, 23, 42, 0.12);
+  --op-card-shadow: 0 1px 2px rgba(10, 22, 40, 0.04);
+  --op-pop-shadow: 0 30px 80px -24px rgba(15, 23, 42, 0.35);
+  --op-grid-line: rgba(10, 22, 40, 0.05);
+
+  /* Legacy shadcn-style tokens (kept for any consumer) */
+  --background: #f5f7fb;
+  --foreground: #0a1628;
   --card: #ffffff;
-  --card-foreground: #0f172a;
-  --card-border: rgba(15, 23, 42, 0.08);
+  --card-foreground: #0a1628;
+  --card-border: rgba(10, 22, 40, 0.08);
   --card-border-cyan: rgba(0, 184, 219, 0.25);
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-
-  /* Light theme — Functional Tokens */
+  --popover-foreground: #0a1628;
   --primary: #00b8db;
   --primary-foreground: #03121c;
   --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
+  --secondary-foreground: #0a1628;
+  --muted: #f4f8fc;
   --muted-foreground: #475569;
   --accent: #00b8db;
   --accent-foreground: #03121c;
   --destructive: #e11d48;
   --destructive-foreground: #ffffff;
-  --border: rgba(15, 23, 42, 0.08);
+  --border: rgba(10, 22, 40, 0.08);
   --input: #ffffff;
   --input-border: rgba(15, 23, 42, 0.12);
   --ring: #00b8db;
 
-  --scrollbar-track: #f1f5f9;
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-thumb-hover: #94a3b8;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(0, 184, 219, 0.3);
+  --scrollbar-thumb-hover: rgba(0, 184, 219, 0.6);
 }
 
 .dark {
   color-scheme: dark;
 
-  /* Dark theme — Clean Solid Matte Surfaces (No muddy gradients) */
-  --background: #090d16;
+  /* Semantic tokens: dark (omnipriv.com dark theme, neutral near-black) */
+  --op-brand: #00b8db;
+  --op-brand-hover: #33c6e2;
+  --op-brand-ink: #00b8db;
+  --op-on-brand: #03121c;
+  --op-page: #0b0c0e;
+  --op-surface: #15171a;
+  --op-surface-muted: #111214;
+  --op-surface-hover: #1b1d21;
+  --op-line: rgba(255, 255, 255, 0.08);
+  --op-line-strong: rgba(255, 255, 255, 0.14);
+  --op-ink: #ffffff;
+  --op-ink-soft: #cbd5e1;
+  --op-ink-muted: #94a3b8;
+  --op-ink-subtle: #64748b;
+  --op-field: #0b0c0e;
+  --op-field-line: rgba(255, 255, 255, 0.12);
+  --op-card-shadow: none;
+  --op-pop-shadow: 0 30px 80px -24px rgba(0, 0, 0, 0.7);
+  --op-grid-line: rgba(255, 255, 255, 0.035);
+
+  --background: #0b0c0e;
   --foreground: #f1f5f9;
-  --card: #0d1424;
+  --card: #15171a;
   --card-foreground: #f1f5f9;
   --card-border: rgba(255, 255, 255, 0.08);
   --card-border-cyan: rgba(0, 184, 219, 0.3);
-  --popover: #0d1424;
+  --popover: #15171a;
   --popover-foreground: #f1f5f9;
-
-  /* Dark theme — Functional Tokens */
   --primary: #00b8db;
   --primary-foreground: #03121c;
-  --secondary: #131d31;
+  --secondary: #1b1d21;
   --secondary-foreground: #e2e8f0;
-  --muted: #131d31;
+  --muted: #111214;
   --muted-foreground: #94a3b8;
   --accent: #00b8db;
   --accent-foreground: #03121c;
   --destructive: #f43f5e;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
-  --input: #0b1120;
+  --input: #0b0c0e;
   --input-border: rgba(255, 255, 255, 0.12);
   --ring: #00b8db;
 
-  --scrollbar-track: #090d16;
-  --scrollbar-thumb: #1e293b;
-  --scrollbar-thumb-hover: #334155;
+  /*
+   * Feature pages are authored dark-first with the slate scale
+   * (`bg-slate-950` page, `bg-slate-900` card, `border-slate-800` hairline).
+   * Tailwind's slate is navy-tinted; the marketing site's dark theme is a
+   * neutral near-black, so the dark end of the scale is re-pointed here.
+   */
+  --color-slate-950: #0b0c0e;
+  --color-slate-900: #15171a;
+  --color-slate-800: #26292e;
+  --color-slate-700: #363a40;
+
+  /* Restore the defaults the light theme inverts, so a `.dark` island
+     (e.g. the navy sign-in panel) renders dark inside a light page. */
+  --color-slate-50: oklch(98.4% 0.003 247.858);
+  --color-slate-100: oklch(96.8% 0.007 247.896);
+  --color-slate-200: oklch(92.9% 0.013 255.508);
+  --color-slate-300: oklch(86.9% 0.022 252.894);
+  --color-slate-400: oklch(70.4% 0.04 256.788);
+  --color-slate-500: oklch(55.4% 0.046 257.417);
+  --color-slate-600: oklch(44.6% 0.043 257.281);
+  --color-white: #fff;
+  --color-cyan-200: oklch(91.7% 0.08 205.041);
+  --color-cyan-300: oklch(86.5% 0.127 207.078);
+  --color-cyan-400: #33c6e2;
+  --color-cyan-700: #00667a;
+  --color-cyan-800: oklch(45% 0.085 224.283);
+  --color-cyan-900: oklch(39.8% 0.07 227.392);
+  --color-cyan-950: oklch(30.2% 0.056 229.695);
+  --color-blue-200: oklch(88.2% 0.059 254.128);
+  --color-blue-300: oklch(80.9% 0.105 251.813);
+  --color-blue-400: oklch(70.7% 0.165 254.624);
+  --color-blue-700: oklch(48.8% 0.243 264.376);
+  --color-blue-800: oklch(42.4% 0.199 265.638);
+  --color-blue-900: oklch(37.9% 0.146 265.522);
+  --color-blue-950: oklch(28.2% 0.091 267.935);
+  --color-amber-200: oklch(92.4% 0.12 95.746);
+  --color-amber-300: oklch(87.9% 0.169 91.605);
+  --color-amber-400: oklch(82.8% 0.189 84.429);
+  --color-amber-700: oklch(55.5% 0.163 48.998);
+  --color-amber-800: oklch(47.3% 0.137 46.201);
+  --color-amber-900: oklch(41.4% 0.112 45.904);
+  --color-amber-950: oklch(27.9% 0.077 45.635);
+  --color-emerald-200: oklch(90.5% 0.093 164.15);
+  --color-emerald-300: oklch(84.5% 0.143 164.978);
+  --color-emerald-400: oklch(76.5% 0.177 163.223);
+  --color-emerald-700: oklch(50.8% 0.118 165.612);
+  --color-emerald-800: oklch(43.2% 0.095 166.913);
+  --color-emerald-900: oklch(37.8% 0.077 168.94);
+  --color-emerald-950: oklch(26.2% 0.051 172.552);
+  --color-rose-200: oklch(89.2% 0.058 10.001);
+  --color-rose-300: oklch(81% 0.117 11.638);
+  --color-rose-400: oklch(71.2% 0.194 13.428);
+  --color-rose-700: oklch(51.4% 0.222 16.935);
+  --color-rose-800: oklch(45.5% 0.188 13.697);
+  --color-rose-900: oklch(41% 0.159 10.272);
+  --color-rose-950: oklch(27.1% 0.105 12.094);
 }
 
-/* Light-theme palette remap for dark-first classes */
+/*
+ * Light theme: the dark-first slate/white classes are inverted so every
+ * feature page reads correctly without per-page `dark:` variants.
+ * `white` becomes the site's navy ink (#0A1628), which also turns the
+ * `border-white/[0.08]` hairlines into the site's navy-at-8% hairline.
+ */
 :root:not(.dark) {
   --color-slate-50: #020617;
-  --color-slate-100: #0f172a;
+  --color-slate-100: #0a1628;
   --color-slate-200: #1e293b;
   --color-slate-300: #334155;
   --color-slate-400: #475569;
   --color-slate-500: #64748b;
   --color-slate-600: #94a3b8;
-  --color-slate-700: #cbd5e1;
-  --color-slate-800: #e2e8f0;
-  --color-slate-900: #f1f5f9;
-  --color-slate-950: #f8fafc;
+  --color-slate-700: #cfd6df;
+  --color-slate-800: #e4e8ee;
+  --color-slate-900: #ffffff;
+  --color-slate-950: #f5f7fb;
 
-  --color-white: #0f172a;
+  --color-white: #0a1628;
   --color-cyan-200: #00667a;
   --color-cyan-300: #00667a;
   --color-cyan-400: #00869f;
@@ -184,40 +308,173 @@
   --color-purple-950: #f3e8ff;
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-onest), system-ui, sans-serif;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ─────────────────────────────────────────────────────────────
+   Base (layered so utilities still win)
+───────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--op-page);
+    color: var(--op-ink-soft);
+    font-family: var(--font-onest), system-ui, sans-serif;
+    min-height: 100vh;
+    font-feature-settings: "kern", "liga", "calt";
+    /* No sideways scroll on phones; `clip` keeps sticky headers working. */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sora), system-ui, sans-serif;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  h1,
+  h2 {
+    letter-spacing: -0.03em;
+  }
+
+  ::selection {
+    background: rgba(0, 184, 219, 0.28);
+  }
+
+  :focus-visible {
+    outline-color: #00b8db;
+  }
+
+  /* Native <select> option lists follow the theme. */
+  option {
+    background-color: var(--op-surface);
+    color: var(--op-ink);
+  }
+
+  /* Tables scroll inside their own wrapper rather than the page. */
+  table {
+    border-collapse: collapse;
+  }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-sora), system-ui, sans-serif;
+/* ─────────────────────────────────────────────────────────────
+   Shared surfaces and motifs (omnipriv.com)
+───────────────────────────────────────────────────────────── */
+@layer components {
+  /* Faint square grid, as on the marketing hero (aip-hero-grid). */
+  .op-grid {
+    background-image:
+      linear-gradient(var(--op-grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--op-grid-line) 1px, transparent 1px);
+    background-size: 3.5rem 3.5rem;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 75%);
+  }
+
+  /* Soft cyan glow from the top right (aip-engine-glow). */
+  .op-glow {
+    background: radial-gradient(ellipse 50% 60% at 85% 0%, rgba(0, 184, 219, 0.12), transparent 70%);
+  }
+
+  /* Navy feature band (op-band-navy). */
+  .op-band-navy {
+    background-color: #0a1628;
+    color: #cbd5e1;
+  }
+
+  .dark .op-band-navy {
+    background-color: #15171a;
+  }
+
+  /* Eyebrow pill (badge-cyan / Partner Portal chip). */
+  .op-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 184, 219, 0.35);
+    background: rgba(0, 184, 219, 0.08);
+    color: var(--op-brand-ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+  }
+
+  .dark .op-eyebrow {
+    color: #7fe3f2;
+  }
+
+  /* Section heading scale (op-h2) and lede (op-lede). */
+  .op-h1 {
+    font-family: var(--font-sora), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 1.3rem + 2.6vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--op-ink);
+  }
+
+  .op-h2 {
+    font-family: var(--font-sora), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.625rem, 1.2rem + 1.5vw, 2.375rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: var(--op-ink);
+  }
+
+  .op-lede {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--op-ink-muted);
+  }
+
+  @media (min-width: 640px) {
+    .op-lede {
+      font-size: 1.0625rem;
+    }
+  }
+
+  /* Feature icon tile (icon-wrapper). */
+  .op-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 0.75rem;
+    color: var(--op-brand-ink);
+    background: linear-gradient(135deg, rgba(0, 184, 219, 0.14) 0%, rgba(0, 102, 122, 0.08) 100%);
+    border: 1px solid rgba(0, 184, 219, 0.2);
+  }
 }
 
-/* Emil Kowalski Button Press Recipe from RECIPES.md */
+/* ─────────────────────────────────────────────────────────────
+   Interaction recipes
+───────────────────────────────────────────────────────────── */
 .btn-press {
   transition: transform 160ms var(--ease-out), background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
-  will-change: transform;
 }
 .btn-press:active {
-  transform: scale(0.97);
+  transform: translateY(1px);
 }
 
-/* Emil Kowalski Smooth Accordion / Collapse using CSS Grid */
+/* Smooth accordion / collapse using CSS grid */
 .accordion-wrapper {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 200ms var(--ease-out), opacity 200ms var(--ease-out);
   opacity: 0;
-  will-change: grid-template-rows, opacity;
 }
 
 .accordion-wrapper[data-open="true"] {
@@ -245,7 +502,38 @@ h6 {
   animation: fadeInUpStagger 220ms var(--ease-out) both;
 }
 
-/* High-contrast, clean scrollbar */
+.toast-in {
+  animation: fadeInUpStagger 220ms var(--ease-out) both;
+}
+
+/* Mobile navigation drawer */
+@keyframes drawerIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.op-drawer-in {
+  animation: drawerIn 260ms var(--ease-drawer) both;
+}
+
+.op-fade-in {
+  animation: fadeIn 200ms ease both;
+}
+
+/* Scrollbar (omnipriv.com: thin cyan thumb) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

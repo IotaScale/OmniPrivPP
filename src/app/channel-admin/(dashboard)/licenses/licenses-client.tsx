@@ -139,7 +139,7 @@ export function LicensesClient({
       <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-6 space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Key className="h-5 w-5 text-indigo-400" />
+            <Key className="h-5 w-5 text-cyan-400" />
             <h2 className="text-base font-semibold text-white">
               Generate OmniPrive Organization License Key
             </h2>
@@ -154,7 +154,7 @@ export function LicensesClient({
             {/* Org ID with Paste button and live validation */}
             <div className="md:col-span-5">
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                OmniPrive Organization ID (<code className="text-indigo-300">org_id</code>) *
+                OmniPrive Organization ID (<code className="text-cyan-300">org_id</code>) *
               </label>
               <div className="flex gap-1.5">
                 <input
@@ -272,7 +272,7 @@ export function LicensesClient({
 
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-800/80">
             <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Calendar className="h-3.5 w-3.5 text-indigo-400" />
+              <Calendar className="h-3.5 w-3.5 text-cyan-400" />
               <span>
                 Expiration preview:{' '}
                 <strong className="text-slate-200">
@@ -285,7 +285,7 @@ export function LicensesClient({
             <button
               type="submit"
               disabled={loading || orgIdInvalid}
-              className="rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 px-5 py-2 text-xs font-semibold text-white transition"
+              className="rounded-lg bg-[#00B8DB] hover:bg-[#33C6E2] disabled:opacity-50 px-5 py-2 text-xs font-semibold text-[#03121c] transition"
             >
               {loading ? 'Generating & Saving in Supabase…' : 'Generate License Key'}
             </button>
@@ -367,7 +367,7 @@ export function LicensesClient({
                     <tr key={lic.id} className="hover:bg-slate-800/30">
                       <td className="px-4 py-3 font-mono text-slate-200">{lic.org_id}</td>
                       <td className="px-4 py-3 text-slate-300">{lic.customer_name || '—'}</td>
-                      <td className="px-4 py-3 font-mono text-indigo-300">
+                      <td className="px-4 py-3 font-mono text-cyan-300">
                         <div className="flex items-center gap-2">
                           <span>{lic.license_key}</span>
                           <button
@@ -422,7 +422,7 @@ export function LicensesClient({
                               durationUnit: 'years',
                             })
                           }
-                          className="inline-flex items-center gap-1 px-2 py-1 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30"
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30"
                           title="Extend 1 Year"
                         >
                           <RefreshCw className="h-3 w-3" /> +1Yr

@@ -3,22 +3,31 @@ import { Onest, Sora, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
+/*
+ * Type system, matching omnipriv.com (OmniPriv/app/layout.tsx):
+ *   Body     Onest 400-700
+ *   Display  Sora 500-800 (headings: 700, -0.03em)
+ *   Mono     JetBrains Mono 400-500 for IDs, codes and labels
+ */
 const onest = Onest({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-onest',
+  weight: ['400', '500', '600', '700'],
 });
 
 const sora = Sora({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sora',
+  weight: ['500', '600', '700', '800'],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-mono',
+  variable: '--font-jetbrains',
+  weight: ['400', '500'],
 });
 
 export const metadata: Metadata = {
@@ -52,14 +61,14 @@ export default function RootLayout({
       className={`h-full antialiased ${onest.variable} ${sora.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        {/* Apply the persisted theme (dark by default) before first paint. */}
+        {/* Apply the persisted theme (light by default, like omnipriv.com) before first paint. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('omnipriv-theme');if(t!=='light'&&t!=='dark'){t='dark';}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){document.documentElement.classList.add('dark');}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('omnipriv-theme');if(t!=='light'&&t!=='dark'){t='light';}document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();`,
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans bg-page text-ink-soft">
         <ThemeProvider>{children}</ThemeProvider>
         <Toaster />
       </body>

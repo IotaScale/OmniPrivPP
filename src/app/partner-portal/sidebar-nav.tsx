@@ -21,7 +21,19 @@ import {
   FileText,
   MapPin,
   CheckSquare,
+  LifeBuoy,
 } from 'lucide-react';
+import { SUPPORT_SSO_PATH } from '@/lib/auth/support-sso-path';
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+  badge?: number;
+  /** Plain anchor: leaves the app via a route handler (e.g. support SSO). */
+  external?: boolean;
+}
 
 interface SidebarNavProps {
   unreadLeadsCount?: number;
@@ -37,7 +49,7 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  const navSections = [
+  const navSections: { title: string; items: NavItem[] }[] = [
     {
       title: 'Sales',
       items: [
@@ -141,19 +153,34 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
         },
       ],
     },
+    {
+      title: 'Help',
+      items: [
+        {
+          // Signs the user in to support.omnipriv.com with their current session.
+          label: 'Support',
+          href: SUPPORT_SSO_PATH,
+          icon: LifeBuoy,
+          external: true,
+        },
+      ],
+    },
   ];
 
+  const itemBase =
+    'btn-press relative flex items-center gap-3 px-3 py-2 rounded-[10px] text-[0.8125rem] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50';
+  const itemActive =
+    'bg-brand/10 text-brand-ink font-semibold before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[3px] before:rounded-full before:bg-brand';
+  const itemIdle = 'text-ink-muted hover:text-ink hover:bg-surface-hover';
+
   return (
-    <nav className="space-y-4 px-3 py-3">
+    <nav aria-label="Partner portal" className="space-y-5 px-3 py-4">
       {/* Dashboard Overview */}
       <div>
         <Link
           href="/partner-portal"
-          className={`btn-press flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors duration-160 ${
-            pathname === '/partner-portal'
-              ? 'bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-          }`}
+          aria-current={pathname === '/partner-portal' ? 'page' : undefined}
+          className={`${itemBase} ${pathname === '/partner-portal' ? itemActive : itemIdle}`}
         >
           <LayoutDashboard className="h-4 w-4 shrink-0" />
           <span>Dashboard</span>
@@ -163,33 +190,32 @@ export function PartnerSidebarNav({ unreadLeadsCount = 0 }: SidebarNavProps) {
       {/* Sections */}
       {navSections.map((section) => (
         <div key={section.title} className="space-y-1">
-          <div className="px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500 font-mono">
+          <div className="px-3 pb-1 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-ink-subtle">
             {section.title}
           </div>
           <div className="space-y-0.5">
             {section.items.map((item) => {
               const Icon = item.icon;
-              const active = isLinkActive(item.href, item.exact);
+              const isExternal = Boolean(item.external);
+              const active = !isExternal && isLinkActive(item.href, item.exact);
+              const LinkTag = isExternal ? 'a' : Link;
               return (
-                <Link
+                <LinkTag
                   key={item.href}
                   href={item.href}
-                  className={`btn-press flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-160 group ${
-                    active
-                      ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                  }`}
+                  aria-current={active ? 'page' : undefined}
+                  className={`${itemBase} justify-between group ${active ? itemActive : itemIdle}`}
                 >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Icon className="h-4 w-4 shrink-0" />
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge !== undefined && (
-                    <span className="ml-2 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-cyan-500 text-slate-950 shrink-0">
+                    <span className="ml-2 min-w-5 h-5 px-1.5 inline-flex items-center justify-center text-[0.6875rem] font-bold rounded-full bg-brand text-on-brand shrink-0">
                       {item.badge}
                     </span>
                   )}
-                </Link>
+                </LinkTag>
               );
             })}
           </div>

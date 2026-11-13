@@ -88,7 +88,7 @@ export default async function ChannelAdminDashboardPage() {
 
         <div className="flex items-center gap-3">
           <Link href="/channel-admin/deals">
-            <Button variant="primary" size="md" className="gap-2 bg-indigo-600 hover:bg-indigo-500 border-indigo-500/30">
+            <Button variant="primary" size="md" className="gap-2">
               <FileCheck2 className="h-4 w-4" />
               <span>Review Deals ({dealsAwaitingCount})</span>
             </Button>
@@ -206,7 +206,7 @@ export default async function ChannelAdminDashboardPage() {
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                 Upcoming Renewals
               </span>
-              <div className="h-8 w-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+              <div className="h-8 w-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                 <RefreshCw className="h-4 w-4" />
               </div>
             </div>
@@ -243,14 +243,14 @@ export default async function ChannelAdminDashboardPage() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <FileCheck2 className="h-4 w-4 text-indigo-400" />
+                  <FileCheck2 className="h-4 w-4 text-cyan-400" />
                   <span>Pending Deal Approval & Conflict Queue</span>
                 </CardTitle>
                 <CardDescription>
                   Opportunities submitted by partners awaiting approval or conflict resolution.
                 </CardDescription>
               </div>
-              <Link href="/channel-admin/deals" className="text-xs text-indigo-400 hover:text-indigo-300 font-medium">
+              <Link href="/channel-admin/deals" className="text-xs text-cyan-400 hover:text-cyan-300 font-medium">
                 View all ({dealsAwaitingCount}) &rarr;
               </Link>
             </CardHeader>
@@ -270,7 +270,7 @@ export default async function ChannelAdminDashboardPage() {
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/channel-admin/deals?id=${deal.id}`}
-                            className="font-medium text-slate-200 hover:text-indigo-400 text-sm"
+                            className="font-medium text-slate-200 hover:text-cyan-400 text-sm"
                           >
                             {deal.customer_legal_name}
                           </Link>
@@ -299,7 +299,7 @@ export default async function ChannelAdminDashboardPage() {
 
                       <div className="flex items-center gap-2 self-end sm:self-center">
                         <Link href={`/channel-admin/deals?id=${deal.id}`}>
-                          <Button variant="primary" size="sm" className="h-7 text-xs bg-indigo-600 hover:bg-indigo-500 border-indigo-500/30">
+                          <Button variant="primary" size="sm" className="h-7 text-xs">
                             <span>Review & Decide</span>
                             <ArrowRight className="h-3 w-3 ml-1" />
                           </Button>
@@ -319,12 +319,12 @@ export default async function ChannelAdminDashboardPage() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <ScrollText className="h-4 w-4 text-indigo-400" />
+                  <ScrollText className="h-4 w-4 text-cyan-400" />
                   <span>Channel Audit Trail</span>
                 </CardTitle>
                 <CardDescription>Live forensic log.</CardDescription>
               </div>
-              <Link href="/channel-admin/audit" className="text-xs text-indigo-400 hover:text-indigo-300 font-medium">
+              <Link href="/channel-admin/audit" className="text-xs text-cyan-400 hover:text-cyan-300 font-medium">
                 Full log &rarr;
               </Link>
             </CardHeader>

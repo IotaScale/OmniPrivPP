@@ -55,7 +55,7 @@ export default async function PartnerCommercialRequestsPage({
         </div>
 
         <Link href="/partner-portal/commercial-requests/new">
-          <Button variant="primary" size="md" className="gap-2 shadow-sm shadow-cyan-950">
+          <Button variant="primary" size="md" className="gap-2">
             <PlusCircle className="h-4 w-4" />
             <span>New Commercial Request</span>
           </Button>

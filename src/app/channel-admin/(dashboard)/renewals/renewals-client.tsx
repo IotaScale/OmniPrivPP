@@ -58,7 +58,7 @@ export function ChannelAdminRenewalsClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <RefreshCw className="h-6 w-6 text-indigo-400" />
+            <RefreshCw className="h-6 w-6 text-cyan-400" />
             <span>Commercial Renewals Operations</span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -70,7 +70,7 @@ export function ChannelAdminRenewalsClient({
           variant="primary"
           size="md"
           onClick={() => setShowCreateModal(true)}
-          className="gap-2 bg-indigo-600 hover:bg-indigo-500 border-indigo-500/30"
+          className="gap-2"
         >
           <Plus className="h-4 w-4" />
           <span>Add Renewal Record</span>
@@ -137,7 +137,7 @@ export function ChannelAdminRenewalsClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Plus className="h-4 w-4 text-indigo-400" />
+              <Plus className="h-4 w-4 text-cyan-400" />
               <span>Create Customer Renewal</span>
             </h3>
 
@@ -181,7 +181,7 @@ export function ChannelAdminRenewalsClient({
                   variant="primary"
                   size="sm"
                   isLoading={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-500"
+                 
                 >
                   Save Renewal
                 </Button>

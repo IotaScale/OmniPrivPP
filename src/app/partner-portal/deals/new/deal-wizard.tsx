@@ -134,7 +134,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                       isActive
                         ? 'bg-[#030711] text-[#00B8DB]'
                         : isCompleted
-                        ? 'bg-emerald-500 text-slate-950'
+                        ? 'bg-emerald-500 text-[#03121c]'
                         : 'bg-white/[0.08] text-slate-400'
                     }`}
                   >
@@ -164,9 +164,9 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
       <form action={formAction}>
         <input type="hidden" name="leadAssignmentId" value={formData.leadAssignmentId} />
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        {/* ══════════════════════════════════════════════════════════
             STEP 1: Deal Details
-           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+           ══════════════════════════════════════════════════════════ */}
         {currentStep === 1 && (
           <Card>
             <CardHeader>
@@ -185,7 +185,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
 
             <CardContent className="space-y-6">
               {/* Inner Panel A: Organization & Domain */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
+              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#15171a]/70 border border-white/[0.06] space-y-5">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
                   <Globe className="h-4 w-4 text-[#00B8DB]" />
                   <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
@@ -243,7 +243,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
               </div>
 
               {/* Inner Panel B: Primary Stakeholder Contact */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
+              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#15171a]/70 border border-white/[0.06] space-y-5">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
                   <UserCheck className="h-4 w-4 text-[#00B8DB]" />
                   <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
@@ -305,9 +305,9 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
           </Card>
         )}
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        {/* ══════════════════════════════════════════════════════════
             STEP 2: Product & Commercial Scope
-           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+           ══════════════════════════════════════════════════════════ */}
         {currentStep === 2 && (
           <Card>
             <CardHeader>
@@ -326,7 +326,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
 
             <CardContent className="space-y-6">
               {/* Inner Panel A: Solution Architecture */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
+              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#15171a]/70 border border-white/[0.06] space-y-5">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
                   <Briefcase className="h-4 w-4 text-[#00B8DB]" />
                   <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
@@ -365,7 +365,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
               </div>
 
               {/* Inner Panel B: Commercial Scope */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-5">
+              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#15171a]/70 border border-white/[0.06] space-y-5">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/[0.06]">
                   <DollarSign className="h-4 w-4 text-[#00B8DB]" />
                   <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
@@ -381,8 +381,8 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                     onChange={handleChange}
                   >
                     <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (â‚¬)</option>
-                    <option value="GBP">GBP (Â£)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
                     <option value="SAR">SAR (ï·¼)</option>
                     <option value="AED">AED (Ø¯.Ø¥)</option>
                   </Select>
@@ -430,7 +430,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
               </div>
 
               {/* Inner Panel C: Strategic Context */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#050B16]/70 border border-white/[0.06] space-y-3">
+              <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/70 dark:bg-[#15171a]/70 border border-white/[0.06] space-y-3">
                 <label className="text-xs sm:text-sm font-medium text-slate-200 block">
                   Partner Strategic Notes & Competitive Incumbent Displacement
                 </label>
@@ -438,7 +438,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                   name="partnerNotes"
                   rows={3}
                   placeholder="Customer environment, incumbent vendor displacement (e.g. replacing CyberArk, BeyondTrust), key security stakeholders..."
-                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#060b17] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
+                  className="w-full p-4 rounded-xl bg-slate-950 dark:bg-[#0b0c0e] border border-white/[0.12] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-[#00B8DB] focus:ring-2 focus:ring-[#00B8DB]/20 transition-all duration-150 resize-y"
                   value={formData.partnerNotes}
                   onChange={handleChange}
                 />
@@ -465,9 +465,9 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
           </Card>
         )}
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        {/* ══════════════════════════════════════════════════════════
             STEP 3: Review & Submit
-           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+           ══════════════════════════════════════════════════════════ */}
         {currentStep === 3 && (
           <Card>
             <CardHeader>
@@ -486,7 +486,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
 
             <CardContent className="space-y-6">
               {/* Executive Summary Sheet */}
-              <div className="rounded-2xl bg-slate-900/80 dark:bg-[#050B16]/80 border border-white/[0.08] overflow-hidden">
+              <div className="rounded-2xl bg-slate-900/80 dark:bg-[#15171a]/80 border border-white/[0.08] overflow-hidden">
                 <div className="px-6 py-3.5 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
                     Deal Registration Summary Sheet
@@ -556,7 +556,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                 className={`p-5 rounded-2xl border transition-all duration-200 ${
                   formData.declarationConfirmed
                     ? 'bg-[#00B8DB]/5 border-[#00B8DB]/40 ring-1 ring-[#00B8DB]/20'
-                    : 'bg-slate-900/80 dark:bg-[#050B16]/80 border-white/[0.08]'
+                    : 'bg-slate-900/80 dark:bg-[#15171a]/80 border-white/[0.08]'
                 }`}
               >
                 <label className="flex items-start gap-3.5 cursor-pointer select-none">
@@ -565,7 +565,7 @@ export function DealRegistrationWizard({ initialData }: { initialData?: InitialD
                     name="declarationConfirmed"
                     checked={formData.declarationConfirmed}
                     onChange={handleChange}
-                    className="mt-1 h-4.5 w-4.5 rounded-lg bg-slate-950 dark:bg-[#060b17] border-white/[0.2] text-[#00B8DB] focus:ring-[#00B8DB] focus:ring-offset-0 cursor-pointer"
+                    className="mt-1 h-4.5 w-4.5 rounded-lg bg-slate-950 dark:bg-[#0b0c0e] border-white/[0.2] text-[#00B8DB] focus:ring-[#00B8DB] focus:ring-offset-0 cursor-pointer"
                     required
                   />
                   <div className="space-y-1">

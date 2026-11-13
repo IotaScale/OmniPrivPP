@@ -69,7 +69,7 @@ export default async function PartnerDealsListPage({
         </div>
 
         <Link href="/partner-portal/deals/new">
-          <Button variant="primary" size="md" className="gap-2 shadow-cyan-950/80 shadow-md">
+          <Button variant="primary" size="md" className="gap-2">
             <FilePlus2 className="h-4 w-4" />
             <span>Register New Deal</span>
           </Button>
